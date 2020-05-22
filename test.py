@@ -12,14 +12,16 @@ import sys
 from stimulus import pick_stimuli
 from canvas import Canvas
 
-IMAGE_WIDTH = 100
+NUM_STIMULI = 6
+IMAGE_WIDTH = 50
+ROW_COL_NUM = 3
+
 
 if __name__ == '__main__':
-    path = f'{os.getcwd()}/images/'
-    images = pick_stimuli(path, 6, IMAGE_WIDTH)
-    # grid = generate_grid(images, 3, 3)
+    path = f'{os.getcwd()}/stimuli/'
+    images = pick_stimuli(path, NUM_STIMULI, IMAGE_WIDTH, extension='.jpg')
         
     app = QApplication(sys.argv)
-    ex = Canvas(images, IMAGE_WIDTH, 4, 4, width=1000, height=800)
+    ex = Canvas(images, IMAGE_WIDTH, ROW_COL_NUM, ROW_COL_NUM, width=800, height=800)
     sys.exit(app.exec_())
 

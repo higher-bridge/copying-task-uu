@@ -7,7 +7,9 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 
 from PyQt5.QtWidgets import QWidget, QLabel, QGroupBox, QGridLayout, QVBoxLayout, QFrame, QSizePolicy
 from PyQt5.QtGui import QPixmap
+from PyQt5 import QtCore
 import example_grid
+from random import shuffle
 
 
 class Canvas(QWidget):
@@ -26,6 +28,8 @@ class Canvas(QWidget):
         self.image_width = image_width
         self.nrow = nrow
         self.ncol = ncol
+
+        self.stylestr = "background-color:rgb(128, 128, 128)"
         
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
@@ -38,6 +42,7 @@ class Canvas(QWidget):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setStyleSheet(self.stylestr)
 
         # Create the example grid
         self.createMasterGrid()
@@ -53,46 +58,64 @@ class Canvas(QWidget):
         
     def createMasterGrid(self):
         self.horizontalGroupBox = QGroupBox("Grid")
-        
+        self.horizontalGroupBox.setStyleSheet(self.stylestr)
         layout = QGridLayout()
+
+        self.emptyGridLayout()
+        layout.addWidget(self.emptyGridBox, 0, 0)
+        layout.addWidget(self.emptyGridBox, 0, 1)
+        layout.addWidget(self.emptyGridBox, 0, 2)
         
         self.exampleGridLayout()
-        layout.addWidget(self.exampleGridBox, 0, 0)
+        layout.addWidget(self.exampleGridBox, 1, 0)
+
+        layout.addWidget(self.emptyGridBox, 1, 1)
         
         self.copyGridLayout()
-        layout.addWidget(self.copyGridBox, 0, 1)
-        
-        # pass
-        # layout.addWidget(label, 1, 0)
+        layout.addWidget(self.copyGridBox, 1, 2)
         
         self.resourceGridLayout()
-        layout.addWidget(self.resourceGridBox, 2, 0, 1, 2)
+        layout.addWidget(self.resourceGridBox, 2, 2) #, 1, 3)
         
         self.horizontalGroupBox.setLayout(layout)
         self.horizontalGroupBox.setTitle('')
             
+    def emptyGridLayout(self):
+        self.emptyGridBox = QGroupBox("Grid")
+        self.emptyGridBox.setStyleSheet(self.stylestr)
+        layout = QGridLayout()
+
+        self.emptyGridBox.setLayout(layout)
+        self.emptyGridBox.setTitle('')
+        self.emptyGridBox.setSizePolicy(self.sizePolicy)
+    
     def exampleGridLayout(self):
         self.exampleGridBox = QGroupBox("Grid")
+        self.exampleGridBox.setStyleSheet(self.stylestr)
         layout = QGridLayout()
         
         i = 0
         for x in range(self.nrow):
             for y in range(self.ncol):
+                label = QLabel(self)
+                label.setFrameStyle(QFrame.Panel)
+
                 if self.grid[x, y]:
-                    label = QLabel(self)
-                    label.setFrameStyle(QFrame.Panel)
                     image = self.images[i]
                     pixmap = QPixmap.fromImage(image.qimage)
                     label.setPixmap(pixmap)
-                    layout.addWidget(label, x, y)
+                    label.setAlignment(QtCore.Qt.AlignCenter)
                     i += 1
-          
+
+                layout.addWidget(label, x, y)
+
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
         self.exampleGridBox.setSizePolicy(self.sizePolicy)
         
     def copyGridLayout(self):
         self.copyGridBox = QGroupBox("Grid")
+        self.copyGridBox.setStyleSheet(self.stylestr)
         layout = QGridLayout()
                 
         for x in range(self.nrow):
@@ -109,18 +132,31 @@ class Canvas(QWidget):
         
     def resourceGridLayout(self):
         self.resourceGridBox = QGroupBox("Grid")
+        self.resourceGridBox.setStyleSheet(self.stylestr)
         layout = QGridLayout()
         
+        shuffled_images = self.images
+        shuffle(shuffled_images)
+
         i = 0
+        row = 0
+        col = 0
         for x in range(self.nrow):
             for y in range(self.ncol):
                 if self.grid[x, y]:
                     label = QLabel(self)
-                    image = self.images[i]
+                    image = shuffled_images[i]
                     pixmap = QPixmap.fromImage(image.qimage)
                     label.setPixmap(pixmap)
-                    layout.addWidget(label, 0, y)
+                    label.setAlignment(QtCore.Qt.AlignCenter)
+                    
+                    if i % 3 == 0:
+                        row += 1
+                        col = 0
+
+                    layout.addWidget(label, row, col)
                     i += 1
+                    col += 1
           
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')

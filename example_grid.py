@@ -6,7 +6,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
 import numpy as np
-from random import choices
+from random import sample
 
 class Examplegrid():
     # Represents the exaple grid from which participants copy
@@ -24,12 +24,15 @@ def generate_grid(stimuli:list, nrow:int, ncol:int):
     
     else:
         grid = np.zeros([nrow, ncol], dtype=bool)
-        
-        random_x = choices(range(nrow), k=len(stimuli))
-        random_y = choices(range(ncol), k=len(stimuli))
-        
-        for (x, y) in zip(random_x, random_y):
-            grid[x, y] = True
+
+        k = 0
+        while k < len(stimuli):
+            x = sample(range(nrow), k=1)
+            y = sample(range(ncol), 1)
+
+            if grid[x, y] == False:
+                grid[x, y] = True
+                k += 1
         
         return grid
 

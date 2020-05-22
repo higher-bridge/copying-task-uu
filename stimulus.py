@@ -6,7 +6,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
 from PyQt5.QtGui import QImage
-from random import choices
+from random import sample
 import os
 
 class Stimulus():
@@ -30,7 +30,7 @@ def load_stimulus(path:str, image_width:int):
     return Stimulus(image, path)
 
 
-def pick_stimuli(path:str, n:int=None, image_width:int=100, extension:str='.png'):
+def pick_stimuli(path:str, n:int=6, image_width:int=100, extension:str='.png'):
     """"Loads all images with the specified extension from the specified path.
     Returns a list of n randomly picked Stimulus objects"""
     
@@ -42,7 +42,7 @@ def pick_stimuli(path:str, n:int=None, image_width:int=100, extension:str='.png'
         stimuli.append(load_stimulus(p, image_width))
     
     n = len(stimuli) if n is None else n    
-    return choices(stimuli, k=n)
+    return sample(stimuli, k=n)
 
 
 
