@@ -16,7 +16,16 @@ class Examplegrid():
 
 def generate_grid(stimuli:list, nrow:int, ncol:int):
     """Returns an array with grid positions for stimuli. If there are fewer
-    stimuli than locations, random positions are chosen. """
+    stimuli than locations, random positions are chosen.
+
+    Arguments:
+        stimuli {list} -- [description]
+        nrow {int} -- [description]
+        ncol {int} -- [description]
+
+    Returns:
+        np.array([nrow, ncol], dtype=bool) -- [description]
+    """
         
     if nrow * ncol == len(stimuli):
         grid = np.ones([nrow, ncol], dtype=bool)

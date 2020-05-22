@@ -5,11 +5,14 @@ Created on Wed Feb 26 19:10:04 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
-from PyQt5.QtWidgets import QWidget, QLabel, QGroupBox, QGridLayout, QVBoxLayout, QFrame, QSizePolicy
-from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore
-import example_grid
 from random import shuffle
+
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
+                             QSizePolicy, QVBoxLayout, QWidget)
+
+import example_grid
 
 
 class Canvas(QWidget):
@@ -161,8 +164,3 @@ class Canvas(QWidget):
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
         self.resourceGridBox.setSizePolicy(self.sizePolicy)
-
-
-
-
-    

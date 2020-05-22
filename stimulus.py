@@ -31,8 +31,20 @@ def load_stimulus(path:str, image_width:int):
 
 
 def pick_stimuli(path:str, n:int=6, image_width:int=100, extension:str='.png'):
-    """"Loads all images with the specified extension from the specified path.
-    Returns a list of n randomly picked Stimulus objects"""
+    """Loads all images with the specified extension from the specified path.
+    Returns a list of n randomly picked Stimulus objects
+
+    Arguments:
+        path {str} -- [description]
+
+    Keyword Arguments:
+        n {int} -- [description] (default: {6})
+        image_width {int} -- [description] (default: {100})
+        extension {str} -- [description] (default: {'.png'})
+
+    Returns:
+        list -- n randomly picked stimuli
+    """
     
     paths = sorted([os.path.join(path, file) for file in os.listdir(path) \
                     if extension in file])
