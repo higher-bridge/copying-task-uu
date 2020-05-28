@@ -8,11 +8,13 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 from random import shuffle
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
 import example_grid
+from custom_labels import CustomLabel, DraggableLabel
 
 
 class Canvas(QWidget):
@@ -32,7 +34,9 @@ class Canvas(QWidget):
         self.nrow = nrow
         self.ncol = ncol
 
-        self.stylestr = "background-color:rgb(128, 128, 128)"
+        # self.stylestr = "background-color:rgba(255, 255, 255, 0)" # doet niks
+        # self.stylestr = "background-color:rgb(128, 128, 128)" # wordt steeds donkerder
+        self.stylestr = "background-color:transparent"
         
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
@@ -41,27 +45,36 @@ class Canvas(QWidget):
         self.sizePolicy.setHeightForWidth(True)
         
         self.initUI()
+
+        # Should be a custom looped function so we can track time
+        timer = QTimer(self)
+        timer.setInterval(500)
+        timer.timeout.connect(self.showHideExampleGrid)
+        timer.start()
         
+    def showHideExampleGrid(self):
+        if self.exampleGridBox.isVisible():
+            self.exampleGridBox.setVisible(False)
+        else:
+            self.exampleGridBox.setVisible(True)
+    
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.setStyleSheet(self.stylestr)
+        self.setStyleSheet("background-color:rgb(128, 128, 128)")
 
         # Create the example grid
         self.createMasterGrid()
         
         windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
+        windowLayout.addWidget(self.masterGrid)
         self.setLayout(windowLayout)
         
-        # TODO: Create the copy grid
-        # TODO: Create the draggable images
-
         self.show()
         
+        
     def createMasterGrid(self):
-        self.horizontalGroupBox = QGroupBox("Grid")
-        self.horizontalGroupBox.setStyleSheet(self.stylestr)
+        self.masterGrid = QGroupBox("Grid", self)
         layout = QGridLayout()
 
         self.emptyGridLayout()
@@ -80,21 +93,21 @@ class Canvas(QWidget):
         self.resourceGridLayout()
         layout.addWidget(self.resourceGridBox, 2, 2) #, 1, 3)
         
-        self.horizontalGroupBox.setLayout(layout)
-        self.horizontalGroupBox.setTitle('')
+        self.masterGrid.setLayout(layout)
+        self.masterGrid.setTitle('')
+        self.masterGrid.setStyleSheet(self.stylestr)
             
     def emptyGridLayout(self):
-        self.emptyGridBox = QGroupBox("Grid")
-        self.emptyGridBox.setStyleSheet(self.stylestr)
+        self.emptyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
 
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
         self.emptyGridBox.setSizePolicy(self.sizePolicy)
+        self.emptyGridBox.setStyleSheet(self.stylestr)
     
     def exampleGridLayout(self):
-        self.exampleGridBox = QGroupBox("Grid")
-        self.exampleGridBox.setStyleSheet(self.stylestr)
+        self.exampleGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
         
         i = 0
@@ -115,27 +128,28 @@ class Canvas(QWidget):
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
         self.exampleGridBox.setSizePolicy(self.sizePolicy)
+        self.exampleGridBox.setStyleSheet(self.stylestr)
         
     def copyGridLayout(self):
-        self.copyGridBox = QGroupBox("Grid")
-        self.copyGridBox.setStyleSheet(self.stylestr)
+        self.copyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
                 
         for x in range(self.nrow):
             for y in range(self.ncol):
-                label = QLabel(self)
+                label = CustomLabel('', self)
                 label.setFrameStyle(QFrame.Panel)
                 label.resize(self.image_width, self.image_width)
+                label.setAlignment(QtCore.Qt.AlignCenter)
                 layout.addWidget(label, x, y)
         
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
         self.copyGridBox.setSizePolicy(self.sizePolicy)
+        self.copyGridBox.setStyleSheet(self.stylestr)
         
     def resourceGridLayout(self):
-        self.resourceGridBox = QGroupBox("Grid")
-        self.resourceGridBox.setStyleSheet(self.stylestr)
+        self.resourceGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
         
         shuffled_images = self.images
@@ -147,11 +161,13 @@ class Canvas(QWidget):
         for x in range(self.nrow):
             for y in range(self.ncol):
                 if self.grid[x, y]:
-                    label = QLabel(self)
+                    # label = CustomLabel('', self)
                     image = shuffled_images[i]
-                    pixmap = QPixmap.fromImage(image.qimage)
-                    label.setPixmap(pixmap)
+                    label = DraggableLabel(self, image.qimage)
+                    # pixmap = QPixmap.fromImage(image.qimage)
+                    # label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)
+                    # label.setStyleSheet(self.stylestr)
                     
                     if i % 3 == 0:
                         row += 1
@@ -160,7 +176,10 @@ class Canvas(QWidget):
                     layout.addWidget(label, row, col)
                     i += 1
                     col += 1
-          
+        
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
         self.resourceGridBox.setSizePolicy(self.sizePolicy)
+        # self.resourceGridBox.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.resourceGridBox.setStyleSheet(self.stylestr)
+        # self.resourceGridBox.setWindowFlags(QtCore.Qt.FramelessWindowHint)
