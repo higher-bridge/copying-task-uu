@@ -5,8 +5,10 @@ Created on Wed Feb 26 19:10:04 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
+import time
 from random import shuffle
 
+import pandas as pd
 from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap
@@ -20,7 +22,8 @@ from custom_labels import CustomLabel, DraggableLabel
 class Canvas(QWidget):
     # Generates a canvas with a Copygrid and an Examplegrid
     def __init__(self, images:list, image_width:int, nrow:int, ncol:int, 
-                 left:int=10, top:int=10, width:int=640, height:int=480):
+                 left:int=10, top:int=10, width:int=640, height:int=480,
+                 visible_time:int=1000, occluded_time:int=500):
         
         super().__init__()
         self.title = 'Copying task TEST'
@@ -33,6 +36,9 @@ class Canvas(QWidget):
         self.image_width = image_width
         self.nrow = nrow
         self.ncol = ncol
+        
+        self.visible_time = visible_time
+        self.occluded_time = occluded_time
 
         # self.stylestr = "background-color:rgba(255, 255, 255, 0)" # doet niks
         # self.stylestr = "background-color:rgb(128, 128, 128)" # wordt steeds donkerder
@@ -45,11 +51,32 @@ class Canvas(QWidget):
         self.sizePolicy.setHeightForWidth(True)
         
         self.initUI()
+        self.run_timer()
 
-        # Should be a custom looped function so we can track time
+                
+    def update_timer(self):
+        should_update = False
+        now = round(time.time() * 1000)
+        
+        if self.exampleGridBox.isVisible():
+            if now - self.start >= self.visible_time:
+                should_update = True
+        else:
+            if now - self.start >= self.occluded_time:
+                should_update = True
+        
+        if should_update:
+            self.showHideExampleGrid()
+            print(f'Update took {now - self.start}ms')
+            self.start = now
+        
+
+    def run_timer(self):
         timer = QTimer(self)
-        timer.setInterval(500)
-        timer.timeout.connect(self.showHideExampleGrid)
+        timer.setInterval(2)
+        timer.timeout.connect(self.update_timer)
+        
+        self.start = round(time.time() * 1000)
         timer.start()
         
     def showHideExampleGrid(self):
