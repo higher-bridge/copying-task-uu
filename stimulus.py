@@ -24,6 +24,7 @@ def load_stimulus(path:str, image_width:int):
         raise ValueError(f'Image "{path}" has a width of 0.')
         
     image = image.scaledToWidth(image_width)
+    path = path.replace('/Users/mba/copying-task-uu/stimuli/', '')
     
     return Stimulus(image, path)
 

@@ -6,6 +6,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 import time
 from random import shuffle
 
+import numpy as np
 import pandas as pd
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
@@ -22,7 +23,7 @@ class Canvas(QWidget):
     # Generates a canvas with a Copygrid and an Examplegrid
     def __init__(self, images:list, image_width:int, nrow:int, ncol:int, 
                  left:int=10, top:int=10, width:int=640, height:int=480,
-                 visible_time:int=1000, occluded_time:int=500):
+                 visible_time:int=2000, occluded_time:int=100):
         
         super().__init__()
         self.title = 'Copying task TEST'
@@ -50,6 +51,9 @@ class Canvas(QWidget):
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
 
+        self.currentTrial = 1
+        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 'Correct', 'Time', 'Trial'])
+
         self.initUI()
 
     def updateTimer(self):
@@ -65,10 +69,10 @@ class Canvas(QWidget):
         
         if should_update:
             self.showHideExampleGrid()
-            print(f'Update took {round(time.time() * 1000) - self.start}ms')
+            self.checkIfFinished()
+            # print(f'Update took {round(time.time() * 1000) - self.start}ms')
             self.start = now
         
-
     def runTimer(self):
         timer = QTimer(self)
         timer.setInterval(1)
@@ -76,7 +80,22 @@ class Canvas(QWidget):
         
         self.start = round(time.time() * 1000)
         timer.start()
-        
+    
+    def clearScreen(self):
+        for i in reversed(range(self.layout.count())): 
+            self.layout.itemAt(i).widget().setParent(None)
+
+    def checkIfFinished(self):
+        copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
+        allCorrect = np.all(copiedTemp['Correct'].values)
+
+        if allCorrect:
+            print(f'All correct: {allCorrect}')
+            print(copiedTemp)
+            self.currentTrial += 1
+            self.clearScreen()
+            self.initOpeningScreen()
+    
     def showHideExampleGrid(self):
         if self.exampleGridBox.isVisible():
             self.exampleGridBox.setVisible(False)
@@ -92,9 +111,8 @@ class Canvas(QWidget):
                 
                 # Set spacePushed to true and remove all widgets
                 self.spacePushed = True
-                for i in reversed(range(self.layout.count())): 
-                    self.layout.itemAt(i).widget().setParent(None)
-                
+                self.clearScreen()
+
                 # Start the task
                 self.initTask()
                 return True
@@ -112,7 +130,7 @@ class Canvas(QWidget):
     
     def initOpeningScreen(self):
         print('Starting opening')
-        # self.layout = QVBoxLayout()
+        self.spacePushed = False
         self.label = QLabel("Press space to start")
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
@@ -125,7 +143,9 @@ class Canvas(QWidget):
     def initTask(self):
         print('Starting task')
         self.removeEventFilter(self)
-        
+        self.grid = example_grid.generate_grid(self.images, 
+                                               self.nrow, self.ncol)
+
         # Create the example grid
         self.createMasterGrid()
         
@@ -184,6 +204,18 @@ class Canvas(QWidget):
                     pixmap = QPixmap.fromImage(image.qimage)
                     label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)
+
+                    exampleDict = pd.DataFrame({
+                        'x': x,
+                        'y': y,
+                        'Name': '',
+                        'shouldBe': image.name,
+                        'Correct': False,
+                        'Time': None,
+                        'Trial': self.currentTrial
+                    }, index=[0])
+                    self.copiedImages = self.copiedImages.append(exampleDict, ignore_index=True)
+                    
                     i += 1
 
                 layout.addWidget(label, x, y)
@@ -196,15 +228,14 @@ class Canvas(QWidget):
     def copyGridLayout(self):
         self.copyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
-                
+        
         for x in range(self.nrow):
             for y in range(self.ncol):
-                label = CustomLabel('', self)
+                label = CustomLabel('', self, x, y, self.currentTrial)
                 label.setFrameStyle(QFrame.Panel)
                 label.resize(self.image_width, self.image_width)
                 label.setAlignment(QtCore.Qt.AlignCenter)
                 layout.addWidget(label, x, y)
-        
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
@@ -226,7 +257,7 @@ class Canvas(QWidget):
                 if self.grid[x, y]:
                     # label = CustomLabel('', self)
                     image = shuffled_images[i]
-                    label = DraggableLabel(self, image.qimage)
+                    label = DraggableLabel(self, image)
                     # pixmap = QPixmap.fromImage(image.qimage)
                     # label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)

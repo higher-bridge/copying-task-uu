@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QApplication
 from canvas import Canvas
 from stimulus import pick_stimuli
 
-NUM_STIMULI = 6
+NUM_STIMULI = 3
 IMAGE_WIDTH = 50
 ROW_COL_NUM = 3
 
