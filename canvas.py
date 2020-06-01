@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Wed Feb 26 19:10:04 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
@@ -10,6 +8,7 @@ from random import shuffle
 
 import pandas as pd
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
@@ -36,9 +35,13 @@ class Canvas(QWidget):
         self.image_width = image_width
         self.nrow = nrow
         self.ncol = ncol
+
+        self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.sizePolicy.setHeightForWidth(True)
         
         self.visible_time = visible_time
         self.occluded_time = occluded_time
+        self.spacePushed = False
 
         # self.stylestr = "background-color:rgba(255, 255, 255, 0)" # doet niks
         # self.stylestr = "background-color:rgb(128, 128, 128)" # wordt steeds donkerder
@@ -46,15 +49,10 @@ class Canvas(QWidget):
         
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
-        
-        self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        self.sizePolicy.setHeightForWidth(True)
-        
-        self.initUI()
-        self.run_timer()
 
-                
-    def update_timer(self):
+        self.initUI()
+
+    def updateTimer(self):
         should_update = False
         now = round(time.time() * 1000)
         
@@ -67,14 +65,14 @@ class Canvas(QWidget):
         
         if should_update:
             self.showHideExampleGrid()
-            print(f'Update took {now - self.start}ms')
+            print(f'Update took {round(time.time() * 1000) - self.start}ms')
             self.start = now
         
 
-    def run_timer(self):
+    def runTimer(self):
         timer = QTimer(self)
-        timer.setInterval(2)
-        timer.timeout.connect(self.update_timer)
+        timer.setInterval(1)
+        timer.timeout.connect(self.updateTimer)
         
         self.start = round(time.time() * 1000)
         timer.start()
@@ -85,20 +83,58 @@ class Canvas(QWidget):
         else:
             self.exampleGridBox.setVisible(True)
     
+    def eventFilter(self, widget, e):
+        # print('Event filtered')
+        if e.type() == QtCore.QEvent.KeyPress:
+            key = e.key()
+            if key == QtCore.Qt.Key_Space and not self.spacePushed:
+                print('Space')
+                
+                # Set spacePushed to true and remove all widgets
+                self.spacePushed = True
+                for i in reversed(range(self.layout.count())): 
+                    self.layout.itemAt(i).widget().setParent(None)
+                
+                # Start the task
+                self.initTask()
+                return True
+
+        return QWidget.eventFilter(self, widget, e)
+        
     def initUI(self):
+        print('Starting UI')
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
+        self.layout = QVBoxLayout()
 
+        self.initOpeningScreen()
+    
+    def initOpeningScreen(self):
+        print('Starting opening')
+        # self.layout = QVBoxLayout()
+        self.label = QLabel("Press space to start")
+        self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
+        self.installEventFilter(self)
+        
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
+        
+        self.show()
+
+    def initTask(self):
+        print('Starting task')
+        self.removeEventFilter(self)
+        
         # Create the example grid
         self.createMasterGrid()
         
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.masterGrid)
-        self.setLayout(windowLayout)
+        # self.layout = QVBoxLayout()
+        self.layout.addWidget(self.masterGrid)
+        self.setLayout(self.layout)
         
         self.show()
-        
+        self.runTimer()
         
     def createMasterGrid(self):
         self.masterGrid = QGroupBox("Grid", self)

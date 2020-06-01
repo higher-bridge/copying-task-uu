@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Wed Feb 26 19:06:29 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
