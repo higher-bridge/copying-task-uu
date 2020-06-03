@@ -3,9 +3,11 @@ Created on Wed Feb 26 19:06:29 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
-from PyQt5.QtGui import QImage
-from random import sample
 import os
+from random import sample
+
+from PyQt5.QtGui import QImage
+
 
 class Stimulus():
     """Represents a stimulus"""
@@ -29,7 +31,7 @@ def load_stimulus(path:str, image_width:int):
     return Stimulus(image, path)
 
 
-def pick_stimuli(path:str, n:int=6, image_width:int=100, extension:str='.png'):
+def load_stimuli(path:str, image_width:int=100, extension:str='.png'):
     """Loads all images with the specified extension from the specified path.
     Returns a list of n randomly picked Stimulus objects
 
@@ -37,12 +39,11 @@ def pick_stimuli(path:str, n:int=6, image_width:int=100, extension:str='.png'):
         path {str} -- [description]
 
     Keyword Arguments:
-        n {int} -- [description] (default: {6})
         image_width {int} -- [description] (default: {100})
         extension {str} -- [description] (default: {'.png'})
 
     Returns:
-        list -- n randomly picked stimuli
+        list -- n stimuli
     """
     
     paths = sorted([os.path.join(path, file) for file in os.listdir(path) \
@@ -52,15 +53,8 @@ def pick_stimuli(path:str, n:int=6, image_width:int=100, extension:str='.png'):
     for p in paths:
         stimuli.append(load_stimulus(p, image_width))
     
-    n = len(stimuli) if n is None else n    
+    # n = len(stimuli) if n is None else n    
+    return stimuli
+
+def pick_stimuli(stimuli:list, n:int=6):
     return sample(stimuli, k=n)
-
-
-
-
-
-
-
-
-
-

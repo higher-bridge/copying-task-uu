@@ -1,0 +1,4 @@
+,x,y,Name,shouldBe,Correct,Time,dragDuration,dragDistance,Trial
+0,0,1,rnd_shp_3_1.jpg,rnd_shp_3_1.jpg,True,1591176777.059231,1.7488911151885986,81,1
+1,1,1,rnd_shp_1_2.jpg,rnd_shp_1_2.jpg,True,1591176780.556965,1.7247211933135986,86,1
+2,1,2,rnd_shp_2_4.jpg,rnd_shp_2_4.jpg,True,1591176785.994358,4.4859700202941895,84,1

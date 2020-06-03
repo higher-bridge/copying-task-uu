@@ -9,21 +9,21 @@ from random import shuffle
 import numpy as np
 import pandas as pd
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
 import example_grid
+from stimulus import pick_stimuli
 from custom_labels import CustomLabel, DraggableLabel
 
 
 class Canvas(QWidget):
     # Generates a canvas with a Copygrid and an Examplegrid
-    def __init__(self, images:list, image_width:int, nrow:int, ncol:int, 
+    def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int, 
                  left:int=10, top:int=10, width:int=640, height:int=480,
-                 visible_time:int=2000, occluded_time:int=100):
+                 visibleTime:int=2000, occludedTime:int=100):
         
         super().__init__()
         self.title = 'Copying task TEST'
@@ -32,42 +32,43 @@ class Canvas(QWidget):
         self.width = width
         self.height = height
         
-        self.images = images
-        self.image_width = image_width
+        self.nStimuli = nStimuli
+        self.allImages = images        
+        self.imageWidth = imageWidth
         self.nrow = nrow
         self.ncol = ncol
 
         self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.sizePolicy.setHeightForWidth(True)
         
-        self.visible_time = visible_time
-        self.occluded_time = occluded_time
+        self.visibleTime = visibleTime
+        self.occludedTime = occludedTime
         self.spacePushed = False
+
+        self.dragStartTime = None
+        self.dragStartPos = None
 
         # self.stylestr = "background-color:rgba(255, 255, 255, 0)" # doet niks
         # self.stylestr = "background-color:rgb(128, 128, 128)" # wordt steeds donkerder
-        self.stylestr = "background-color:transparent"
-        
-        self.grid = example_grid.generate_grid(self.images, 
-                                               self.nrow, self.ncol)
+        self.styleStr = "background-color:transparent"
 
-        self.currentTrial = 1
-        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 'Correct', 'Time', 'Trial'])
+        self.currentTrial = 0
+        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 'Correct', 'Time', 'dragDuration', 'dragDistance', 'Trial'])
 
         self.initUI()
 
     def updateTimer(self):
-        should_update = False
+        shouldUpdate = False
         now = round(time.time() * 1000)
         
         if self.exampleGridBox.isVisible():
-            if now - self.start >= self.visible_time:
-                should_update = True
+            if now - self.start >= self.visibleTime:
+                shouldUpdate = True
         else:
-            if now - self.start >= self.occluded_time:
-                should_update = True
+            if now - self.start >= self.occludedTime:
+                shouldUpdate = True
         
-        if should_update:
+        if shouldUpdate:
             self.showHideExampleGrid()
             self.checkIfFinished()
             # print(f'Update took {round(time.time() * 1000) - self.start}ms')
@@ -89,10 +90,12 @@ class Canvas(QWidget):
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
-        if allCorrect:
+        if len(copiedTemp) > 0 and allCorrect:
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
-            self.currentTrial += 1
+
+            self.copiedImages.to_csv('results/placements.csv')
+
             self.clearScreen()
             self.initOpeningScreen()
     
@@ -131,6 +134,8 @@ class Canvas(QWidget):
     def initOpeningScreen(self):
         print('Starting opening')
         self.spacePushed = False
+        self.currentTrial += 1
+        
         self.label = QLabel("Press space to start")
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
@@ -143,6 +148,8 @@ class Canvas(QWidget):
     def initTask(self):
         print('Starting task')
         self.removeEventFilter(self)
+        
+        self.images = pick_stimuli(self.allImages, self.nStimuli)
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
 
@@ -178,7 +185,7 @@ class Canvas(QWidget):
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
-        self.masterGrid.setStyleSheet(self.stylestr)
+        self.masterGrid.setStyleSheet(self.styleStr)
             
     def emptyGridLayout(self):
         self.emptyGridBox = QGroupBox("Grid", self)
@@ -187,7 +194,7 @@ class Canvas(QWidget):
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
         self.emptyGridBox.setSizePolicy(self.sizePolicy)
-        self.emptyGridBox.setStyleSheet(self.stylestr)
+        self.emptyGridBox.setStyleSheet(self.styleStr)
     
     def exampleGridLayout(self):
         self.exampleGridBox = QGroupBox("Grid", self)
@@ -212,6 +219,8 @@ class Canvas(QWidget):
                         'shouldBe': image.name,
                         'Correct': False,
                         'Time': None,
+                        'dragDuration': None,
+                        'dragDistance': None,
                         'Trial': self.currentTrial
                     }, index=[0])
                     self.copiedImages = self.copiedImages.append(exampleDict, ignore_index=True)
@@ -223,7 +232,7 @@ class Canvas(QWidget):
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
         self.exampleGridBox.setSizePolicy(self.sizePolicy)
-        self.exampleGridBox.setStyleSheet(self.stylestr)
+        self.exampleGridBox.setStyleSheet(self.styleStr)
         
     def copyGridLayout(self):
         self.copyGridBox = QGroupBox("Grid", self)
@@ -233,21 +242,21 @@ class Canvas(QWidget):
             for y in range(self.ncol):
                 label = CustomLabel('', self, x, y, self.currentTrial)
                 label.setFrameStyle(QFrame.Panel)
-                label.resize(self.image_width, self.image_width)
+                label.resize(self.imageWidth, self.imageWidth)
                 label.setAlignment(QtCore.Qt.AlignCenter)
                 layout.addWidget(label, x, y)
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
         self.copyGridBox.setSizePolicy(self.sizePolicy)
-        self.copyGridBox.setStyleSheet(self.stylestr)
+        self.copyGridBox.setStyleSheet(self.styleStr)
         
     def resourceGridLayout(self):
         self.resourceGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
         
-        shuffled_images = self.images
-        shuffle(shuffled_images)
+        shuffledImages = self.images
+        shuffle(shuffledImages)
 
         i = 0
         row = 0
@@ -255,13 +264,9 @@ class Canvas(QWidget):
         for x in range(self.nrow):
             for y in range(self.ncol):
                 if self.grid[x, y]:
-                    # label = CustomLabel('', self)
-                    image = shuffled_images[i]
+                    image = shuffledImages[i]
                     label = DraggableLabel(self, image)
-                    # pixmap = QPixmap.fromImage(image.qimage)
-                    # label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)
-                    # label.setStyleSheet(self.stylestr)
                     
                     if i % 3 == 0:
                         row += 1
@@ -275,5 +280,5 @@ class Canvas(QWidget):
         self.resourceGridBox.setTitle('')
         self.resourceGridBox.setSizePolicy(self.sizePolicy)
         # self.resourceGridBox.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
-        self.resourceGridBox.setStyleSheet(self.stylestr)
+        self.resourceGridBox.setStyleSheet(self.styleStr)
         # self.resourceGridBox.setWindowFlags(QtCore.Qt.FramelessWindowHint)
