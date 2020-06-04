@@ -78,7 +78,7 @@ class CustomLabel(QLabel):
 
         dragDuration = time.time() - self.parent.dragStartTime
         dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
-        print(f'Moved image {self.containedImage} {dragDistance}px in {dragDuration}s')
+        print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
         
         # Find in which row of the df x/y == self.x/y and trial == self.trial
         rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
@@ -96,4 +96,4 @@ class CustomLabel(QLabel):
         if self.parent.copiedImages['shouldBe'][rowIndex] == self.containedImage:
             self.parent.copiedImages['Correct'][rowIndex] = True
         
-        print(f'Moved {self.containedImage} to ({self.x}, {self.y})')
+        # print(f'Moved {self.containedImage} to ({self.x}, {self.y})')

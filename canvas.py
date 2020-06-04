@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
@@ -22,43 +22,59 @@ from custom_labels import CustomLabel, DraggableLabel
 class Canvas(QWidget):
     # Generates a canvas with a Copygrid and an Examplegrid
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int, 
-                 left:int=10, top:int=10, width:int=640, height:int=480,
+                 left:int=1, top:int=5, width:int=800, height:int=800,
                  visibleTime:int=2000, occludedTime:int=100):
         
         super().__init__()
+        # Set window params
         self.title = 'Copying task TEST'
         self.left = left
         self.top = top
         self.width = width
         self.height = height
+
+        self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.sizePolicy.setHeightForWidth(True)
+        self.styleStr = "background-color:transparent"
         
+        # Set stimuli params
         self.nStimuli = nStimuli
         self.allImages = images        
         self.imageWidth = imageWidth
         self.nrow = nrow
         self.ncol = ncol
-
-        self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        self.sizePolicy.setHeightForWidth(True)
         
+        # Set experiment params
         self.visibleTime = visibleTime
         self.occludedTime = occludedTime
         self.spacePushed = False
 
+        # Set tracking vars
+        self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPos = None
 
-        # self.stylestr = "background-color:rgba(255, 255, 255, 0)" # doet niks
-        # self.stylestr = "background-color:rgb(128, 128, 128)" # wordt steeds donkerder
-        self.styleStr = "background-color:transparent"
-
         self.currentTrial = 0
+
+        # Init tracking dataframes
         self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 'Correct', 'Time', 'dragDuration', 'dragDistance', 'Trial'])
+        self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
         self.initUI()
 
+    def writeCursorPosition(self):
+        e = self.mouse.pos()
+        movementDF = pd.DataFrame({
+            'x': e.x(),
+            'y': e.y(),
+            'Time': time.time()
+        }, index=[0])
+
+        self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
+    
     def updateTimer(self):
         shouldUpdate = False
+        self.writeCursorPosition()
         now = round(time.time() * 1000)
         
         if self.exampleGridBox.isVisible():
@@ -95,6 +111,8 @@ class Canvas(QWidget):
             print(copiedTemp)
 
             self.copiedImages.to_csv('results/placements.csv')
+            self.mouseTracker.to_csv(f'results/tracking-trial{self.currentTrial}.csv')
+            self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
             self.clearScreen()
             self.initOpeningScreen()
@@ -136,7 +154,11 @@ class Canvas(QWidget):
         self.spacePushed = False
         self.currentTrial += 1
         
-        self.label = QLabel("Press space to start")
+        if self.currentTrial > 1:
+            self.label = QLabel("End of trial. Press space to continue")
+        else:
+            self.label = QLabel("Press space to start")
+        
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
         
@@ -193,7 +215,7 @@ class Canvas(QWidget):
 
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
-        self.emptyGridBox.setSizePolicy(self.sizePolicy)
+        # self.emptyGridBox.setSizePolicy(self.sizePolicy)
         self.emptyGridBox.setStyleSheet(self.styleStr)
     
     def exampleGridLayout(self):
@@ -211,6 +233,7 @@ class Canvas(QWidget):
                     pixmap = QPixmap.fromImage(image.qimage)
                     label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)
+                    label.setSizePolicy(self.sizePolicy)
 
                     exampleDict = pd.DataFrame({
                         'x': x,
@@ -231,7 +254,7 @@ class Canvas(QWidget):
 
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
-        self.exampleGridBox.setSizePolicy(self.sizePolicy)
+        # self.exampleGridBox.setSizePolicy(self.sizePolicy)
         self.exampleGridBox.setStyleSheet(self.styleStr)
         
     def copyGridLayout(self):
@@ -244,11 +267,12 @@ class Canvas(QWidget):
                 label.setFrameStyle(QFrame.Panel)
                 label.resize(self.imageWidth, self.imageWidth)
                 label.setAlignment(QtCore.Qt.AlignCenter)
+                label.setSizePolicy(self.sizePolicy)
                 layout.addWidget(label, x, y)
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
-        self.copyGridBox.setSizePolicy(self.sizePolicy)
+        # self.copyGridBox.setSizePolicy(self.sizePolicy)
         self.copyGridBox.setStyleSheet(self.styleStr)
         
     def resourceGridLayout(self):
@@ -267,6 +291,7 @@ class Canvas(QWidget):
                     image = shuffledImages[i]
                     label = DraggableLabel(self, image)
                     label.setAlignment(QtCore.Qt.AlignCenter)
+                    label.setSizePolicy(self.sizePolicy)
                     
                     if i % 3 == 0:
                         row += 1
@@ -278,7 +303,7 @@ class Canvas(QWidget):
         
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
-        self.resourceGridBox.setSizePolicy(self.sizePolicy)
+        # self.resourceGridBox.setSizePolicy(self.sizePolicy)
         # self.resourceGridBox.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.resourceGridBox.setStyleSheet(self.styleStr)
         # self.resourceGridBox.setWindowFlags(QtCore.Qt.FramelessWindowHint)
