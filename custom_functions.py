@@ -13,9 +13,35 @@ from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 
 
+def customTimer(parent, now):
+    """Implement your own custom timer. Integrate with eyetracker if necessary.
+
+    Args:
+        parent: Receives all properties from Canvas
+        now (int): Receives the current time in milliseconds
+
+    Returns:
+        bool: Return whether to update. Returning True inverts the current occlusion settings
+    """
+    
+    ### EXAMPLE CODE ###
+    shouldUpdate = False
+    
+    # If example grid is visible and visible time expires, update
+    if parent.exampleGridBox.isVisible():
+        if now - parent.start >= parent.visibleTime:
+            shouldUpdate = True
+            
+    # If example grid is occluded and occlusion time expires, update
+    else:
+        if now - parent.start >= parent.occludedTime:
+            shouldUpdate = True
+    
+    return shouldUpdate
+
 class DraggableLabel(QLabel):
     
-    def __init__(self,parent,image):
+    def __init__(self, parent, image):
         super(QLabel,self).__init__(parent)
         
         self.parent = parent

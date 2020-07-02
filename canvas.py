@@ -16,14 +16,14 @@ from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
 
 import example_grid
 from stimulus import pick_stimuli
-from custom_labels import CustomLabel, DraggableLabel
+from custom_functions import customTimer, CustomLabel, DraggableLabel
 
 
 class Canvas(QWidget):
     # Generates a canvas with a Copygrid and an Examplegrid
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int, 
-                 left:int=1, top:int=5, width:int=800, height:int=800,
-                 visibleTime:int=2000, occludedTime:int=100):
+                 left:int=1, top:int=5, width:int=800, height:int=800, 
+                 useCustomTimer:bool=False, visibleTime:int=1000, occludedTime:int=200):
         
         super().__init__()
         # Set window params
@@ -45,6 +45,7 @@ class Canvas(QWidget):
         self.ncol = ncol
         
         # Set experiment params
+        self.useCustomTimer = useCustomTimer
         self.visibleTime = visibleTime
         self.occludedTime = occludedTime
         self.spacePushed = False
@@ -73,16 +74,20 @@ class Canvas(QWidget):
         self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
     
     def updateTimer(self):
-        shouldUpdate = False
         self.writeCursorPosition()
         now = round(time.time() * 1000)
         
-        if self.exampleGridBox.isVisible():
-            if now - self.start >= self.visibleTime:
-                shouldUpdate = True
+        if self.useCustomTimer:
+            shouldUpdate = customTimer(self, now)
         else:
-            if now - self.start >= self.occludedTime:
-                shouldUpdate = True
+            shouldUpdate = False
+            
+            if self.exampleGridBox.isVisible():
+                if now - self.start >= self.visibleTime:
+                    shouldUpdate = True
+            else:
+                if now - self.start >= self.occludedTime:
+                    shouldUpdate = True
         
         if shouldUpdate:
             self.showHideExampleGrid()
