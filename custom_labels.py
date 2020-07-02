@@ -71,29 +71,33 @@ class CustomLabel(QLabel):
             e.ignore()
     
     def dropEvent(self, e):
-        self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
-        
-        # Retrieve the image name
-        self.containedImage = e.mimeData().text()
+        try:
+            # Find in which row of the df x/y == self.x/y and trial == self.trial
+            rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
+                        (self.parent.copiedImages['y'] == self.y) &\
+                        (self.parent.copiedImages['Trial'] == self.trial))
+            rowIndex = rowIndex[0][-1]
 
-        dragDuration = time.time() - self.parent.dragStartTime
-        dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
-        print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
-        
-        # Find in which row of the df x/y == self.x/y and trial == self.trial
-        rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
-            (self.parent.copiedImages['y'] == self.y) &\
-                (self.parent.copiedImages['Trial'] == self.trial))
-        
-        rowIndex = rowIndex[0][-1]
+            # Set new pixmap in this position if position is valid
+            self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
 
-        # Fill copiedImages dataframe
-        self.parent.copiedImages['Name'][rowIndex] = self.containedImage
-        self.parent.copiedImages['Time'][rowIndex] = time.time()
-        self.parent.copiedImages['dragDuration'][rowIndex] = dragDuration
-        self.parent.copiedImages['dragDistance'][rowIndex] = dragDistance
+            # Retrieve the image name
+            self.containedImage = e.mimeData().text()
+
+            # Retrieve drag characteristics
+            dragDuration = time.time() - self.parent.dragStartTime
+            dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
+            print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
+
+            # Fill copiedImages dataframe
+            self.parent.copiedImages['Name'][rowIndex] = self.containedImage
+            self.parent.copiedImages['Time'][rowIndex] = time.time()
+            self.parent.copiedImages['dragDuration'][rowIndex] = dragDuration
+            self.parent.copiedImages['dragDistance'][rowIndex] = dragDistance
+            
+            # If image matches 'shouldBe', set 'Correct' to True
+            if self.parent.copiedImages['shouldBe'][rowIndex] == self.containedImage:
+                self.parent.copiedImages['Correct'][rowIndex] = True
         
-        if self.parent.copiedImages['shouldBe'][rowIndex] == self.containedImage:
-            self.parent.copiedImages['Correct'][rowIndex] = True
-        
-        # print(f'Moved {self.containedImage} to ({self.x}, {self.y})')
+        except:
+            print(f'Item could not be placed in ({self.x}, {self.y})')

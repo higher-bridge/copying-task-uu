@@ -128,7 +128,7 @@ class Canvas(QWidget):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
-                print('Space')
+                # print('Space')
                 
                 # Set spacePushed to true and remove all widgets
                 self.spacePushed = True
@@ -141,7 +141,7 @@ class Canvas(QWidget):
         return QWidget.eventFilter(self, widget, e)
         
     def initUI(self):
-        print('Starting UI')
+        # print('Starting UI')
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
@@ -150,7 +150,7 @@ class Canvas(QWidget):
         self.initOpeningScreen()
     
     def initOpeningScreen(self):
-        print('Starting opening')
+        # print('Starting opening')
         self.spacePushed = False
         self.currentTrial += 1
         
@@ -168,7 +168,7 @@ class Canvas(QWidget):
         self.show()
 
     def initTask(self):
-        print('Starting task')
+        # print('Starting task')
         self.removeEventFilter(self)
         
         self.images = pick_stimuli(self.allImages, self.nStimuli)
