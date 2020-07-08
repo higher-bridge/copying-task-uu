@@ -1,0 +1,4 @@
+,x,y,Name,shouldBe,Correct,Time,dragDuration,dragDistance,Trial
+0,0,0,/Users/alexos/copying-task-uu/stimuli/rnd_shp_3_1.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_3_1.jpg,True,1594206531.753792,1.093635082244873,81,1
+1,0,2,/Users/alexos/copying-task-uu/stimuli/rnd_shp_4_1.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_4_1.jpg,True,1594206534.357273,0.8672990798950195,92,1
+2,2,1,/Users/alexos/copying-task-uu/stimuli/rnd_shp_2_4.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_2_4.jpg,True,1594206536.50738,0.9086940288543701,90,1

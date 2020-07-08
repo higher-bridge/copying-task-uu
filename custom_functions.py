@@ -17,7 +17,7 @@ def customTimer(parent, now):
     """Implement your own custom timer. Integrate with eyetracker if necessary.
 
     Args:
-        parent: Receives all properties from Canvas
+        parent: Receives all class variables from Canvas
         now (int): Receives the current time in milliseconds
 
     Returns:

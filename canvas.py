@@ -115,8 +115,8 @@ class Canvas(QWidget):
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
-            self.copiedImages.to_csv('results/placements.csv')
-            self.mouseTracker.to_csv(f'results/tracking-trial{self.currentTrial}.csv')
+            self.copiedImages.to_csv('results/stimulusPlacements.csv')
+            self.mouseTracker.to_csv(f'results/mouseTracking-trial{self.currentTrial}.csv')
             self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
             self.clearScreen()
