@@ -1,4 +1,10 @@
 ,x,y,Name,shouldBe,Correct,Time,dragDuration,dragDistance,Trial
-0,0,0,/Users/alexos/copying-task-uu/stimuli/rnd_shp_3_1.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_3_1.jpg,True,1594206531.753792,1.093635082244873,81,1
-1,0,2,/Users/alexos/copying-task-uu/stimuli/rnd_shp_4_1.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_4_1.jpg,True,1594206534.357273,0.8672990798950195,92,1
-2,2,1,/Users/alexos/copying-task-uu/stimuli/rnd_shp_2_4.jpg,/Users/alexos/copying-task-uu/stimuli/rnd_shp_2_4.jpg,True,1594206536.50738,0.9086940288543701,90,1
+0,0,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_4.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_4.png,True,1594989408.8390331,1.5484302043914795,213,1
+1,1,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_1_1.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_1_1.png,True,1594989403.4279082,0.8027479648590088,192,1
+2,1,2,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_1.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_1.png,True,1594989406.48587,1.064964771270752,273,1
+3,1,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_1.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_1.png,True,1594989453.3528042,0.9180943965911865,217,2
+4,1,2,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_5_3.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_5_3.png,True,1594989441.5237732,0.957871675491333,252,2
+5,2,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_4.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_4.png,True,1594989455.4857442,0.7897093296051025,205,2
+6,1,0,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_3_3.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_3_3.png,True,1594989469.1356575,0.9048283100128174,219,3
+7,1,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_2.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_2_2.png,True,1594989470.8992841,0.8487944602966309,213,3
+8,2,1,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_2.png,C:\Users\Alex\Documents\copying-task-uu\stimuli\PNG_rnd_shp_4_2.png,True,1594989472.9791663,1.0339405536651611,218,3

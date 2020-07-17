@@ -8,19 +8,32 @@ import os
 import sys
 
 from PyQt5.QtWidgets import QApplication
+from pathlib import Path
 
 from canvas import Canvas
 from stimulus import load_stimuli
 
 NUM_STIMULI = 3
-IMAGE_WIDTH = 50
+IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
+
+NUM_TRIALS = 2
+CONDITIONS = [(4000, 0),
+              (3000, 1000),
+              (2000, 2000),
+              (1000, 3000)]
+CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
 
 
 if __name__ == '__main__':
-    path = f'{os.getcwd()}/stimuli/'
-    images = load_stimuli(path, IMAGE_WIDTH, extension='.jpg')
+    path = Path(f'{os.getcwd()}/stimuli/')
+    images = load_stimuli(path, IMAGE_WIDTH, extension='.png')
         
-    app = QApplication(sys.argv)
-    ex = Canvas(images, NUM_STIMULI, IMAGE_WIDTH, ROW_COL_NUM, ROW_COL_NUM, width=800, height=800)
+    app = QApplication(sys.argv)    
+
+    ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
+                nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
+                conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
+                nTrials=NUM_TRIALS, useCustomTimer=False)
+    
     sys.exit(app.exec_())

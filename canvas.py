@@ -8,6 +8,7 @@ from random import shuffle
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap, QCursor
@@ -20,10 +21,10 @@ from custom_functions import customTimer, CustomLabel, DraggableLabel
 
 
 class Canvas(QWidget):
-    # Generates a canvas with a Copygrid and an Examplegrid
-    def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int, 
-                 left:int=1, top:int=5, width:int=800, height:int=800, 
-                 useCustomTimer:bool=False, visibleTime:int=1000, occludedTime:int=200):
+    def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
+                 conditions:list, conditionOrder:list, nTrials:int, 
+                 useCustomTimer:bool=False, 
+                 left:int=50, top:int=50, width:int=1920, height:int=1920):
         
         super().__init__()
         # Set window params
@@ -45,24 +46,39 @@ class Canvas(QWidget):
         self.ncol = ncol
         
         # Set experiment params
+        self.nTrials = nTrials
+        self.conditions = conditions
+        self.nConditions = len(conditions)
+        self.conditionOrder = conditionOrder
+        
+        self.currentTrial = 0
+        self.conditionOrderIndex = 0
+        self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
+
         self.useCustomTimer = useCustomTimer
-        self.visibleTime = visibleTime
-        self.occludedTime = occludedTime
+        self.visibleTime = 1000
+        self.occludedTime = 0
         self.spacePushed = False
 
         # Set tracking vars
         self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPos = None
-
-        self.currentTrial = 0
-
+        
         # Init tracking dataframes
-        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 'Correct', 'Time', 'dragDuration', 'dragDistance', 'Trial'])
+        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
+                                                  'Correct', 'Time', 
+                                                  'dragDuration', 'dragDistance', 
+                                                  'Trial', 'Condition'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
+
+        self.inOpeningScreen = False
 
         self.initUI()
 
+    # =============================================================================
+    # TRACKING FUNCTIONS    
+    # =============================================================================
     def writeCursorPosition(self):
         e = self.mouse.pos()
         movementDF = pd.DataFrame({
@@ -74,14 +90,17 @@ class Canvas(QWidget):
         self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
     
     def updateTimer(self):
+        # if self.inOpeningScreen:
+        #     return
+        
         self.writeCursorPosition()
         now = round(time.time() * 1000)
         
+        shouldUpdate = False
+        
         if self.useCustomTimer:
             shouldUpdate = customTimer(self, now)
-        else:
-            shouldUpdate = False
-            
+        else:            
             if self.exampleGridBox.isVisible():
                 if now - self.start >= self.visibleTime:
                     shouldUpdate = True
@@ -91,9 +110,10 @@ class Canvas(QWidget):
         
         if shouldUpdate:
             self.showHideExampleGrid()
-            self.checkIfFinished()
             # print(f'Update took {round(time.time() * 1000) - self.start}ms')
             self.start = now
+            
+            self.checkIfFinished()
         
     def runTimer(self):
         timer = QTimer(self)
@@ -102,21 +122,18 @@ class Canvas(QWidget):
         
         self.start = round(time.time() * 1000)
         timer.start()
-    
-    def clearScreen(self):
-        for i in reversed(range(self.layout.count())): 
-            self.layout.itemAt(i).widget().setParent(None)
 
     def checkIfFinished(self):
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
+        copiedTemp = self.copiedTem.loc[self.copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         if len(copiedTemp) > 0 and allCorrect:
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
-            self.copiedImages.to_csv('results/stimulusPlacements.csv')
-            self.mouseTracker.to_csv(f'results/mouseTracking-trial{self.currentTrial}.csv')
+            self.copiedImages.to_csv(Path('results/stimulusPlacements.csv'))
+            self.mouseTracker.to_csv(Path(f'results/mouseTracking-trial{self.currentTrial}-condition{self.currentConditionIndex}.csv'))
             self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
             self.clearScreen()
@@ -144,18 +161,51 @@ class Canvas(QWidget):
                 return True
 
         return QWidget.eventFilter(self, widget, e)
+
+    def setConditionTiming(self):
+        # Try to retrieve a new condition. If index out of range (IndexError), conditions are exhausted
+        try:
+            # conditionOrderIndex to retrieve a condition number from conditionOrder
+            self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
+            
+            # Use the condition number retrieved from conditionOrder to retrieve the actual condition to use
+            self.visibleTime = self.conditions[self.currentConditionIndex][0]
+            self.occludedTime = self.conditions[self.currentConditionIndex][1]
+            
+            print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
+            
+        except IndexError: 
+            pass
+            #TODO: implement breaking out of the program
         
+    # =============================================================================
+    #     INITIALIZATION OF SCREENS
+    # =============================================================================
+    def clearScreen(self):
+        for i in reversed(range(self.layout.count())): 
+            self.layout.itemAt(i).widget().setParent(None)
+    
     def initUI(self):
         # print('Starting UI')
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
         self.layout = QVBoxLayout()
+        self.setConditionTiming()
 
         self.initOpeningScreen()
     
     def initOpeningScreen(self):
         # print('Starting opening')
+        self.inOpeningScreen = True
+        
+        # If all trials are done, increment condition counter and 
+        # reset trial counter to 0
+        if self.currentTrial > self.nTrials:
+            self.conditionOrderIndex += 1
+            self.currentTrial = 0
+            self.setConditionTiming()
+        
         self.spacePushed = False
         self.currentTrial += 1
         
@@ -171,6 +221,7 @@ class Canvas(QWidget):
         self.setLayout(self.layout)
         
         self.show()
+        self.inOpeningScreen = False
 
     def initTask(self):
         # print('Starting task')
@@ -190,6 +241,9 @@ class Canvas(QWidget):
         self.show()
         self.runTimer()
         
+    # =============================================================================
+    #    GENERATE GRIDS     
+    # =============================================================================
     def createMasterGrid(self):
         self.masterGrid = QGroupBox("Grid", self)
         layout = QGridLayout()
@@ -212,7 +266,7 @@ class Canvas(QWidget):
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
-        self.masterGrid.setStyleSheet(self.styleStr)
+        self.masterGrid.setStyleSheet(self.styleStr)# + "; border:0px")
             
     def emptyGridLayout(self):
         self.emptyGridBox = QGroupBox("Grid", self)
@@ -221,7 +275,7 @@ class Canvas(QWidget):
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
         # self.emptyGridBox.setSizePolicy(self.sizePolicy)
-        self.emptyGridBox.setStyleSheet(self.styleStr)
+        self.emptyGridBox.setStyleSheet(self.styleStr + "; border:0px")
     
     def exampleGridLayout(self):
         self.exampleGridBox = QGroupBox("Grid", self)
@@ -249,7 +303,8 @@ class Canvas(QWidget):
                         'Time': None,
                         'dragDuration': None,
                         'dragDistance': None,
-                        'Trial': self.currentTrial
+                        'Trial': self.currentTrial,
+                        'Condition': self.currentConditionIndex
                     }, index=[0])
                     self.copiedImages = self.copiedImages.append(exampleDict, ignore_index=True)
                     

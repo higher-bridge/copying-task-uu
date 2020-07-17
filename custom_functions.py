@@ -78,13 +78,14 @@ class DraggableLabel(QLabel):
 
 class CustomLabel(QLabel):
     
-    def __init__(self, title, parent, x, y, trial):
+    def __init__(self, title, parent, x, y, trial, condition):
         super().__init__(title, parent)
 
         self.x, self.y = x, y
         self.containedImage = None
         self.parent = parent
         self.trial = trial
+        self.condition = condition
 
         self.setAcceptDrops(True)
 
@@ -101,7 +102,8 @@ class CustomLabel(QLabel):
             # Find in which row of the df x/y == self.x/y and trial == self.trial
             rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
                         (self.parent.copiedImages['y'] == self.y) &\
-                        (self.parent.copiedImages['Trial'] == self.trial))
+                        (self.parent.copiedImages['Trial'] == self.trial) &\
+                        (self.parent.copiedImages['Condition']) == self.condition)
             rowIndex = rowIndex[0][-1]
 
             # Set new pixmap in this position if position is valid
