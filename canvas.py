@@ -36,6 +36,7 @@ class Canvas(QWidget):
 
         self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.sizePolicy.setHeightForWidth(True)
+        self.setSizePolicy(self.sizePolicy)
         self.styleStr = "background-color:transparent"
         
         # Set stimuli params
@@ -125,7 +126,7 @@ class Canvas(QWidget):
 
     def checkIfFinished(self):
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
-        copiedTemp = self.copiedTem.loc[self.copiedTemp['Condition'] == self.currentConditionIndex]
+        copiedTemp = self.copiedTemp.loc[self.copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         if len(copiedTemp) > 0 and allCorrect:
@@ -274,7 +275,7 @@ class Canvas(QWidget):
 
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
-        # self.emptyGridBox.setSizePolicy(self.sizePolicy)
+        self.emptyGridBox.setSizePolicy(self.sizePolicy)
         self.emptyGridBox.setStyleSheet(self.styleStr + "; border:0px")
     
     def exampleGridLayout(self):
@@ -290,7 +291,7 @@ class Canvas(QWidget):
                 if self.grid[x, y]:
                     image = self.images[i]
                     pixmap = QPixmap.fromImage(image.qimage)
-                    label.setPixmap(pixmap)
+                    label.setPixmap(pixmap) 
                     label.setAlignment(QtCore.Qt.AlignCenter)
                     label.setSizePolicy(self.sizePolicy)
 
@@ -314,7 +315,7 @@ class Canvas(QWidget):
 
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
-        # self.exampleGridBox.setSizePolicy(self.sizePolicy)
+        self.exampleGridBox.setSizePolicy(self.sizePolicy)
         self.exampleGridBox.setStyleSheet(self.styleStr)
         
     def copyGridLayout(self):
@@ -323,7 +324,7 @@ class Canvas(QWidget):
         
         for x in range(self.nrow):
             for y in range(self.ncol):
-                label = CustomLabel('', self, x, y, self.currentTrial)
+                label = CustomLabel('', self, x, y, self.currentTrial, self.currentConditionIndex)
                 label.setFrameStyle(QFrame.Panel)
                 label.resize(self.imageWidth, self.imageWidth)
                 label.setAlignment(QtCore.Qt.AlignCenter)
@@ -363,7 +364,7 @@ class Canvas(QWidget):
         
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
-        # self.resourceGridBox.setSizePolicy(self.sizePolicy)
+        self.resourceGridBox.setSizePolicy(self.sizePolicy)
         # self.resourceGridBox.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.resourceGridBox.setStyleSheet(self.styleStr)
         # self.resourceGridBox.setWindowFlags(QtCore.Qt.FramelessWindowHint)
