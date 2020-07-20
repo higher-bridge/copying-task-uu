@@ -6,12 +6,6 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 import numpy as np
 from random import sample
 
-class Examplegrid():
-    # Represents the exaple grid from which participants copy
-    def __init__(self, nrow:int, ncol:int):
-        self.nrow = nrow
-        self.ncol = ncol
-
 def generate_grid(stimuli:list, nrow:int, ncol:int):
     """Returns an array with grid positions for stimuli. If there are fewer
     stimuli than locations, random positions are chosen.

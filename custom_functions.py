@@ -7,8 +7,8 @@ import time
 
 import numpy as np
 import pandas as pd
-from PyQt5 import QtCore
-from PyQt5.QtCore import QMimeData, Qt, QByteArray
+# from PyQt5 import QtCore
+from PyQt5.QtCore import QMimeData, Qt
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 

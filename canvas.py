@@ -248,7 +248,7 @@ class Canvas(QWidget):
         self.masterGrid = QGroupBox("Grid", self)
         layout = QGridLayout()
         
-        ### TEST ###
+        
         masterGridRows = 3
         masterGridCols = 6
         gridLocs = [(1, 1), (1,4), (2, 4)]
@@ -268,23 +268,6 @@ class Canvas(QWidget):
         
         self.resourceGridLayout()
         layout.addWidget(self.resourceGridBox, gridLocs[2][0], gridLocs[2][1])
-        ### END TEST ###
-
-        # self.emptyGridLayout()
-        # layout.addWidget(self.emptyGridBox, 0, 0)
-        # layout.addWidget(self.emptyGridBox, 0, 1)
-        # layout.addWidget(self.emptyGridBox, 0, 2)
-        
-        # self.exampleGridLayout()
-        # layout.addWidget(self.exampleGridBox, 1, 0)
-
-        # layout.addWidget(self.emptyGridBox, 1, 1)
-        
-        # self.copyGridLayout()
-        # layout.addWidget(self.copyGridBox, 1, 2)
-        
-        # self.resourceGridLayout()
-        # layout.addWidget(self.resourceGridBox, 2, 2) #, 1, 3)
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
