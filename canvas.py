@@ -24,15 +24,15 @@ class Canvas(QWidget):
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, 
-                 left:int=50, top:int=50, width:int=1920, height:int=1920):
+                 left:int=50, top:int=50, width:int=1920, height:int=1080):
         
         super().__init__()
         # Set window params
         self.title = 'Copying task TEST'
         self.left = left
         self.top = top
-        self.width = width
-        self.height = height
+        self.width = width * 1.5
+        self.height = height * 1.5
 
         self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.sizePolicy.setHeightForWidth(True)
@@ -126,7 +126,7 @@ class Canvas(QWidget):
 
     def checkIfFinished(self):
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
-        copiedTemp = self.copiedTemp.loc[self.copiedTemp['Condition'] == self.currentConditionIndex]
+        copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         if len(copiedTemp) > 0 and allCorrect:
@@ -235,7 +235,6 @@ class Canvas(QWidget):
         # Create the example grid
         self.createMasterGrid()
         
-        # self.layout = QVBoxLayout()
         self.layout.addWidget(self.masterGrid)
         self.setLayout(self.layout)
         
@@ -248,22 +247,44 @@ class Canvas(QWidget):
     def createMasterGrid(self):
         self.masterGrid = QGroupBox("Grid", self)
         layout = QGridLayout()
-
-        self.emptyGridLayout()
-        layout.addWidget(self.emptyGridBox, 0, 0)
-        layout.addWidget(self.emptyGridBox, 0, 1)
-        layout.addWidget(self.emptyGridBox, 0, 2)
         
-        self.exampleGridLayout()
-        layout.addWidget(self.exampleGridBox, 1, 0)
+        ### TEST ###
+        masterGridRows = 3
+        masterGridCols = 6
+        gridLocs = [(1, 1), (1,4), (2, 4)]
+        
+        self.emptyGridLayout()
+        for row in range(masterGridRows):
+            for col in range(masterGridCols):
+                if (row, col) not in gridLocs:
+                    print(f'Adding widget in ({row}, {col})')
+                    layout.addWidget(self.emptyGridBox, row, col)
 
-        layout.addWidget(self.emptyGridBox, 1, 1)
+        self.exampleGridLayout()
+        layout.addWidget(self.exampleGridBox, gridLocs[0][0], gridLocs[0][1])
         
         self.copyGridLayout()
-        layout.addWidget(self.copyGridBox, 1, 2)
+        layout.addWidget(self.copyGridBox, gridLocs[1][0], gridLocs[1][1])
         
         self.resourceGridLayout()
-        layout.addWidget(self.resourceGridBox, 2, 2) #, 1, 3)
+        layout.addWidget(self.resourceGridBox, gridLocs[2][0], gridLocs[2][1])
+        ### END TEST ###
+
+        # self.emptyGridLayout()
+        # layout.addWidget(self.emptyGridBox, 0, 0)
+        # layout.addWidget(self.emptyGridBox, 0, 1)
+        # layout.addWidget(self.emptyGridBox, 0, 2)
+        
+        # self.exampleGridLayout()
+        # layout.addWidget(self.exampleGridBox, 1, 0)
+
+        # layout.addWidget(self.emptyGridBox, 1, 1)
+        
+        # self.copyGridLayout()
+        # layout.addWidget(self.copyGridBox, 1, 2)
+        
+        # self.resourceGridLayout()
+        # layout.addWidget(self.resourceGridBox, 2, 2) #, 1, 3)
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
@@ -275,7 +296,7 @@ class Canvas(QWidget):
 
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
-        self.emptyGridBox.setSizePolicy(self.sizePolicy)
+        # self.emptyGridBox.setSizePolicy(self.sizePolicy)
         self.emptyGridBox.setStyleSheet(self.styleStr + "; border:0px")
     
     def exampleGridLayout(self):

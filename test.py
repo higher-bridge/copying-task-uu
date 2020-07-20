@@ -13,7 +13,7 @@ from pathlib import Path
 from canvas import Canvas
 from stimulus import load_stimuli
 
-NUM_STIMULI = 3
+NUM_STIMULI = 4
 IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
 
