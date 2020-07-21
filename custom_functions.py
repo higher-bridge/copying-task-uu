@@ -115,7 +115,7 @@ class CustomLabel(QLabel):
             # Retrieve drag characteristics
             dragDuration = time.time() - self.parent.dragStartTime
             dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
-            print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
+            # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
             # Fill copiedImages dataframe
             self.parent.copiedImages['Name'][rowIndex] = self.containedImage

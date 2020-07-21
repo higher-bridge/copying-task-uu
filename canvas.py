@@ -4,7 +4,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
 import time
-from random import shuffle
+from random import shuffle, gauss
 
 import numpy as np
 import pandas as pd
@@ -23,7 +23,7 @@ from custom_functions import customTimer, CustomLabel, DraggableLabel
 class Canvas(QWidget):
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
                  conditions:list, conditionOrder:list, nTrials:int, 
-                 useCustomTimer:bool=False, 
+                 useCustomTimer:bool=False, addNoise=True,
                  left:int=50, top:int=50, width:int=1920, height:int=1080):
         
         super().__init__()
@@ -59,6 +59,7 @@ class Canvas(QWidget):
         self.useCustomTimer = useCustomTimer
         self.visibleTime = 1000
         self.occludedTime = 0
+        self.addNoise = addNoise
         self.spacePushed = False
 
         # Set tracking vars
@@ -71,7 +72,7 @@ class Canvas(QWidget):
         self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
                                                   'Correct', 'Time', 
                                                   'dragDuration', 'dragDistance', 
-                                                  'Trial', 'Condition'])
+                                                  'Trial', 'Condition', 'visibleTime'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
         self.inOpeningScreen = True
@@ -94,7 +95,6 @@ class Canvas(QWidget):
     def updateTimer(self):
         # print(self.inOpeningScreen)
         if self.inOpeningScreen:
-          print('In opening')
           return
         
         self.writeCursorPosition()
@@ -175,20 +175,38 @@ class Canvas(QWidget):
         return QWidget.eventFilter(self, widget, e)
 
     def setConditionTiming(self):
-        # Try to retrieve a new condition. If index out of range (IndexError), conditions are exhausted
+        # Try to retrieve condition timing. If index out of range (IndexError), conditions are exhausted.
+        # visibleTime and occludedTime are pulled from conditions, and assigned to class after mutation has been done
         try:
-            # conditionOrderIndex to retrieve a condition number from conditionOrder
-            self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
-            
-            # Use the condition number retrieved from conditionOrder to retrieve the actual condition to use
-            self.visibleTime = self.conditions[self.currentConditionIndex][0]
-            self.occludedTime = self.conditions[self.currentConditionIndex][1]
-            
-            print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
-            
-        except IndexError: 
+            visibleTime, occludedTime = self.getConditionTiming()
+        except IndexError:
             pass
-            #TODO: implement breaking out of the program
+            #TODO implement breaking out of the program
+        
+        if self.addNoise:
+            if occludedTime != 0:
+                sumDuration = visibleTime + occludedTime
+
+                # Generating a noise and its invert keeps the sum duration the same as without permutation
+                noise = gauss(mu=1.0, sigma=0.05)
+                
+                self.visibleTime = int(self.visibleTime * noise)
+                self.occludedTime = sumDuration - self.visibleTime
+        else:
+            self.visibleTime = visibleTime
+            self.occludedTime = occludedTime
+        
+        print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
+    
+    def getConditionTiming(self):
+        # conditionOrderIndex to retrieve a condition number from conditionOrder
+        self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
+        
+        # Use the condition number retrieved from conditionOrder to retrieve the actual condition to use
+        visibleTime = self.conditions[self.currentConditionIndex][0]
+        occludedTime = self.conditions[self.currentConditionIndex][1]
+
+        return visibleTime, occludedTime
         
     # =============================================================================
     #     INITIALIZATION OF SCREENS
@@ -203,7 +221,6 @@ class Canvas(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
         self.layout = QVBoxLayout()
-        self.setConditionTiming()
 
         self.initOpeningScreen()
     
@@ -217,7 +234,6 @@ class Canvas(QWidget):
         if self.currentTrial >= self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 0
-            self.setConditionTiming()
         
         self.spacePushed = False
         self.currentTrial += 1
@@ -242,6 +258,7 @@ class Canvas(QWidget):
         self.images = pick_stimuli(self.allImages, self.nStimuli)
         self.grid = example_grid.generate_grid(self.images, 
                                                self.nrow, self.ncol)
+        self.setConditionTiming() # Set slightly different timing for each trial
 
         # Create the example grid
         self.createMasterGrid()
@@ -321,7 +338,8 @@ class Canvas(QWidget):
                         'dragDuration': None,
                         'dragDistance': None,
                         'Trial': self.currentTrial,
-                        'Condition': self.currentConditionIndex
+                        'Condition': self.currentConditionIndex,
+                        'visibleTime': self.visibleTime
                     }, index=[0])
                     self.copiedImages = self.copiedImages.append(exampleDict, ignore_index=True)
                     
