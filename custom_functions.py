@@ -103,7 +103,7 @@ class CustomLabel(QLabel):
             rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
                         (self.parent.copiedImages['y'] == self.y) &\
                         (self.parent.copiedImages['Trial'] == self.trial) &\
-                        (self.parent.copiedImages['Condition']) == self.condition)
+                        (self.parent.copiedImages['Condition'] == self.condition))
             rowIndex = rowIndex[0][-1]
 
             # Set new pixmap in this position if position is valid

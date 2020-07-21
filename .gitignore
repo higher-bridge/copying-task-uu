@@ -135,3 +135,7 @@ dmypy.json
 .pytype/
 settings.json
 .pylintrc
+
+# Saved data
+*.csv
+*.xlsx

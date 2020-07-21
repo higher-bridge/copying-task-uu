@@ -36,6 +36,6 @@ if __name__ == '__main__':
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
                 nTrials=NUM_TRIALS, useCustomTimer=False)
     
-    ex.showFullScreen()
+    # ex.showFullScreen()
     
     sys.exit(app.exec_())

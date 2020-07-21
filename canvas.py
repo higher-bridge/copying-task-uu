@@ -62,6 +62,7 @@ class Canvas(QWidget):
         self.spacePushed = False
 
         # Set tracking vars
+        self.timer = QTimer(self)
         self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPos = None
@@ -73,7 +74,7 @@ class Canvas(QWidget):
                                                   'Trial', 'Condition'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
-        self.inOpeningScreen = False
+        self.inOpeningScreen = True
 
         self.initUI()
 
@@ -91,8 +92,10 @@ class Canvas(QWidget):
         self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
     
     def updateTimer(self):
-        # if self.inOpeningScreen:
-        #     return
+        # print(self.inOpeningScreen)
+        if self.inOpeningScreen:
+          print('In opening')
+          return
         
         self.writeCursorPosition()
         now = round(time.time() * 1000)
@@ -111,23 +114,31 @@ class Canvas(QWidget):
         
         if shouldUpdate:
             self.showHideExampleGrid()
-            # print(f'Update took {round(time.time() * 1000) - self.start}ms')
             self.start = now
             
             self.checkIfFinished()
+            
+            # print(f'Update took {round(time.time() * 1000) - now}ms')
         
     def runTimer(self):
-        timer = QTimer(self)
-        timer.setInterval(1)
-        timer.timeout.connect(self.updateTimer)
+        self.timer.setInterval(1)
+        self.timer.timeout.connect(self.updateTimer)
         
         self.start = round(time.time() * 1000)
-        timer.start()
+        self.timer.start()
+        
+    def disconnectTimer(self):
+        try:
+            self.timer.stop()
+        except AttributeError:
+            pass # Happens if the timer has never been started yet
 
     def checkIfFinished(self):
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
+
+        # print(copiedTemp)
 
         if len(copiedTemp) > 0 and allCorrect:
             print(f'All correct: {allCorrect}')
@@ -141,13 +152,13 @@ class Canvas(QWidget):
             self.initOpeningScreen()
     
     def showHideExampleGrid(self):
+        # print('Updating grid')
         if self.exampleGridBox.isVisible():
             self.exampleGridBox.setVisible(False)
         else:
             self.exampleGridBox.setVisible(True)
     
     def eventFilter(self, widget, e):
-        # print('Event filtered')
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
@@ -198,6 +209,7 @@ class Canvas(QWidget):
     
     def initOpeningScreen(self):
         # print('Starting opening')
+        self.disconnectTimer()
         self.inOpeningScreen = True
         
         # If all trials are done, increment condition counter and 
@@ -222,7 +234,6 @@ class Canvas(QWidget):
         self.setLayout(self.layout)
         
         self.show()
-        self.inOpeningScreen = False
 
     def initTask(self):
         # print('Starting task')
@@ -239,6 +250,8 @@ class Canvas(QWidget):
         self.setLayout(self.layout)
         
         self.show()
+        
+        self.inOpeningScreen = False
         self.runTimer()
         
     # =============================================================================
@@ -257,7 +270,6 @@ class Canvas(QWidget):
         for row in range(masterGridRows):
             for col in range(masterGridCols):
                 if (row, col) not in gridLocs:
-                    print(f'Adding widget in ({row}, {col})')
                     layout.addWidget(self.emptyGridBox, row, col)
 
         self.exampleGridLayout()
