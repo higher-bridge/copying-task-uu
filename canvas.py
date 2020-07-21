@@ -214,7 +214,7 @@ class Canvas(QWidget):
         
         # If all trials are done, increment condition counter and 
         # reset trial counter to 0
-        if self.currentTrial > self.nTrials:
+        if self.currentTrial >= self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 0
             self.setConditionTiming()
