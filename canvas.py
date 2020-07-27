@@ -3,6 +3,7 @@ Created on Wed Feb 26 19:10:04 2020
 Author: Alex Hoogerbrugge (@higher-bridge)
 """
 
+import json
 import time
 from random import shuffle, gauss
 
@@ -75,13 +76,48 @@ class Canvas(QWidget):
                                                   'Trial', 'Condition', 'visibleTime'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
-        self.inOpeningScreen = True
+        
+        self.ppNumber = None
+        self.setParticipantNumber()
 
+
+        self.inOpeningScreen = True
         self.initUI()
 
     # =============================================================================
     # TRACKING FUNCTIONS    
     # =============================================================================
+    def setParticipantNumber(self):
+        # Get input
+        number = input('Enter participant number or name:\n')
+        
+        # If input is none, try again (recursively)
+        if len(number) < 1 or number == None:
+            print('Invalid input, try again')
+            self.setParticipantNumber()
+        
+        # Read already used numbers
+        with open('results/usedNumbers.txt', 'r') as f:
+            usedNumbers = json.load(f)
+        
+        # If not in use, save and return
+        if number not in usedNumbers:
+            self.ppNumber = number
+            usedNumbers.append(number)
+            
+            with open('results/usedNumbers.txt', 'w') as f:
+                json.dump(usedNumbers, f)
+            
+            return
+        
+        # If already in use, recursively run again
+        else:
+            print(f'{number} is already in use! Use another number or name')
+            self.setParticipantNumber()
+                
+            
+            
+    
     def writeCursorPosition(self):
         e = self.mouse.pos()
         movementDF = pd.DataFrame({
@@ -144,8 +180,8 @@ class Canvas(QWidget):
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
-            self.copiedImages.to_csv(Path('results/stimulusPlacements.csv'))
-            self.mouseTracker.to_csv(Path(f'results/mouseTracking-trial{self.currentTrial}-condition{self.currentConditionIndex}.csv'))
+            self.copiedImages.to_csv(Path(f'results/{self.ppNumber}-stimulusPlacements.csv'))
+            self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-trial{self.currentTrial}-condition{self.currentConditionIndex}.csv'))
             self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
 
             self.clearScreen()
