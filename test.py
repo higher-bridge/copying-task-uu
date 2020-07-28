@@ -6,6 +6,7 @@ Created on Mon Mar  2 20:03:30 2020
 
 import os
 import sys
+from random import shuffle
 
 from PyQt5.QtWidgets import QApplication
 from pathlib import Path
@@ -22,8 +23,9 @@ CONDITIONS = [(4000, 0),
               (3000, 1000),
               (2000, 2000),
               (1000, 3000)]
-CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
 
+CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
+# shuffle(CONDITION_ORDER)
 
 if __name__ == '__main__':
     path = Path(f'{os.getcwd()}/stimuli/')
@@ -34,7 +36,7 @@ if __name__ == '__main__':
     ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
-                nTrials=NUM_TRIALS, useCustomTimer=False)
+                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=10000)
     
     # ex.showFullScreen()
     

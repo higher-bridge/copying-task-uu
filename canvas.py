@@ -24,7 +24,7 @@ from custom_functions import customTimer, CustomLabel, DraggableLabel
 class Canvas(QWidget):
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
                  conditions:list, conditionOrder:list, nTrials:int, 
-                 useCustomTimer:bool=False, addNoise=True,
+                 useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  left:int=50, top:int=50, width:int=1920, height:int=1080):
         
         super().__init__()
@@ -61,6 +61,8 @@ class Canvas(QWidget):
         self.visibleTime = 1000
         self.occludedTime = 0
         self.addNoise = addNoise
+        self.trialTimeOut = trialTimeOut
+
         self.spacePushed = False
 
         # Set tracking vars
@@ -115,9 +117,6 @@ class Canvas(QWidget):
             print(f'{number} is already in use! Use another number or name')
             self.setParticipantNumber()
                 
-            
-            
-    
     def writeCursorPosition(self):
         e = self.mouse.pos()
         movementDF = pd.DataFrame({
@@ -137,7 +136,11 @@ class Canvas(QWidget):
         now = round(time.time() * 1000)
         
         shouldUpdate = False
-        
+
+        if now - self.globalTrialStart >= self.trialTimeOut:
+            self.checkIfFinished(timeOut=True)
+            return
+
         if self.useCustomTimer:
             shouldUpdate = customTimer(self, now)
         else:            
@@ -161,6 +164,7 @@ class Canvas(QWidget):
         self.timer.timeout.connect(self.updateTimer)
         
         self.start = round(time.time() * 1000)
+        self.globalTrialStart = self.start
         self.timer.start()
         
     def disconnectTimer(self):
@@ -169,14 +173,15 @@ class Canvas(QWidget):
         except AttributeError:
             pass # Happens if the timer has never been started yet
 
-    def checkIfFinished(self):
+    def checkIfFinished(self, timeOut=False):
+        print('Timeout =', timeOut)
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         # print(copiedTemp)
 
-        if len(copiedTemp) > 0 and allCorrect:
+        if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
