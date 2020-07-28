@@ -174,7 +174,6 @@ class Canvas(QWidget):
             pass # Happens if the timer has never been started yet
 
     def checkIfFinished(self, timeOut=False):
-        print('Timeout =', timeOut)
         copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
@@ -221,8 +220,7 @@ class Canvas(QWidget):
         try:
             visibleTime, occludedTime = self.getConditionTiming()
         except IndexError:
-            pass
-            #TODO implement breaking out of the program
+            raise IndexError('No more conditions to parse. End of experiment.')
         
         if self.addNoise:
             if occludedTime != 0:
@@ -231,8 +229,8 @@ class Canvas(QWidget):
                 # Generating a noise and its invert keeps the sum duration the same as without permutation
                 noise = gauss(mu=1.0, sigma=0.05)
                 
-                self.visibleTime = int(self.visibleTime * noise)
-                self.occludedTime = sumDuration - self.visibleTime
+                self.visibleTime = int(visibleTime * noise)
+                self.occludedTime = sumDuration - visibleTime
         else:
             self.visibleTime = visibleTime
             self.occludedTime = occludedTime
@@ -292,7 +290,7 @@ When you are ready to start the experiment, press the space bar and the first tr
 Good luck!")
             else:
                 self.label = QLabel("End of trial. Press space to continue to the next trial")
-        
+
         else:
             if self.currentTrial == 1:
                 self.label = QLabel(f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
@@ -300,7 +298,6 @@ If you wish to carry on, press space and the experiment will resume immediately.
             else:
                 self.label = QLabel("End of trial. Press space to continue to the next trial")
 
-        
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
         
