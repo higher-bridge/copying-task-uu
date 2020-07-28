@@ -274,10 +274,27 @@ class Canvas(QWidget):
         self.spacePushed = False
         self.currentTrial += 1
         
-        if self.currentTrial > 1:
-            self.label = QLabel("End of trial. Press space to continue")
+        if self.conditionOrderIndex == 0:
+            if self.currentTrial == 1:
+                self.label = QLabel("Welcome to the experiment.\n \
+Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n \
+by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly \
+and as accurately as possible.\n Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n \
+performing the task as quickly and as accurately as possible.\n \n \
+If you have any questions now or anytime during the experiment, please ask them straightaway.\n \
+If you need to take a break, please tell the experimenter so.\n \n \
+When you are ready to start the experiment, press the space bar and the first trial will start immediately.\n \
+Good luck!")
+            else:
+                self.label = QLabel("End of trial. Press space to continue to the next trial")
+        
         else:
-            self.label = QLabel("Press space to start")
+            if self.currentTrial == 1:
+                self.label = QLabel(f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
+If you wish to carry on, press space and the experiment will resume immediately.")
+            else:
+                self.label = QLabel("End of trial. Press space to continue to the next trial")
+
         
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
