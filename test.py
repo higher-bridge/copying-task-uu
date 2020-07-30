@@ -36,8 +36,8 @@ if __name__ == '__main__':
     ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
-                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=10000)
+                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=20000)
     
-    ex.showFullScreen()
+    # ex.showFullScreen()
     
     sys.exit(app.exec_())

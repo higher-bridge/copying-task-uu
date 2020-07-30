@@ -7,7 +7,7 @@ import time
 
 import numpy as np
 import pandas as pd
-# from PyQt5 import QtCore
+
 from PyQt5.QtCore import QMimeData, Qt
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
@@ -53,7 +53,6 @@ class DraggableLabel(QLabel):
         if e.button() == Qt.LeftButton:
             self.parent.dragStartPos = e.pos()
             self.parent.dragStartTime = time.time()
-            # print(f'Start: {e.pos()}')
 
     def mouseMoveEvent(self, e):
         if not (e.buttons() & Qt.LeftButton):
@@ -91,10 +90,8 @@ class CustomLabel(QLabel):
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasImage():
-            # print('accepted')
             e.accept()
         else:
-            # print('rejected')
             e.ignore()
     
     def dropEvent(self, e):

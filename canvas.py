@@ -12,7 +12,7 @@ import pandas as pd
 from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QCursor
+from PyQt5.QtGui import QPixmap, QCursor, QFont
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
@@ -58,7 +58,7 @@ class Canvas(QWidget):
         self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
 
         self.useCustomTimer = useCustomTimer
-        self.visibleTime = 1000
+        self.visibleTime = 0
         self.occludedTime = 0
         self.addNoise = addNoise
         self.trialTimeOut = trialTimeOut
@@ -76,12 +76,10 @@ class Canvas(QWidget):
                                                   'Correct', 'Time', 
                                                   'dragDuration', 'dragDistance', 
                                                   'Trial', 'Condition', 'visibleTime'])
-        self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
-
-        
+        self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
+     
         self.ppNumber = None
         self.setParticipantNumber()
-
 
         self.inOpeningScreen = True
         self.initUI()
@@ -122,13 +120,13 @@ class Canvas(QWidget):
         movementDF = pd.DataFrame({
             'x': e.x(),
             'y': e.y(),
-            'Time': time.time()
+            'Time': time.time(),
+            'Trial': self.currentTrial
         }, index=[0])
 
         self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
     
     def updateTimer(self):
-        # print(self.inOpeningScreen)
         if self.inOpeningScreen:
           return
         
@@ -155,9 +153,10 @@ class Canvas(QWidget):
             self.showHideExampleGrid()
             self.start = now
             
-            self.checkIfFinished()
+        # Always check if finished, at the cost of ~1ms added processing time
+        self.checkIfFinished()
             
-            # print(f'Update took {round(time.time() * 1000) - now}ms')
+        # print(f'Update took {round(time.time() * 1000) - now}ms')
         
     def runTimer(self):
         self.timer.setInterval(1)
@@ -178,21 +177,18 @@ class Canvas(QWidget):
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
-        # print(copiedTemp)
-
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
             self.copiedImages.to_csv(Path(f'results/{self.ppNumber}-stimulusPlacements.csv'))
-            self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-trial{self.currentTrial}-condition{self.currentConditionIndex}.csv'))
-            self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time'])
+            self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
+            # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
 
             self.clearScreen()
             self.initOpeningScreen()
     
     def showHideExampleGrid(self):
-        # print('Updating grid')
         if self.exampleGridBox.isVisible():
             self.exampleGridBox.setVisible(False)
         else:
@@ -202,7 +198,6 @@ class Canvas(QWidget):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
-                # print('Space')
                 
                 # Set spacePushed to true and remove all widgets
                 self.spacePushed = True
@@ -220,20 +215,22 @@ class Canvas(QWidget):
         try:
             visibleTime, occludedTime = self.getConditionTiming()
         except IndexError:
-            raise IndexError('No more conditions to parse. End of experiment.')
+            self.close()
+            print('\nNo more conditions, the experiment is finished!')
+            raise SystemExit(0)
         
-        if self.addNoise:
-            if occludedTime != 0:
-                sumDuration = visibleTime + occludedTime
+        if occludedTime != 0 and self.addNoise:
+            sumDuration = visibleTime + occludedTime
+            print(sumDuration)
 
-                # Generating a noise and its invert keeps the sum duration the same as without permutation
-                noise = gauss(mu=1.0, sigma=0.05)
-                
-                self.visibleTime = int(visibleTime * noise)
-                self.occludedTime = sumDuration - visibleTime
+            # Generating a noise and its invert keeps the sum duration the same as without permutation
+            noise = gauss(mu=1.0, sigma=0.1)
+            
+            self.visibleTime = int(visibleTime * noise)
+            self.occludedTime = sumDuration - visibleTime
         else:
             self.visibleTime = visibleTime
-            self.occludedTime = occludedTime
+            self.occludedTime = occludedTime 
         
         print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
     
@@ -255,7 +252,6 @@ class Canvas(QWidget):
             self.layout.itemAt(i).widget().setParent(None)
     
     def initUI(self):
-        # print('Starting UI')
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
@@ -264,19 +260,20 @@ class Canvas(QWidget):
         self.initOpeningScreen()
     
     def initOpeningScreen(self):
-        # print('Starting opening')
         self.disconnectTimer()
         self.inOpeningScreen = True
         
         # If all trials are done, increment condition counter and 
-        # reset trial counter to 0
+        # reset trial counter to 0. Also reset the mouseTracker df
         if self.currentTrial >= self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 0
+            self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
         
         self.spacePushed = False
         self.currentTrial += 1
         
+        # Great big mess :-)
         if self.conditionOrderIndex == 0:
             if self.currentTrial == 1:
                 self.label = QLabel("Welcome to the experiment.\n \
@@ -298,6 +295,7 @@ If you wish to carry on, press space and the experiment will resume immediately.
             else:
                 self.label = QLabel("End of trial. Press space to continue to the next trial")
 
+        self.label.setFont(QFont("Times", 12))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
         self.installEventFilter(self)
         
@@ -307,7 +305,6 @@ If you wish to carry on, press space and the experiment will resume immediately.
         self.show()
 
     def initTask(self):
-        # print('Starting task')
         self.removeEventFilter(self)
         
         self.images = pick_stimuli(self.allImages, self.nStimuli)
