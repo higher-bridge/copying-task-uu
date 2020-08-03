@@ -17,6 +17,7 @@ from stimulus import load_stimuli
 NUM_STIMULI = 4
 IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
+TIME_OUT_MS = 20000
 
 NUM_TRIALS = 2
 CONDITIONS = [(4000, 0),
@@ -25,7 +26,8 @@ CONDITIONS = [(4000, 0),
               (1000, 3000)]
 
 CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
-# shuffle(CONDITION_ORDER)
+shuffle(CONDITION_ORDER)
+print(CONDITION_ORDER)
 
 if __name__ == '__main__':
     path = Path(f'{os.getcwd()}/stimuli/')
@@ -36,7 +38,7 @@ if __name__ == '__main__':
     ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
-                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=20000)
+                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=TIME_OUT_MS)
     
     # ex.showFullScreen()
     

@@ -71,11 +71,16 @@ class Canvas(QWidget):
         self.dragStartTime = None
         self.dragStartPos = None
         
-        # Init tracking dataframes
-        self.copiedImages = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
+        # Track correct placements
+        self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
                                                   'Correct', 'Time', 
                                                   'dragDuration', 'dragDistance', 
                                                   'Trial', 'Condition', 'visibleTime'])
+        
+        # Track placements including mistakes
+        self.allPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
+                                                   'Correct', 'Time',  
+                                                   'Trial', 'Condition', 'visibleTime'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
      
         self.ppNumber = None
@@ -180,7 +185,7 @@ class Canvas(QWidget):
             pass # Happens if the timer has never been started yet
 
     def checkIfFinished(self, timeOut=False):
-        copiedTemp = self.copiedImages.loc[self.copiedImages['Trial'] == self.currentTrial]
+        copiedTemp = self.correctPlacements.loc[self.correctPlacements['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
 
@@ -188,9 +193,9 @@ class Canvas(QWidget):
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
-            self.copiedImages.to_csv(Path(f'results/{self.ppNumber}-stimulusPlacements.csv'))
+            self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
+            self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
             self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
-            # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
 
             self.clearScreen()
             self.initOpeningScreen(timeOut)
@@ -282,17 +287,22 @@ class Canvas(QWidget):
         
         if self.currentTrial == 1:
             if self.conditionOrderIndex == 0:
-                self.label = QLabel("Welcome to the experiment.\n \
+                self.label = QLabel(\
+"Welcome to the experiment.\n \
 Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n \
 by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly \
-and as accurately as possible.\n Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n \
+and as accurately as possible.\n \
+If you make a mistake, you can right-click the image to remove it from that location. \n \
+Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n \
 performing the task as quickly and as accurately as possible.\n \n \
 If you have any questions now or anytime during the experiment, please ask them straightaway.\n \
 If you need to take a break, please tell the experimenter so.\n \n \
 When you are ready to start the experiment, press the space bar and the first trial will start immediately.\n \
 Good luck!")
+
             elif self.conditionOrderIndex > 0:
-                self.label = QLabel(f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
+                self.label = QLabel(\
+f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
 If you wish to carry on, press space and the experiment will resume immediately.")
 
         elif self.currentTrial > 1:
@@ -399,7 +409,7 @@ If you wish to carry on, press space and the experiment will resume immediately.
                         'Condition': self.currentConditionIndex,
                         'visibleTime': self.visibleTime
                     }, index=[0])
-                    self.copiedImages = self.copiedImages.append(exampleDict, ignore_index=True)
+                    self.correctPlacements = self.correctPlacements.append(exampleDict, ignore_index=True)
                     
                     i += 1
 

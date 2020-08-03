@@ -88,6 +88,11 @@ class CustomLabel(QLabel):
 
         self.setAcceptDrops(True)
 
+    def mousePressEvent(self, e):
+        if e.button() == Qt.RightButton:
+            self.setPixmap(QPixmap())
+            self.containedImage = None
+    
     def dragEnterEvent(self, e):
         if e.mimeData().hasImage():
             e.accept()
@@ -98,34 +103,52 @@ class CustomLabel(QLabel):
         # Set new pixmap in this position if position is valid
         self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
 
+        # Retrieve the image name
+        self.containedImage = e.mimeData().text()
+
         try:
             # Find in which row of the df x/y == self.x/y and trial == self.trial
-            rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
-                        (self.parent.copiedImages['y'] == self.y) &\
-                        (self.parent.copiedImages['Trial'] == self.trial) &\
-                        (self.parent.copiedImages['Condition'] == self.condition))
+            rowIndex = np.where((self.parent.correctPlacements['x'] == self.x) &\
+                        (self.parent.correctPlacements['y'] == self.y) &\
+                        (self.parent.correctPlacements['Trial'] == self.trial) &\
+                        (self.parent.correctPlacements['Condition'] == self.condition))
             rowIndex = rowIndex[0][-1]
-
-            # # Set new pixmap in this position if position is valid
-            # self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
-
-            # Retrieve the image name
-            self.containedImage = e.mimeData().text()
 
             # Retrieve drag characteristics
             dragDuration = time.time() - self.parent.dragStartTime
             dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
             # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
-            # Fill copiedImages dataframe
-            self.parent.copiedImages['Name'][rowIndex] = self.containedImage
-            self.parent.copiedImages['Time'][rowIndex] = time.time()
-            self.parent.copiedImages['dragDuration'][rowIndex] = dragDuration
-            self.parent.copiedImages['dragDistance'][rowIndex] = dragDistance
+            # Fill correctPlacements dataframe
+            self.parent.correctPlacements['Name'][rowIndex] = self.containedImage
+            self.parent.correctPlacements['Time'][rowIndex] = time.time()
+            self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
+            self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
             
             # If image matches 'shouldBe', set 'Correct' to True
-            if self.parent.copiedImages['shouldBe'][rowIndex] == self.containedImage:
-                self.parent.copiedImages['Correct'][rowIndex] = True
+            shouldBe = self.parent.correctPlacements['shouldBe'][rowIndex]
+            if shouldBe == self.containedImage:
+                self.parent.correctPlacements['Correct'][rowIndex] = True
         
         except:
-            print(f'Item could not be placed in ({self.x}, {self.y})')
+            print(f'Item incorrectly placed in ({self.x}, {self.y})')
+
+        
+        # Now write regardless of correctness to a different df
+        try:
+            correct = shouldBe == self.containedImage
+        except:
+            shouldBe = 'Empty'
+            correct = False
+
+        allPlacementsDict = pd.DataFrame({'x': self.x,
+                             'y': self.y,
+                             'Name': self.containedImage,
+                             'shouldBe': shouldBe,
+                             'Correct': correct,
+                             'Time': time.time(),
+                             'Trial': self.trial,
+                             'Condition': self.condition,
+                             'visibleTime': self.parent.visibleTime
+                             }, index=[0])
+        self.parent.allPlacements = self.parent.allPlacements.append(allPlacementsDict, ignore_index=True)
