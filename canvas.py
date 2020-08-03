@@ -131,14 +131,16 @@ class Canvas(QWidget):
           return
         
         self.writeCursorPosition()
+
         now = round(time.time() * 1000)
-        
         shouldUpdate = False
 
+        # Check for timeout
         if now - self.globalTrialStart >= self.trialTimeOut:
             self.checkIfFinished(timeOut=True)
             return
 
+        # Check if update necessary
         if self.useCustomTimer:
             shouldUpdate = customTimer(self, now)
         else:            
@@ -152,18 +154,23 @@ class Canvas(QWidget):
         if shouldUpdate:
             self.showHideExampleGrid()
             self.start = now
-            
-        # Always check if finished, at the cost of ~1ms added processing time
-        self.checkIfFinished()
+
+        # Check if result needs checking, every 500ms to avoid too much processing
+        if now - self.checkIfFinishedStart >= 500:
+            self.checkIfFinished()
+            self.checkIfFinishedStart = now
             
         # print(f'Update took {round(time.time() * 1000) - now}ms')
         
     def runTimer(self):
-        self.timer.setInterval(1)
+        self.timer.setInterval(1) # 1 ms
         self.timer.timeout.connect(self.updateTimer)
         
+        # Unfortunately we need three tracking vars to keep updates not too time-consuming
         self.start = round(time.time() * 1000)
         self.globalTrialStart = self.start
+        self.checkIfFinishedStart = self.start
+        
         self.timer.start()
         
     def disconnectTimer(self):
@@ -186,7 +193,7 @@ class Canvas(QWidget):
             # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
 
             self.clearScreen()
-            self.initOpeningScreen()
+            self.initOpeningScreen(timeOut)
     
     def showHideExampleGrid(self):
         if self.exampleGridBox.isVisible():
@@ -259,7 +266,7 @@ class Canvas(QWidget):
 
         self.initOpeningScreen()
     
-    def initOpeningScreen(self):
+    def initOpeningScreen(self, timeOut=False):
         self.disconnectTimer()
         self.inOpeningScreen = True
         
@@ -273,9 +280,8 @@ class Canvas(QWidget):
         self.spacePushed = False
         self.currentTrial += 1
         
-        # Great big mess :-)
-        if self.conditionOrderIndex == 0:
-            if self.currentTrial == 1:
+        if self.currentTrial == 1:
+            if self.conditionOrderIndex == 0:
                 self.label = QLabel("Welcome to the experiment.\n \
 Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n \
 by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly \
@@ -285,15 +291,15 @@ If you have any questions now or anytime during the experiment, please ask them 
 If you need to take a break, please tell the experimenter so.\n \n \
 When you are ready to start the experiment, press the space bar and the first trial will start immediately.\n \
 Good luck!")
-            else:
-                self.label = QLabel("End of trial. Press space to continue to the next trial")
-
-        else:
-            if self.currentTrial == 1:
+            elif self.conditionOrderIndex > 0:
                 self.label = QLabel(f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
 If you wish to carry on, press space and the experiment will resume immediately.")
+
+        elif self.currentTrial > 1:
+            if timeOut:
+                self.label = QLabel("You timed out. Press space to continue to the next trial")
             else:
-                self.label = QLabel("End of trial. Press space to continue to the next trial")
+                self.label = QLabel("End of trial. Press space to continue to the next trial")            
 
         self.label.setFont(QFont("Times", 12))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)

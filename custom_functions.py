@@ -95,6 +95,9 @@ class CustomLabel(QLabel):
             e.ignore()
     
     def dropEvent(self, e):
+        # Set new pixmap in this position if position is valid
+        self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
+
         try:
             # Find in which row of the df x/y == self.x/y and trial == self.trial
             rowIndex = np.where((self.parent.copiedImages['x'] == self.x) &\
@@ -103,8 +106,8 @@ class CustomLabel(QLabel):
                         (self.parent.copiedImages['Condition'] == self.condition))
             rowIndex = rowIndex[0][-1]
 
-            # Set new pixmap in this position if position is valid
-            self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
+            # # Set new pixmap in this position if position is valid
+            # self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
 
             # Retrieve the image name
             self.containedImage = e.mimeData().text()
