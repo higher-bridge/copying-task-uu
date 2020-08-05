@@ -6,6 +6,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 import json
 import time
 from random import shuffle, gauss
+import os
 
 import numpy as np
 import pandas as pd
@@ -15,6 +16,9 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap, QCursor, QFont
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
+
+from pygaze import libscreen
+from pygaze.eyetracker import EyeTracker
 
 import example_grid
 from stimulus import pick_stimuli
@@ -83,6 +87,10 @@ class Canvas(QWidget):
                                                    'Trial', 'Condition', 'visibleTime'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
      
+        self.disp = libscreen.Display()
+        self.tracker = EyeTracker(self.disp)
+        self.recordingSession = 0
+
         self.ppNumber = None
         self.setParticipantNumber()
 
@@ -206,6 +214,13 @@ class Canvas(QWidget):
         else:
             self.exampleGridBox.setVisible(True)
     
+    def moveAndRenameTrackerFile(self):
+        fromLocation = 'default.edf'
+        toLocation = f'results/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
+        os.rename(Path(fromLocation), Path(toLocation))
+
+        print(f'Saved session {self.recordingSession} to {toLocation}')
+
     def eventFilter(self, widget, e):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
@@ -219,6 +234,23 @@ class Canvas(QWidget):
                 self.initTask()
                 return True
 
+            if key == QtCore.Qt.Key_Escape:
+                try:
+                    self.tracker.stop_recording()
+                    self.moveAndRenameTrackerFile()
+                except:
+                    # There is no recording to stop
+                    pass
+
+                # Go into calibration
+                self.tracker.calibrate(self.disp)
+                self.disp.close()
+
+                # When done, start recording and init task
+                self.recordingSession += 1
+                self.tracker.start_recording()
+                self.initTask()
+
         return QWidget.eventFilter(self, widget, e)
 
     def setConditionTiming(self):
@@ -227,6 +259,9 @@ class Canvas(QWidget):
         try:
             visibleTime, occludedTime = self.getConditionTiming()
         except IndexError:
+            self.tracker.stop_recording()
+            self.moveAndRenameTrackerFile()
+            self.tracker.close()
             self.close()
             print('\nNo more conditions, the experiment is finished!')
             raise SystemExit(0)
