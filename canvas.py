@@ -86,6 +86,8 @@ class Canvas(QWidget):
                                                    'Correct', 'Time',  
                                                    'Trial', 'Condition', 'visibleTime'])
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
+
+        self.eventTracker = pd.DataFrame(columns=['Time', 'Event', 'Condition', 'Trial'])
      
         self.disp = libscreen.Display()
         self.tracker = EyeTracker(self.disp)
@@ -201,18 +203,29 @@ class Canvas(QWidget):
             print(f'All correct: {allCorrect}')
             print(copiedTemp)
 
+            event = pd.DataFrame({'Time': time.time(), 'Event': 'Finished trial',
+                                   'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+            self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+
             self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
             self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
             self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
+            self.eventTracker.to_csv(Path(f'results/{self.ppNumber}-eventTracking.csv'))
 
             self.clearScreen()
             self.initOpeningScreen(timeOut)
     
     def showHideExampleGrid(self):
         if self.exampleGridBox.isVisible():
+            text = 'Showing'
             self.exampleGridBox.setVisible(False)
         else:
+            text = 'Hiding'
             self.exampleGridBox.setVisible(True)
+
+        event = pd.DataFrame({'Time': time.time(), 'Event': f'{text} grid',
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
     
     def moveAndRenameTrackerFile(self):
         fromLocation = 'default.edf'
@@ -304,6 +317,10 @@ class Canvas(QWidget):
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
         self.layout = QVBoxLayout()
 
+        event = pd.DataFrame({'Time': time.time(), 'Event': 'UI init',
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+
         self.initOpeningScreen()
     
     def initOpeningScreen(self, timeOut=False):
@@ -319,6 +336,10 @@ class Canvas(QWidget):
         
         self.spacePushed = False
         self.currentTrial += 1
+
+        event = pd.DataFrame({'Time': time.time(), 'Event': 'In starting screen',
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
         
         if self.currentTrial == 1:
             if self.conditionOrderIndex == 0:
@@ -369,6 +390,10 @@ If you wish to carry on, press space and the experiment will resume immediately.
         self.layout.addWidget(self.masterGrid)
         self.setLayout(self.layout)
         
+        event = pd.DataFrame({'Time': time.time(), 'Event': 'Task init',
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+
         self.show()
         
         self.inOpeningScreen = False
