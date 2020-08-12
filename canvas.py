@@ -57,7 +57,7 @@ class Canvas(QWidget):
         self.nConditions = len(conditions)
         self.conditionOrder = conditionOrder
         
-        self.currentTrial = 0
+        self.currentTrial = 1
         self.conditionOrderIndex = 0
         self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
 
@@ -88,13 +88,17 @@ class Canvas(QWidget):
         self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
 
         self.eventTracker = pd.DataFrame(columns=['Time', 'Event', 'Condition', 'Trial'])
-     
-        self.disp = libscreen.Display()
-        self.tracker = EyeTracker(self.disp)
-        self.recordingSession = 0
 
         self.ppNumber = None
-        self.setParticipantNumber()
+        self.setParticipantNumber()        
+
+        # self.disp = libscreen.Display()
+        # self.tracker = EyeTracker(self.disp)
+        # self.disp.close()
+        self.disp = None
+        self.tracker = None
+        self.recordingSession = 0
+
 
         self.inOpeningScreen = True
         self.initUI()
@@ -194,10 +198,17 @@ class Canvas(QWidget):
         except AttributeError:
             pass # Happens if the timer has never been started yet
 
+    def writeFiles(self):
+        self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
+        self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
+        self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
+        self.eventTracker.to_csv(Path(f'results/{self.ppNumber}-eventTracking.csv'))
+
     def checkIfFinished(self, timeOut=False):
         copiedTemp = self.correctPlacements.loc[self.correctPlacements['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         allCorrect = np.all(copiedTemp['Correct'].values)
+
 
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             print(f'All correct: {allCorrect}')
@@ -207,12 +218,10 @@ class Canvas(QWidget):
                                    'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
             self.eventTracker = self.eventTracker.append(event, ignore_index=True)
 
-            self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
-            self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
-            self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
-            self.eventTracker.to_csv(Path(f'results/{self.ppNumber}-eventTracking.csv'))
+            self.writeFiles()
 
             self.clearScreen()
+            self.currentTrial += 1
             self.initOpeningScreen(timeOut)
     
     def showHideExampleGrid(self):
@@ -231,6 +240,10 @@ class Canvas(QWidget):
         fromLocation = 'default.edf'
         toLocation = f'results/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
         os.rename(Path(fromLocation), Path(toLocation))
+        
+        event = pd.DataFrame({'Time': time.time(), 'Event': f'Writing eyetracker session {self.recordingSession}',
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
 
         print(f'Saved session {self.recordingSession} to {toLocation}')
 
@@ -247,22 +260,61 @@ class Canvas(QWidget):
                 self.initTask()
                 return True
 
-            if key == QtCore.Qt.Key_Escape:
+            if key == QtCore.Qt.Key_Backspace:
+                print('Backspace pressed')
+                # Try to close the eyetracker
+                # if self.disp != None:
                 try:
                     self.tracker.stop_recording()
+                    self.tracker.close()
                     self.moveAndRenameTrackerFile()
-                except:
+                    self.disp = None
+                    self.tracker = None
+                    
+                except Exception as e:
                     # There is no recording to stop
-                    pass
+                    # print('Escape pressed, disp!=None')
+                    print(e)
+
 
                 # Go into calibration
-                self.tracker.calibrate(self.disp)
-                self.disp.close()
-
-                # When done, start recording and init task
-                self.recordingSession += 1
-                self.tracker.start_recording()
-                self.initTask()
+                if self.disp == None:
+                    print('Backspace pressed, disp==None')
+                    
+                    # Program crashes if both pygaze and this want to use fullscreen, so maximize instead of FS
+                    self.clearScreen()
+                    self.showMaximized()
+                    
+                    # time.sleep(5)
+                    self.disp = libscreen.Display()
+                    self.tracker = EyeTracker(self.disp)
+    
+                    self.tracker.calibrate()
+                    self.disp.close()
+                    # self.disp = None
+                    
+                    self.showFullScreen()
+    
+                    # When done, start recording and init task
+                    self.recordingSession += 1
+                    self.tracker.start_recording()
+                
+                time.sleep(1)
+                self.initOpeningScreen()
+                
+                return True
+            
+            # if key == QtCore.Qt.Key_Tab:
+            #     self.tracker.stop_recording()
+            #     self.tracker.close(full_close=True)
+            #     self.moveAndRenameTrackerFile()
+                
+            #     event = pd.DataFrame({'Time': time.time(), 'Event': 'Early exit',
+            #               'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+            #     self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+                
+            #     self.close()
+            #     raise SystemExit(0)
 
         return QWidget.eventFilter(self, widget, e)
 
@@ -271,10 +323,17 @@ class Canvas(QWidget):
         # visibleTime and occludedTime are pulled from conditions, and assigned to class after mutation has been done
         try:
             visibleTime, occludedTime = self.getConditionTiming()
-        except IndexError:
+        except IndexError as e:
             self.tracker.stop_recording()
+            self.tracker.close(full_close=True)
             self.moveAndRenameTrackerFile()
-            self.tracker.close()
+            
+            event = pd.DataFrame({'Time': time.time(), 'Event': 'Finished',
+                      'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+            self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+            
+            self.writeFiles()
+            
             self.close()
             print('\nNo more conditions, the experiment is finished!')
             raise SystemExit(0)
@@ -329,13 +388,12 @@ class Canvas(QWidget):
         
         # If all trials are done, increment condition counter and 
         # reset trial counter to 0. Also reset the mouseTracker df
-        if self.currentTrial >= self.nTrials:
+        if self.currentTrial > self.nTrials:
             self.conditionOrderIndex += 1
-            self.currentTrial = 0
+            self.currentTrial = 1
             self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
         
         self.spacePushed = False
-        self.currentTrial += 1
 
         event = pd.DataFrame({'Time': time.time(), 'Event': 'In starting screen',
                               'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
@@ -353,13 +411,14 @@ Throughout the experiment, the example layout may disappear for brief periods of
 performing the task as quickly and as accurately as possible.\n \n \
 If you have any questions now or anytime during the experiment, please ask them straightaway.\n \
 If you need to take a break, please tell the experimenter so.\n \n \
-When you are ready to start the experiment, press the space bar and the first trial will start immediately.\n \
+When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n \
 Good luck!")
 
             elif self.conditionOrderIndex > 0:
                 self.label = QLabel(\
 f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
-If you wish to carry on, press space and the experiment will resume immediately.")
+If you wish to carry on, press space and the experiment will resume immediately.\n \
+If you have taken a break, please wait for the experimenter to start the calibration procedure.")
 
         elif self.currentTrial > 1:
             if timeOut:
