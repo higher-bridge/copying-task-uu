@@ -25,3 +25,5 @@ for i, file in enumerate(files):
     
     print(f'Parsed {i + 1} of {len(files)} files')
     sys.stdout.write("\033[F")
+    
+print(f'Succesfully converted {len(files)} files!')
