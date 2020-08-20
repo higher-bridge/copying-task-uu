@@ -19,7 +19,7 @@ IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
 TIME_OUT_MS = 20000
 
-NUM_TRIALS = 2
+NUM_TRIALS = 20
 CONDITIONS = [(4000, 0),
               (3000, 1000),
               (2000, 2000),
@@ -40,6 +40,6 @@ if __name__ == '__main__':
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
                 nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=TIME_OUT_MS)
     
-    # ex.showFullScreen()
+    ex.showFullScreen()
     
     sys.exit(app.exec_())
