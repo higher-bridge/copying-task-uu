@@ -52,7 +52,7 @@ class DraggableLabel(QLabel):
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:
             self.parent.dragStartPos = e.pos()
-            self.parent.dragStartTime = time.time()
+            self.parent.dragStartTime = round(time.time() * 1000)
 
     def mouseMoveEvent(self, e):
         if not (e.buttons() & Qt.LeftButton):
@@ -115,13 +115,13 @@ class CustomLabel(QLabel):
             rowIndex = rowIndex[0][-1]
 
             # Retrieve drag characteristics
-            dragDuration = time.time() - self.parent.dragStartTime
+            dragDuration = round(time.time() * 1000) - self.parent.dragStartTime
             dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
             # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
             # Fill correctPlacements dataframe
             self.parent.correctPlacements['Name'][rowIndex] = self.containedImage
-            self.parent.correctPlacements['Time'][rowIndex] = time.time()
+            self.parent.correctPlacements['Time'][rowIndex] = round(time.time() * 1000)
             self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
             self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
             
@@ -146,7 +146,7 @@ class CustomLabel(QLabel):
                              'Name': self.containedImage,
                              'shouldBe': shouldBe,
                              'Correct': correct,
-                             'Time': time.time(),
+                             'Time': round(time.time() * 1000),
                              'Trial': self.trial,
                              'Condition': self.condition,
                              'visibleTime': self.parent.visibleTime

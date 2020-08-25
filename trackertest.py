@@ -5,56 +5,15 @@ Created on Mon Jul 27 13:16:56 2020
 @author: pytest
 """
 
-# from psychopy.iohub import launchHubServer
-# from psychopy.core import getTime, wait
-
-
-# iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
-#                 {'name': 'tracker',
-#                  'model_name': 'EYELINK 1000 DESKTOP',
-#                  'runtime_settings': {'sampling_rate': 1000,
-#                                       'track_eyes': 'RIGHT'}
-#                  }
-#                 }
-# # io = launchHubServer(**iohub_config)
-
-# io = launchHubServer()
-
-# # Get the eye tracker device.
-# tracker = io.devices.tracker
-
-# # run eyetracker calibration
-# r = tracker.runSetupProcedure()
-
-
-# # Check for and print any eye tracker events received...
-# tracker.setRecordingState(True)
-
-# stime = getTime()
-# while getTime()-stime < 2.0:
-#     for e in tracker.getEvents():
-#         print(e)
-        
-        
-# # Check for and print current eye position every 100 msec.
-# stime = getTime()
-# while getTime()-stime < 5.0:
-#     print(tracker.getPosition())
-#     wait(0.1)
-
-# tracker.setRecordingState(False)
-
-# # Stop the ioHub Server
-# io.quit()
-
 from pygaze import libscreen
 from pygaze.eyetracker import EyeTracker
 import time
+from constants import *
 
 
 disp = libscreen.Display()
 
-tracker = EyeTracker(disp)
+tracker = EyeTracker(disp) #resolution=(2560, 1440), screensize=(59.8, 33.6)
 tracker.calibrate()
 
 disp.close()
@@ -62,9 +21,16 @@ disp.close()
 start = time.time()
 tracker.start_recording()
 
-while time.time() - start < 10:
-    print(tracker.sample())
 
+print(tracker._get_eyelink_clock_async(time.time()))
+
+while time.time() - start < 20:
+    if round(time.time() - start, 2) % 1 == 0:
+        # print(tracker.sample())
+        # print(tracker._get_eyelink_clock_async(time.time()))
+        tracker.log('time {round(time.time() * 1000)}')
+        pass
+        
 tracker.stop_recording()
 
 tracker.close()

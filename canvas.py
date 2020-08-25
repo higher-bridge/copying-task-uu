@@ -87,9 +87,9 @@ class Canvas(QWidget):
                                                    'Trial', 'Condition', 'visibleTime'])
         
         # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
-        self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'Trial', 'Condition']}
+        self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 
-        self.eventTracker = pd.DataFrame(columns=['Time', 'Event', 'Condition', 'Trial'])
+        self.eventTracker = pd.DataFrame(columns=['Time', 'TrackerTime', 'TimeDiff', 'Event', 'Condition', 'Trial'])
 
         self.ppNumber = None
         self.setParticipantNumber()        
@@ -142,26 +142,15 @@ class Canvas(QWidget):
     def writeCursorPosition(self):
         e = self.mouse.pos()
 
-        start = round(time.time() * 1000)
         self.mouseUpdates += 1
 
         self.mouseTrackerDict['x'].append(e.x())
         self.mouseTrackerDict['y'].append(e.y())
-        self.mouseTrackerDict['Time'].append(time.time())
+        self.mouseTrackerDict['Time'].append(round(time.time() * 1000))
+        self.mouseTrackerDict['TrackerTime'].append(self.getTrackerClock())
         self.mouseTrackerDict['Trial'].append(self.currentTrial)
         self.mouseTrackerDict['Condition'].append(self.currentConditionIndex)
         
-        # movementDF = pd.DataFrame({
-        #     'x': e.x(),
-        #     'y': e.y(),
-        #     'Time': time.time(),
-        #     'Trial': self.currentTrial
-        # }, index=[0])
-
-        # self.mouseTracker = self.mouseTracker.append(movementDF, ignore_index=True)
-
-        # if self.mouseUpdates % 10000 == 0:
-        #     print(f'Mouse update took {round(time.time() * 1000) - start}ms (Trial {self.currentTrial})')
     
     def updateTimer(self):
         if self.inOpeningScreen:
@@ -216,6 +205,27 @@ class Canvas(QWidget):
         except AttributeError:
             pass # Happens if the timer has never been started yet
 
+    def getTrackerClock(self):
+        start = round(time.time() * 1000)
+        try:
+            trackerClock = self.tracker.get_eyelink_clock()
+        except Exception:
+            trackerClock = 0
+            
+        print(f'Retrieving clock took {round(time.time() * 1000) - start} ms')
+        return trackerClock
+
+    def writeEvent(self, msg):
+        trackerClock = self.getTrackerClock()
+            
+        localTime = round(time.time() * 1000)
+        timeDiff = localTime - trackerClock
+        
+        event = pd.DataFrame({'Time': localTime, 'TrackerTime': trackerClock, 
+                              'TimeDiff': timeDiff, 'Event': msg,
+                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
+        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+
     def writeFiles(self):
         self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
         self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
@@ -240,9 +250,7 @@ class Canvas(QWidget):
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             print(f'All correct: {allCorrect}')
             
-            event = pd.DataFrame({'Time': time.time(), 'Event': 'Finished trial',
-                                   'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-            self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+            self.writeEvent('Finished trial')
 
             self.clearScreen()
             
@@ -259,18 +267,14 @@ class Canvas(QWidget):
             text = 'Hiding'
             self.exampleGridBox.setVisible(True)
 
-        event = pd.DataFrame({'Time': time.time(), 'Event': f'{text} grid',
-                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+        self.writeEvent(f'{text} grid')
     
     def moveAndRenameTrackerFile(self):
         fromLocation = 'default.edf'
         toLocation = f'results/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
         os.rename(Path(fromLocation), Path(toLocation))
         
-        event = pd.DataFrame({'Time': time.time(), 'Event': f'Writing eyetracker session {self.recordingSession}',
-                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+        self.writeEvent(f'Writing eyetracker session {self.recordingSession}')
 
         print(f'Saved session {self.recordingSession} to {toLocation}')
 
@@ -363,7 +367,11 @@ class Canvas(QWidget):
                     # When done, start recording and init task
                     self.recordingSession += 1
                     self.tracker.start_recording()
-                
+                    
+                    # Get the async between tracker and os
+                    async_val = self.tracker._get_eyelink_clock_async()
+                    self.writeEvent(f'Async {async_val}')
+                    
                 time.sleep(1)
                 self.initOpeningScreen()
                 
@@ -377,11 +385,8 @@ class Canvas(QWidget):
                     self.moveAndRenameTrackerFile()
                 except Exception as e:
                     print(e)
-                
-                
-                event = pd.DataFrame({'Time': time.time(), 'Event': 'Early exit',
-                          'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-                self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+                                
+                self.writeEvent('Early exit')
                 
                 self.writeFiles()
                 
@@ -401,9 +406,7 @@ class Canvas(QWidget):
             self.tracker.close(full_close=True)
             self.moveAndRenameTrackerFile()
             
-            event = pd.DataFrame({'Time': time.time(), 'Event': 'Finished',
-                      'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-            self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+            self.writeEvent('Finished')
             
             self.writeFiles()
             
@@ -448,9 +451,7 @@ class Canvas(QWidget):
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
         self.layout = QVBoxLayout()
 
-        event = pd.DataFrame({'Time': time.time(), 'Event': 'UI init',
-                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+        self.writeEvent('UI init',)
 
         self.initOpeningScreen()
     
@@ -471,9 +472,7 @@ class Canvas(QWidget):
         
         self.spacePushed = False
 
-        event = pd.DataFrame({'Time': time.time(), 'Event': 'In starting screen',
-                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+        self.writeEvent('In starting screen')
         
         if self.currentTrial == 1:
             if self.conditionOrderIndex == 0:
@@ -529,9 +528,7 @@ If you have taken a break, please wait for the experimenter to start the calibra
         self.layout.addWidget(self.masterGrid)
         self.setLayout(self.layout)
         
-        event = pd.DataFrame({'Time': time.time(), 'Event': 'Task init',
-                              'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-        self.eventTracker = self.eventTracker.append(event, ignore_index=True)
+        self.writeEvent('Task init')
 
         self.show()
         
