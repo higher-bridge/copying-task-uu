@@ -206,13 +206,13 @@ class Canvas(QWidget):
             pass # Happens if the timer has never been started yet
 
     def getTrackerClock(self):
-        start = round(time.time() * 1000)
+        # start = round(time.time() * 1000)
         try:
             trackerClock = self.tracker.get_eyelink_clock()
         except Exception:
             trackerClock = 0
             
-        print(f'Retrieving clock took {round(time.time() * 1000) - start} ms')
+        # print(f'Retrieving clock took {round(time.time() * 1000) - start} ms')
         return trackerClock
 
     def writeEvent(self, msg):
@@ -327,7 +327,7 @@ class Canvas(QWidget):
                 self.initTask()
                 return True
 
-            if key == QtCore.Qt.Key_Backspace:
+            elif key == QtCore.Qt.Key_Backspace:
                 print('Backspace pressed')
                 
                 self.clearScreen()
@@ -378,7 +378,7 @@ class Canvas(QWidget):
                 return True
             
             # Trigger early exit
-            if key == QtCore.Qt.Key_Tab:
+            elif key == QtCore.Qt.Key_Tab:
                 try:
                     self.tracker.stop_recording()
                     self.tracker.close(full_close=True)
@@ -389,6 +389,7 @@ class Canvas(QWidget):
                 self.writeEvent('Early exit')
                 
                 self.writeFiles()
+                self.writeMouseTracker()
                 
                 self.close()
                 print('\nEarly exit')

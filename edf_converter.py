@@ -14,14 +14,18 @@ import sys
 
 path = f'{os.getcwd()}/results'
 
-files = [f'{path}/{f}' for f in os.listdir(path) if '.edf' in f]
+allfiles = [f'{path}/{f}' for f in os.listdir(path)]
+files = [f for f in allfiles if '.edf' in f]
 
 
 for i, file in enumerate(files):
-    samples, events, _ = edf.pread(file)
+    samples, events, messages = edf.pread(file)
     
-    samples.to_csv(file.replace('.edf', '-samples.csv'))
-    events.to_csv(file.replace('.edf', '-events.csv'))
+    new_filename = file.replace('.edf', '-samples.csv')
+    
+    if new_filename not in allfiles:
+        samples.to_csv(new_filename)
+        events.to_csv(file.replace('.edf', '-events.csv'))
     
     print(f'Parsed {i + 1} of {len(files)} files')
     sys.stdout.write("\033[F")

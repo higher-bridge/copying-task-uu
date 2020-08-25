@@ -17,9 +17,11 @@ def find_nearest_index(array, timestamp):
     idx = (np.abs(array - timestamp)).argmin()
     return idx
 
+filename = 'xytest'
+
 # Load data
-samples_loc = '../results/001-trackingSession-1-samples.csv'
-events_loc = '../results/001-trackingSession-1-events.csv'
+samples_loc = f'../results/{filename}-trackingSession-1-samples.csv'
+events_loc = f'../results/{filename}-trackingSession-1-events.csv'
 
 samples = pd.read_csv(samples_loc)
 events = pd.read_csv(events_loc)
@@ -27,18 +29,34 @@ events = pd.read_csv(events_loc)
 # Filter only fixations
 fixations = events.loc[events['type'] == 'fixation']
 
-# Get start & end times of first trial
-task_events = pd.read_csv('../results/001-eventTracking.csv')
-
-start_times = task_events.loc[task_events['Event'] == 'Task init']['Time']
-start = list(start_times)[0]
-start_idx = find_nearest_index(fixations['start'], start)
-
-end_times = task_events.loc[task_events['Event'] == 'Finished trial']['Time']
-end = list(end_times)[0]
-end_idx = find_nearest_index(fixations['start'], end)
-
-
+# Plot all fixations
 plt.figure()
 sns.scatterplot('gavx', 'gavy', data=fixations)
+plt.xlim((0, 2560))
+plt.ylim((1440, 0)) # Note that the y-axis needs to be flipped
+plt.title('All trials')
 plt.show()
+
+# Get start & end times of first trial
+task_events = pd.read_csv(f'../results/{filename}-eventTracking.csv')
+
+start_times = task_events.loc[task_events['Event'] == 'Task init']['TrackerTime']
+end_times = task_events.loc[task_events['Event'] == 'Finished trial']['TrackerTime']
+
+for trial_num in range(len(start_times)):
+
+    start = list(start_times)[trial_num]
+    end = list(end_times)[trial_num]
+    
+    start_idx = find_nearest_index(fixations['start'], start)
+    end_idx = find_nearest_index(fixations['end'], end)
+    
+    fixations_trial = fixations.iloc[start_idx:end_idx]
+    
+    # Plot
+    plt.figure()
+    sns.scatterplot('gavx', 'gavy', data=fixations_trial)
+    plt.xlim((0, 2560))
+    plt.ylim((1440, 0)) # Note that the y-axis needs to be flipped
+    plt.title(f'Trial {trial_num + 1}')
+    plt.show()
