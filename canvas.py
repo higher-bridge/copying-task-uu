@@ -238,8 +238,8 @@ class Canvas(QWidget):
         # mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
         
         pickle.dump(self.mouseTrackerDict, 
-                    Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
-                    'wb')        
+                    open(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
+                    'wb'))        
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
         
     def checkIfFinished(self, timeOut=False):        
