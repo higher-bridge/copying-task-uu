@@ -19,11 +19,11 @@ IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
 TIME_OUT_MS = 20000
 
-NUM_TRIALS = 20
-CONDITIONS = [(4000, 0),
-              (3000, 1000),
-              (2000, 2000),
-              (1000, 3000)]
+NUM_TRIALS = 35
+CONDITIONS = [(6000, 0),
+              (4000, 2000),
+              (3000, 3000),
+              (2000, 4000)]
 
 CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
 shuffle(CONDITION_ORDER)

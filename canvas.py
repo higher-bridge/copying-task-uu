@@ -11,6 +11,7 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import pickle
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap, QCursor, QFont
@@ -131,7 +132,11 @@ class Canvas(QWidget):
             
             with open('results/usedNumbers.txt', 'w') as f:
                 json.dump(usedNumbers, f)
-            
+                
+            # Make dedicated folder for this person
+            if not str(self.ppNumber) in os.listdir('results'):
+                os.mkdir(f'results/{self.ppNumber}')
+                
             return
         
         # If already in use, recursively run again
@@ -185,9 +190,7 @@ class Canvas(QWidget):
         if now - self.checkIfFinishedStart >= 500:
             self.checkIfFinished()
             self.checkIfFinishedStart = now
-            
-        # print(f'Update took {round(time.time() * 1000) - now}ms')
-        
+                    
     def runTimer(self):
         self.timer.setInterval(1) # 1 ms
         self.timer.timeout.connect(self.updateTimer)
@@ -206,13 +209,11 @@ class Canvas(QWidget):
             pass # Happens if the timer has never been started yet
 
     def getTrackerClock(self):
-        # start = round(time.time() * 1000)
         try:
             trackerClock = self.tracker.get_eyelink_clock()
         except Exception:
             trackerClock = 0
             
-        # print(f'Retrieving clock took {round(time.time() * 1000) - start} ms')
         return trackerClock
 
     def writeEvent(self, msg):
@@ -227,20 +228,21 @@ class Canvas(QWidget):
         self.eventTracker = self.eventTracker.append(event, ignore_index=True)
 
     def writeFiles(self):
-        self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}-correctPlacements.csv'))
-        self.allPlacements.to_csv(Path(f'results/{self.ppNumber}-allPlacements.csv'))
+        self.correctPlacements.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-correctPlacements.csv'))
+        self.allPlacements.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-allPlacements.csv'))
         
-        self.eventTracker.to_csv(Path(f'results/{self.ppNumber}-eventTracking.csv'))
+        self.eventTracker.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv'))
 
     def writeMouseTracker(self):
-        mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
-        mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
+        # mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
+        # mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
         
-        # self.mouseTracker.to_csv(Path(f'results/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
-
-    def checkIfFinished(self, timeOut=False):
-        now = round(time.time() * 1000)
+        pickle.dump(self.mouseTrackerDict, 
+                    Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
+                    'wb')        
+        self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
         
+    def checkIfFinished(self, timeOut=False):        
         copiedTemp = self.correctPlacements.loc[self.correctPlacements['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
         
@@ -271,7 +273,7 @@ class Canvas(QWidget):
     
     def moveAndRenameTrackerFile(self):
         fromLocation = 'default.edf'
-        toLocation = f'results/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
+        toLocation = f'results/{self.ppNumber}/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
         os.rename(Path(fromLocation), Path(toLocation))
         
         self.writeEvent(f'Writing eyetracker session {self.recordingSession}')
@@ -333,7 +335,6 @@ class Canvas(QWidget):
                 self.clearScreen()
                 
                 # Try to close the eyetracker
-                # if self.disp != None:
                 try:
                     self.tracker.stop_recording()
                     self.tracker.close()
@@ -343,14 +344,11 @@ class Canvas(QWidget):
                     
                 except Exception as e:
                     # There is no recording to stop
-                    # print('Escape pressed, disp!=None')
                     print(e)
 
 
                 # Go into calibration
-                if self.disp == None:
-                    print('Backspace pressed, disp==None')
-                    
+                if self.disp == None:                    
                     # Program crashes if both pygaze and this want to use fullscreen, so maximize instead of FS
                     self.showMaximized()
                     
@@ -467,9 +465,6 @@ class Canvas(QWidget):
             self.currentTrial = 1
             
             self.writeMouseTracker()
-            # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
-            self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'Trial', 'Condition']}
-            
         
         self.spacePushed = False
 
