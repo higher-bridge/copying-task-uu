@@ -234,12 +234,12 @@ class Canvas(QWidget):
         self.eventTracker.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv'))
 
     def writeMouseTracker(self):
-        # mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
-        # mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.csv'))
+        mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
+        mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}-trackingSession-{self.recordingSession}.csv'))
         
-        pickle.dump(self.mouseTrackerDict, 
-                    open(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
-                    'wb'))        
+        # pickle.dump(self.mouseTrackerDict, 
+        #             open(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
+        #             'wb'))        
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
         
     def checkIfFinished(self, timeOut=False):        
@@ -275,6 +275,8 @@ class Canvas(QWidget):
         fromLocation = 'default.edf'
         toLocation = f'results/{self.ppNumber}/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
         os.rename(Path(fromLocation), Path(toLocation))
+        
+        self.writeMouseTracker()
         
         self.writeEvent(f'Writing eyetracker session {self.recordingSession}')
 
@@ -387,7 +389,6 @@ class Canvas(QWidget):
                 self.writeEvent('Early exit')
                 
                 self.writeFiles()
-                self.writeMouseTracker()
                 
                 self.close()
                 print('\nEarly exit')
@@ -463,8 +464,6 @@ class Canvas(QWidget):
         if self.currentTrial > self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 1
-            
-            self.writeMouseTracker()
         
         self.spacePushed = False
 
