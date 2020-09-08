@@ -20,26 +20,32 @@ class MouseFixations():
         self.fix_dict = self.init_fixation_dict()
 
     def init_fixation_dict(self):
-        keys = ['start_x', 'start_y', 'end_x', 'end_y', 'dist', 'avx', 'avy', 'start', 'end', 'duration']
+        keys = ['start_x', 'start_y', 'end_x', 'end_y', 'dist', 'velocity',
+                'avx', 'avy', 'start', 'end', 'duration']
         
         fix_dict = {key: [] for key in keys}
         return fix_dict
            
     def add_to_fixation_dict(self, start_location:tuple, end_location:tuple, start, end):
+        dist = euclidean_distance(start_location, end_location)
+        dur = end - start
+        velocity = dist / dur
+        
         self.fix_dict['start_x'].append(start_location[0])
         self.fix_dict['start_y'].append(start_location[1])
         
         self.fix_dict['end_x'].append(end_location[0])
         self.fix_dict['end_y'].append(end_location[1])
         
-        self.fix_dict['dist'].append(euclidean_distance(start_location, end_location))
+        self.fix_dict['dist'].append(dist)
+        self.fix_dict['velocity'].append(velocity)
         
         self.fix_dict['avx'].append((start_location[0] + end_location[0]) / 2)
         self.fix_dict['avy'].append((start_location[1] + end_location[1]) / 2)
         
         self.fix_dict['start'].append(start)
         self.fix_dict['end'].append(end)
-        self.fix_dict['duration'].append(end - start)
+        self.fix_dict['duration'].append(dur)
         
     def get_fix_dict(self, astype:str='dataframe'):
         if astype == 'dataframe':
@@ -74,6 +80,8 @@ def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int
         start_location = (xdata[i], ydata[i])
         start_time = timedata[i]
         
+        # We assume a fixation just to get in the while loop. If distance is too great,
+        # it will break out immediately
         fixating = True
         time_lim_reached = False
         
@@ -88,7 +96,7 @@ def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int
                 if euclidean_distance(start_location, new_location) > max_deviation:
                     fixating = False
                 
-                # As long as min_duration isn't reached continue, else break
+                # Min duration must have been reached to count as fixation
                 if new_time - start_time > min_duration:
                     time_lim_reached = True
             

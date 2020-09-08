@@ -96,7 +96,6 @@ for i, ID in enumerate(ID_dict.keys()):
     print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
     sys.stdout.write("\033[F")
     
-    break
     
     
     
