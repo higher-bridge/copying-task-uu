@@ -60,10 +60,10 @@ def concat_event_files(eventfiles:list):
     events = pd.concat(all_sessions, ignore_index=True)
     return events
 
-def scatterplot_fixations(data, title:str):
+def scatterplot_fixations(data, x, y, title:str):
     # Plot fixations
     plt.figure()
-    sns.scatterplot('gavx', 'gavy', data=data)
+    sns.scatterplot(y, y, data=data)
     plt.xlim((0, 2560))
     plt.ylim((1440, 0)) # Note that the y-axis needs to be flipped
     plt.xlabel('x (pixels)')
