@@ -22,10 +22,10 @@ all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignor
 
 ID_dict = hf.write_IDs_to_dict(all_IDs)
     
-for i, ID in enumerate(ID_dict.keys()):
+for i, ID in enumerate(ID_dict.keys()):  
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
-    mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking')
+    mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking-')
     
     # Concatenate all separate session files into one larger file
     task_events = hf.concat_event_files(task_event_files)
@@ -36,7 +36,7 @@ for i, ID in enumerate(ID_dict.keys()):
     fixations = events.loc[events['type'] == 'fixation']
     
     # Plot all fixations
-    # hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials')
+    hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials')
 
     # Create two empty lists
     trial_list = np.empty(len(events))
@@ -96,6 +96,5 @@ for i, ID in enumerate(ID_dict.keys()):
     print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
     sys.stdout.write("\033[F")
     
-    
-    
+  
     

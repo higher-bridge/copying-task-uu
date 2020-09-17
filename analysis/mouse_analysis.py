@@ -29,7 +29,7 @@ class MouseFixations():
     def add_to_fixation_dict(self, start_location:tuple, end_location:tuple, start, end):
         dist = euclidean_distance(start_location, end_location)
         dur = end - start
-        velocity = dist / dur
+        # velocity = dist / dur
         
         self.fix_dict['start_x'].append(start_location[0])
         self.fix_dict['start_y'].append(start_location[1])
@@ -38,7 +38,8 @@ class MouseFixations():
         self.fix_dict['end_y'].append(end_location[1])
         
         self.fix_dict['dist'].append(dist)
-        self.fix_dict['velocity'].append(velocity)
+        # self.fix_dict['velocity'].append(velocity)
+        self.fix_dict['velocity'].append(np.nan)
         
         self.fix_dict['avx'].append((start_location[0] + end_location[0]) / 2)
         self.fix_dict['avy'].append((start_location[1] + end_location[1]) / 2)
@@ -110,7 +111,8 @@ def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int
                                         start_time, timedata[i-1])
     
     events = mf.get_fix_dict()
-    events = events.loc[events['duration'] < max_duration] # Remove all that is longer than max_duration            
+    events = events.loc[events['duration'] < max_duration] # Remove all that is longer than max_duration 
+    events = events.loc[events['duration'] >= min_duration] # Due to merging different dataframes?           
     
     return events
                 

@@ -29,7 +29,7 @@ def getListOfFiles(dirName):
                 
     return sorted(allFiles)
 
-path = f'{os.getcwd()}/results'
+path = f'../results'
 
 allfiles = [f for f in getListOfFiles(path)]
 files = [f for f in allfiles if '.edf' in f]
