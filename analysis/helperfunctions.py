@@ -60,6 +60,29 @@ def concat_event_files(eventfiles:list):
     events = pd.concat(all_sessions, ignore_index=True)
     return events
 
+def order_by_condition(df, condition_order:list):
+    new_order = []
+    
+    for c in condition_order:
+        df_c = df.loc[df['Condition'] == c]
+        new_order.append(df_c)
+        
+    new_df = pd.concat(new_order, ignore_index=True)
+
+    return new_df
+
+def get_condition_order(df, ID:str, conditions:list=[1, 2, 3, 4]):
+    df_id = df.loc[df['ID'] == ID]
+    
+    condition_order = []
+    
+    for condition in conditions:
+        colname = f'Condition {condition}'
+        c = list(df_id[colname])[0]
+        condition_order.append(c)
+        
+    return condition_order
+
 def scatterplot_fixations(data, x, y, title:str):
     # Plot fixations
     plt.figure()

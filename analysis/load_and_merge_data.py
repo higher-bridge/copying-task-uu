@@ -21,6 +21,8 @@ base_location = '../results'
 all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignores actual files, only finds folders
 
 ID_dict = hf.write_IDs_to_dict(all_IDs)
+pp_info = pd.read_excel('../results/participant_info.xlsx')
+pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
     
 for i, ID in enumerate(ID_dict.keys()):  
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
@@ -31,6 +33,11 @@ for i, ID in enumerate(ID_dict.keys()):
     task_events = hf.concat_event_files(task_event_files)
     events = hf.concat_event_files(eventfiles)  
     mousedata = hf.concat_event_files(mousefiles) #.drop('Unnamed: 0')
+    
+    # Order the df in the proper condition, retrieved from participant_info.xlsx
+    # (I didn't design the mousetracker filenames with chronological ordering)
+    condition_order = hf.get_condition_order(pp_info, ID)
+    mousedata = hf.order_by_condition(mousedata, condition_order)
     
     # Filter only fixations
     fixations = events.loc[events['type'] == 'fixation']
@@ -95,6 +102,8 @@ for i, ID in enumerate(ID_dict.keys()):
     
     print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
     sys.stdout.write("\033[F")
+    
+    break
     
   
     
