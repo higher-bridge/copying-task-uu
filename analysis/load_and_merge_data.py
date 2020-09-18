@@ -23,8 +23,14 @@ all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignor
 ID_dict = hf.write_IDs_to_dict(all_IDs)
 pp_info = pd.read_excel('../results/participant_info.xlsx')
 pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
+
+
+trials_b1 = []
+trials_b2 = []
+trials_b3 = []
+trials_b4 = []
     
-for i, ID in enumerate(ID_dict.keys()):  
+for i, ID in enumerate(list(pp_info['ID'].unique())):  
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
     mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking-')
@@ -45,21 +51,23 @@ for i, ID in enumerate(ID_dict.keys()):
     # Plot all fixations
     hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials')
 
-    # Create two empty lists
-    trial_list = np.empty(len(events))
-    trial_list[:] = np.nan
+    # Create two empty lists in which we will fill in the appropriate trials/condition value
+    trial_list = np.empty(len(events), dtype=int)
+    trial_list[:] = 999
     
-    condition_list = np.empty(len(events))
-    condition_list[:] = np.nan
+    condition_list = np.empty(len(events), dtype=int)
+    condition_list[:] = 999
     
+    # Create a list to track which rows in mousedata are valid
     mouse_valid = np.zeros(len(mousedata), dtype=bool)
     mouse_valid[:] = False
     
     # For each condition, each trial, get the start and end times and relate it to eye events
-    for condition in list(task_events['Condition'].unique()):
+    for x, condition in enumerate(list(task_events['Condition'].unique())):
         condition_df = task_events.loc[task_events['Condition'] == condition]
         
-        for trial_num in list(condition_df['Trial'].unique()):
+        all_trials = list(condition_df['Trial'].unique())
+        for trial_num in all_trials:
             trial_df = condition_df.loc[condition_df['Trial'] == trial_num]
             
             # Retrieve where eventTracking has written trial init and trial finish
@@ -87,10 +95,17 @@ for i, ID in enumerate(ID_dict.keys()):
                     fixations_trial = fixations.iloc[start_idx:end_idx]
                     hf.scatterplot_fixations(fixations_trial, 'gavx', 'gavy', title=f'ID {ID}, condition {condition}, trial {trial_num + 1}')
     
-    
+        
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
     events['Condition'] = condition_list
+    
+    num_trials = hf.get_num_trials(events)
+    trials_b1.append(int(num_trials[0]))
+    trials_b2.append(int(num_trials[1]))
+    trials_b3.append(int(num_trials[2]))
+    trials_b4.append(int(num_trials[3]))
+    
     events.to_csv(f'../results/{ID}/{ID}-allFixations.csv')
     
     mousedata['Valid'] = mouse_valid
@@ -103,7 +118,13 @@ for i, ID in enumerate(ID_dict.keys()):
     print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
     sys.stdout.write("\033[F")
     
-    break
+
+pp_info['Trials condition 0'] = trials_b1
+pp_info['Trials condition 1'] = trials_b2
+pp_info['Trials condition 2'] = trials_b3
+pp_info['Trials condition 3'] = trials_b4
+
+pp_info.to_excel('../results/participant_info.xlsx')
     
   
     

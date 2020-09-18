@@ -77,16 +77,31 @@ def get_condition_order(df, ID:str, conditions:list=[1, 2, 3, 4]):
     condition_order = []
     
     for condition in conditions:
-        colname = f'Condition {condition}'
+        colname = f'Block {condition}'
         c = list(df_id[colname])[0]
         condition_order.append(c)
         
     return condition_order
 
+def get_num_trials(df, conditions:list=[0, 1, 2, 3]):
+    num_trials = []
+    
+    # conditions = sorted(list(df['Condition'].unique()))
+    for condition in conditions:
+        df_c = df.loc[df['Condition'] == condition]
+        trials = list(df_c['Trial'].unique())
+        
+        if len(trials) > 0:
+            num_trials.append(len(trials))
+        else:
+            num_trials.append(0)
+        
+    return num_trials
+
 def scatterplot_fixations(data, x, y, title:str):
     # Plot fixations
     plt.figure()
-    sns.scatterplot(y, y, data=data)
+    sns.scatterplot(x, y, data=data)
     plt.xlim((0, 2560))
     plt.ylim((1440, 0)) # Note that the y-axis needs to be flipped
     plt.xlabel('x (pixels)')
