@@ -12,26 +12,11 @@ import pandas as pd
 import os
 import sys
 
-def getListOfFiles(dirName):
-    # create a list of file and sub directories 
-    # names in the given directory 
-    listOfFile = os.listdir(dirName)
-    allFiles = list()
-    # Iterate over all the entries
-    for entry in listOfFile:
-        # Create full path
-        fullPath = os.path.join(dirName, entry)
-        # If entry is a directory then get the list of files in this directory 
-        if os.path.isdir(fullPath):
-            allFiles = allFiles + getListOfFiles(fullPath)
-        else:
-            allFiles.append(fullPath)
-                
-    return sorted(allFiles)
+import helperfunctions as hf
 
-path = f'../results'
+path = '../results'
 
-allfiles = [f for f in getListOfFiles(path)]
+allfiles = [f for f in hf.getListOfFiles(path)]
 files = [f for f in allfiles if '.edf' in f]
 
 

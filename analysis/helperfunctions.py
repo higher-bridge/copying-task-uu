@@ -12,6 +12,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
+
+def getListOfFiles(dirName):
+    # create a list of file and sub directories 
+    # names in the given directory 
+    listOfFile = os.listdir(dirName)
+    allFiles = list()
+    # Iterate over all the entries
+    for entry in listOfFile:
+        # Create full path
+        fullPath = os.path.join(dirName, entry)
+        # If entry is a directory then get the list of files in this directory 
+        if os.path.isdir(fullPath):
+            allFiles = allFiles + getListOfFiles(fullPath)
+        else:
+            allFiles.append(fullPath)
+                
+    return sorted(allFiles)
+
 def find_nearest_index(array, timestamp):
     array = np.asarray(array)
     idx = (np.abs(array - timestamp)).argmin()
@@ -98,7 +116,26 @@ def get_num_trials(df, conditions:list=[0, 1, 2, 3]):
         
     return num_trials
 
-def scatterplot_fixations(data, x, y, title:str):
+def get_midline_crossings(xpos:list, midline=1280):
+    num_crossings = 0
+    prev_x = 2560
+    
+    for x in xpos:
+        if prev_x > midline and x < midline:
+            num_crossings += 1
+        
+        prev_x = x
+    
+    return num_crossings
+
+def get_left_side_fixations(xpos:list, midline=1280):
+    return len([x for x in xpos if x < midline])
+    
+def get_left_ratio_fixations(xpos:list, midline=1280):
+    return len([x for x in xpos if x < midline]) / len(xpos)
+
+
+def scatterplot_fixations(data, x, y, title:str, savestr:str, save=True):
     # Plot fixations
     plt.figure()
     sns.scatterplot(x, y, data=data)
@@ -107,4 +144,5 @@ def scatterplot_fixations(data, x, y, title:str):
     plt.xlabel('x (pixels)')
     plt.ylabel('y (pixels)')
     plt.title(title)
+    plt.savefig(savestr, dpi=500)
     plt.show()
