@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+from scipy.stats import normaltest, kruskal, mannwhitneyu
 
 
 def getListOfFiles(dirName):
@@ -116,7 +117,7 @@ def get_num_trials(df, conditions:list=[0, 1, 2, 3]):
         
     return num_trials
 
-def get_midline_crossings(xpos:list, midline=1280):
+def get_midline_crossings(xpos:list, midline=1100):
     num_crossings = 0
     prev_x = 2560
     
@@ -128,14 +129,60 @@ def get_midline_crossings(xpos:list, midline=1280):
     
     return num_crossings
 
-def get_left_side_fixations(xpos:list, midline=1280):
+def get_left_side_fixations(xpos:list, midline=1100):
     return len([x for x in xpos if x < midline])
     
-def get_left_ratio_fixations(xpos:list, midline=1280):
+def get_left_ratio_fixations(xpos:list, midline=1100):
     return len([x for x in xpos if x < midline]) / len(xpos)
 
+def test_normality(df, dep_var, ind_vars):
+    p_values = []
+    
+    for iv in ind_vars:
+        df_iv = df.loc[df['Condition'] == iv]
+        
+        s, p = normaltest(df_iv[dep_var])
+        p_values.append(p)
+        print(f'Condition {iv}: s={s}, p={round(p, 3)}')
+        
+    return p_values
 
-def scatterplot_fixations(data, x, y, title:str, savestr:str, save=True):
+def test_anova(df, dep_var, ind_vars):
+    ind_vars = sorted(ind_vars)
+    
+    normality_p = test_normality(df, dep_var, ind_vars)
+    significants = [p for p in normality_p if p < 0.01]
+    is_non_normal = len(significants) > 0
+    
+    # dep_var_list = pd.DataFrame()
+    # for iv in ind_vars:
+    #     df_iv = df.loc[df['Condition'] == iv]
+    #     dvar = list(df_iv[dep_var])
+    #     dep_var_list[iv] = dvar
+    
+    iv_combinations = []
+    
+    for iv in ind_vars:
+        for iv1 in ind_vars:
+            if (iv != iv1) and ((iv, iv1) not in iv_combinations) and ((iv1, iv) not in iv_combinations):
+                iv_combinations.append((iv, iv1))
+    
+    # print(iv_combinations)
+    
+    print('')
+    if is_non_normal:
+        for comb in iv_combinations:
+            x = df.loc[df['Condition'] == comb[0]][dep_var]
+            y = df.loc[df['Condition'] == comb[1]][dep_var]
+            
+            s, p = mannwhitneyu(x, y)
+            print(f'{comb} MW-U: U={s}, p={round(p, 3)}')
+    else:
+        return None
+    
+    return
+
+def scatterplot_fixations(data, x, y, title:str, save=True, savestr:str=''):
     # Plot fixations
     plt.figure()
     sns.scatterplot(x, y, data=data)

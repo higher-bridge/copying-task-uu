@@ -16,6 +16,8 @@ import helperfunctions as hf
 EXCLUDE_TRIALS = list(range(1, 6))
 EXCLUDE_TRIALS.append(999)
 
+PLOT = True
+
 base_location = '../results'
 
 pp_info = pd.read_excel('../results/participant_info.xlsx')
@@ -80,9 +82,9 @@ print(f'No loss: {no_data_loss} (ratio={round(no_data_loss/total_trials, 3)})')
 print(f'No loss + correct: {no_data_loss_correct} (ratio={round(no_data_loss_correct/total_trials, 3)})\n')
 
 
-# =============================================================================
-# EXPLORE COMPLETION TIMES PER CONDITION
-# =============================================================================
+# # =============================================================================
+# # EXPLORE COMPLETION TIMES PER CONDITION
+# # =============================================================================
 time_dict = {f'Condition {i}': [] for i in range(4)}
 
 for i, ID in enumerate(list(pp_info['ID'].unique())): 
@@ -113,29 +115,30 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
 # Melt the dataframe
 all_times = pd.DataFrame(time_dict)
 all_times_melt = all_times.melt(value_vars=['Condition 0',
-                                         'Condition 1',
-                                         'Condition 2',
-                                         'Condition 3'],
+                                          'Condition 1',
+                                          'Condition 2',
+                                          'Condition 3'],
                                 var_name='Condition',
                                 value_name='Time (ms)')
 
-# Distplot of trial times
-plt.figure()
-for condition in list(time_dict.keys()):
-    df = all_times_melt.loc[all_times_melt['Condition'] == condition]
-    sns.distplot(df['Time (ms)'], label=condition)
-
-plt.legend()
-plt.xlim((0, 20100))
-plt.savefig(f'{base_location}/plots/trial-time-dist.png', dpi=500)
-plt.show()
-
-# Barplot of mean trial times
-plt.figure()
-sns.catplot('Condition', 'Time (ms)', data=all_times_melt, kind='bar')
-plt.tight_layout()
-plt.savefig(f'{base_location}/plots/trial-time-bar.png', dpi=500)
-plt.show()
+if PLOT:
+    # Distplot of trial times
+    plt.figure()
+    for condition in list(time_dict.keys()):
+        df = all_times_melt.loc[all_times_melt['Condition'] == condition]
+        sns.distplot(df['Time (ms)'], label=condition)
+    
+    plt.legend()
+    plt.xlim((0, 20100))
+    plt.savefig(f'{base_location}/plots/trial-time-dist.png', dpi=500)
+    plt.show()
+    
+    # Barplot of mean trial times
+    plt.figure()
+    sns.catplot('Condition', 'Time (ms)', data=all_times_melt, kind='bar')
+    plt.tight_layout()
+    plt.savefig(f'{base_location}/plots/trial-time-bar.png', dpi=500)
+    plt.show()
 
 # Calculate mean and SD trial times
 mean_times = pd.DataFrame(columns=['Mean', 'SD', 'Condition'])
@@ -144,11 +147,12 @@ for condition in list(time_dict.keys()):
     times = time_dict[condition]
     
     mt = pd.DataFrame({'Mean'     : round(np.nanmean(times), 1),
-                       'SD'       : round(np.nanstd(times), 1),
-                       'Condition': condition},
+                        'SD'       : round(np.nanstd(times), 1),
+                        'Condition': condition},
                       index=[0])
     mean_times = mean_times.append(mt, ignore_index=True)
-    
+ 
+print('\nMean trial durations:')
 print(mean_times)
 
 # =============================================================================
@@ -177,30 +181,33 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                                   'Condition': condition,
                                   'Trial'    : trial,
                                   'ID'       : ID},
-                                 index=[0])
+                                  index=[0])
                 
                 crossings = crossings.append(c, ignore_index=True)
 
+print('\nANOVA test Crossings')
+hf.test_anova(crossings, 'Crossings', list(crossings['Condition'].unique()))
 
-# Distplot of number of crossings
-plt.figure()
-for condition in sorted(list(crossings['Condition'].unique())):
-    df = crossings.loc[crossings['Condition'] == condition]
-    sns.distplot(df['Crossings'], label=condition, bins=15)
+if PLOT:
+    # Distplot of number of crossings
+    plt.figure()
+    for condition in sorted(list(crossings['Condition'].unique())):
+        df = crossings.loc[crossings['Condition'] == condition]
+        sns.distplot(df['Crossings'], label=condition, bins=15)
+        
+    plt.legend()
+    plt.xlim((-1, 8))
+    plt.xlabel('Midline crossings (right to left)')
+    plt.savefig(f'{base_location}/plots/crossings-dist.png', dpi=500)
+    plt.show()
     
-plt.legend()
-plt.xlim((-1, 8))
-plt.xlabel('Midline crossings (right to left)')
-plt.savefig(f'{base_location}/plots/crossings-dist.png', dpi=500)
-plt.show()
-
-# Barplot of number of crossings
-plt.figure()
-sns.catplot('Condition', 'Crossings', data=crossings, kind='bar')
-plt.ylabel('Midline crossings (right to left)')
-plt.tight_layout()
-plt.savefig(f'{base_location}/plots/crossings-bar.png', dpi=500)
-plt.show()
+    # Barplot of number of crossings
+    plt.figure()
+    sns.catplot('Condition', 'Crossings', data=crossings, kind='bar')
+    plt.ylabel('Midline crossings (right to left)')
+    plt.tight_layout()
+    plt.savefig(f'{base_location}/plots/crossings-bar.png', dpi=500)
+    plt.show()
 
 # =============================================================================
 # EXPLORE FIXATIONS ON THE EXAMPLE GRID PER CONDITION
@@ -231,76 +238,82 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                                  index=[0])
                 
                 left_fixations = left_fixations.append(c, ignore_index=True)
+                
+                hf.scatterplot_fixations(df_t, 'gavx', 'gavy', f'{num_fixations} left fix', save=False, savestr='')
 
-
-# Distplot of number of crossings
-plt.figure()
-for condition in sorted(list(left_fixations['Condition'].unique())):
-    df = left_fixations.loc[left_fixations['Condition'] == condition]
-    sns.distplot(df['Fixations'], label=condition, bins=15)
+print('\nANOVA test left fixations')
+hf.test_anova(left_fixations, 'Fixations', list(left_fixations['Condition'].unique()))
     
-plt.legend()
-plt.xlim((-1, 20))
-plt.xlabel('Left-side fixations')
-plt.savefig(f'{base_location}/plots/leftFixations-dist.png', dpi=500)
-plt.show()
-
-# Barplot of number of crossings
-plt.figure()
-sns.catplot('Condition', 'Fixations', data=left_fixations, kind='bar')
-plt.ylabel('Left-side fixations')
-plt.tight_layout()
-plt.savefig(f'{base_location}/plots/leftFixations-bar.png', dpi=500)
-plt.show()
+if PLOT:
+    # Distplot of number of left fixations
+    plt.figure()
+    for condition in sorted(list(left_fixations['Condition'].unique())):
+        df = left_fixations.loc[left_fixations['Condition'] == condition]
+        sns.distplot(df['Fixations'], label=condition, bins=15)
+        
+    plt.legend()
+    plt.xlim((-1, 20))
+    plt.xlabel('Left-side fixations')
+    plt.savefig(f'{base_location}/plots/leftFixations-dist.png', dpi=500)
+    plt.show()
+    
+    # Barplot of number of left fixations
+    plt.figure()
+    sns.catplot('Condition', 'Fixations', data=left_fixations, kind='bar')
+    plt.ylabel('Left-side fixations')
+    plt.tight_layout()
+    plt.savefig(f'{base_location}/plots/leftFixations-bar.png', dpi=500)
+    plt.show()
 
 # =============================================================================
 # EXPLORE FIXATIONS ON THE EXAMPLE GRID AS RATIO OF TOTAL
 # =============================================================================
-ratio_fixations = pd.DataFrame(columns=['Fixations', 'Condition', 'Trial', 'ID'])
+# ratio_fixations = pd.DataFrame(columns=['Fixations', 'Condition', 'Trial', 'ID'])
 
-# Data outside of trial start-end are marked with 999 so will be filtered in the next steps
-for i, ID in enumerate(list(pp_info['ID'].unique())): 
-    filenames = [f for f in fixations_files if ID in f]
-    filename = filenames[0]
+# # Data outside of trial start-end are marked with 999 so will be filtered in the next steps
+# for i, ID in enumerate(list(pp_info['ID'].unique())): 
+#     filenames = [f for f in fixations_files if ID in f]
+#     filename = filenames[0]
     
-    df = pd.read_csv(filename)
-    df = df.loc[df['type'] == 'fixation']
+#     df = pd.read_csv(filename)
+#     df = df.loc[df['type'] == 'fixation']
     
-    for condition in list(df['Condition'].unique()):
-        df_c = df.loc[df['Condition'] == condition]
+#     for condition in list(df['Condition'].unique()):
+#         df_c = df.loc[df['Condition'] == condition]
         
-        for trial in list(df_c['Trial'].unique()): 
-            if trial not in EXCLUDE_TRIALS:
-                df_t = df_c.loc[df_c['Trial'] == trial]
+#         for trial in list(df_c['Trial'].unique()): 
+#             if trial not in EXCLUDE_TRIALS:
+#                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
-                num_fixations = hf.get_left_ratio_fixations(list(df_t['gavx']))
+#                 num_fixations = hf.get_left_ratio_fixations(list(df_t['gavx']))
                 
-                c = pd.DataFrame({'Fixations': num_fixations,
-                                  'Condition': condition,
-                                  'Trial'    : trial,
-                                  'ID'       : ID},
-                                 index=[0])
+#                 c = pd.DataFrame({'Fixations': num_fixations,
+#                                   'Condition': condition,
+#                                   'Trial'    : trial,
+#                                   'ID'       : ID},
+#                                   index=[0])
                 
-                ratio_fixations = ratio_fixations.append(c, ignore_index=True)
+#                 ratio_fixations = ratio_fixations.append(c, ignore_index=True)
 
 
-# Distplot of number of crossings
-plt.figure()
-for condition in sorted(list(ratio_fixations['Condition'].unique())):
-    df = ratio_fixations.loc[ratio_fixations['Condition'] == condition]
-    sns.distplot(df['Fixations'], label=condition, bins=15)
+# if PLOT:
+#     # Distplot of left fixation ratio
+#     plt.figure()
+#     for condition in sorted(list(ratio_fixations['Condition'].unique())):
+#         df = ratio_fixations.loc[ratio_fixations['Condition'] == condition]
+#         sns.distplot(df['Fixations'], label=condition, bins=15)
+        
+#     plt.legend()
+#     plt.xlim((-0.05, 1.05))
+#     plt.xlabel('Left-side fixations as ratio of total')
+#     plt.savefig(f'{base_location}/plots/ratioFixations-dist.png', dpi=500)
+#     plt.show()
     
-plt.legend()
-plt.xlim((-0.05, 1.05))
-plt.xlabel('Left-side fixations as ratio of total')
-plt.savefig(f'{base_location}/plots/ratioFixations-dist.png', dpi=500)
-plt.show()
-
-# Barplot of number of crossings
-plt.figure()
-sns.catplot('Condition', 'Fixations', data=ratio_fixations, kind='bar')
-plt.ylabel('Left-side fixations as ratio of total')
-plt.tight_layout()
-plt.savefig(f'{base_location}/plots/ratioFixations-bar.png', dpi=500)
-plt.show()
+#     # Barplot of left fixation ratio
+#     plt.figure()
+#     sns.catplot('Condition', 'Fixations', data=ratio_fixations, kind='bar')
+#     plt.ylabel('Left-side fixations as ratio of total')
+#     plt.tight_layout()
+#     plt.savefig(f'{base_location}/plots/ratioFixations-bar.png', dpi=500)
+#     plt.show()
 
