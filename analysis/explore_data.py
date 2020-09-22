@@ -130,29 +130,31 @@ if PLOT:
     
     plt.legend()
     plt.xlim((0, 20100))
+    plt.xlabel('Trial completion time (ms)')
     plt.savefig(f'{base_location}/plots/trial-time-dist.png', dpi=500)
     plt.show()
     
     # Barplot of mean trial times
     plt.figure()
-    sns.catplot('Condition', 'Time (ms)', data=all_times_melt, kind='bar')
+    sns.catplot('Condition', 'Time (ms)', data=all_times_melt, kind='bar', estimator=np.median)
+    plt.xlabel('Trial completion time (ms)')
     plt.tight_layout()
     plt.savefig(f'{base_location}/plots/trial-time-bar.png', dpi=500)
     plt.show()
 
 # Calculate mean and SD trial times
-mean_times = pd.DataFrame(columns=['Mean', 'SD', 'Condition'])
+mean_times = pd.DataFrame(columns=['Median', 'SD', 'Condition'])
 
 for condition in list(time_dict.keys()):
     times = time_dict[condition]
     
-    mt = pd.DataFrame({'Mean'     : round(np.nanmean(times), 1),
+    mt = pd.DataFrame({'Median'     : round(np.nanmedian(times), 1),
                         'SD'       : round(np.nanstd(times), 1),
                         'Condition': condition},
                       index=[0])
     mean_times = mean_times.append(mt, ignore_index=True)
  
-print('\nMean trial durations:')
+print('\nMedian trial durations:')
 print(mean_times)
 
 # =============================================================================
@@ -203,7 +205,7 @@ if PLOT:
     
     # Barplot of number of crossings
     plt.figure()
-    sns.catplot('Condition', 'Crossings', data=crossings, kind='bar')
+    sns.catplot('Condition', 'Crossings', data=crossings, kind='bar', estimator=np.median)
     plt.ylabel('Midline crossings (right to left)')
     plt.tight_layout()
     plt.savefig(f'{base_location}/plots/crossings-bar.png', dpi=500)
@@ -239,7 +241,7 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 
                 left_fixations = left_fixations.append(c, ignore_index=True)
                 
-                hf.scatterplot_fixations(df_t, 'gavx', 'gavy', f'{num_fixations} left fix', save=False, savestr='')
+                # hf.scatterplot_fixations(df_t, 'gavx', 'gavy', f'{num_fixations} left fix', save=False, savestr='')
 
 print('\nANOVA test left fixations')
 hf.test_anova(left_fixations, 'Fixations', list(left_fixations['Condition'].unique()))
@@ -253,16 +255,74 @@ if PLOT:
         
     plt.legend()
     plt.xlim((-1, 20))
-    plt.xlabel('Left-side fixations')
+    plt.xlabel('Number of left-side fixations')
     plt.savefig(f'{base_location}/plots/leftFixations-dist.png', dpi=500)
     plt.show()
     
     # Barplot of number of left fixations
     plt.figure()
-    sns.catplot('Condition', 'Fixations', data=left_fixations, kind='bar')
-    plt.ylabel('Left-side fixations')
+    sns.catplot('Condition', 'Fixations', data=left_fixations, kind='bar', estimator=np.median)
+    plt.ylabel('Median of number of left-side fixations')
     plt.tight_layout()
     plt.savefig(f'{base_location}/plots/leftFixations-bar.png', dpi=500)
+    plt.show()
+
+# =============================================================================
+# EXPLORE DWELL TIME FIXATIONS ON THE EXAMPLE GRID PER CONDITION
+# =============================================================================
+dwell_times = pd.DataFrame(columns=['Dwell Time', 'Condition', 'Trial', 'ID'])
+
+# Data outside of trial start-end are marked with 999 so will be filtered in the next steps
+for i, ID in enumerate(list(pp_info['ID'].unique())): 
+    filenames = [f for f in fixations_files if ID in f]
+    filename = filenames[0]
+    
+    df = pd.read_csv(filename)
+    df = df.loc[df['type'] == 'fixation']
+    
+    for condition in list(df['Condition'].unique()):
+        df_c = df.loc[df['Condition'] == condition]
+        
+        for trial in list(df_c['Trial'].unique()): 
+            if trial not in EXCLUDE_TRIALS:
+                df_t = df_c.loc[df_c['Trial'] == trial]
+                
+                num_fixations = hf.get_dwell_times(list(df_t['gavx']),
+                                                   list(df_t['start']),
+                                                   list(df_t['end']))
+                
+                c = pd.DataFrame({'Dwell Time': num_fixations,
+                                  'Condition': condition,
+                                  'Trial'    : trial,
+                                  'ID'       : ID},
+                                 index=[0])
+                
+                dwell_times = dwell_times.append(c, ignore_index=True)
+                
+dwell_times = dwell_times.dropna(axis=0)
+
+print('\nANOVA test dwell time')
+hf.test_anova(dwell_times, 'Dwell Time', list(dwell_times['Condition'].unique()))
+    
+if PLOT:
+    # Distplot of number of left fixations
+    plt.figure()
+    for condition in sorted(list(dwell_times['Condition'].unique())):
+        df = dwell_times.loc[dwell_times['Condition'] == condition]
+        sns.distplot(df['Dwell Time'], label=condition, bins=15)
+        
+    plt.legend()
+    plt.xlim((-50, 4100))
+    plt.xlabel('Total dwell time on left side of screen (ms)')
+    plt.savefig(f'{base_location}/plots/dwellTime-dist.png', dpi=500)
+    plt.show()
+    
+    # Barplot of number of left fixations
+    plt.figure()
+    sns.catplot('Condition', 'Dwell Time', data=dwell_times, kind='bar', estimator=np.median)
+    plt.ylabel('Median of total dwell time on left side of screen (ms)')
+    plt.tight_layout()
+    plt.savefig(f'{base_location}/plots/dwellTime-bar.png', dpi=500)
     plt.show()
 
 # =============================================================================
@@ -311,7 +371,7 @@ if PLOT:
     
 #     # Barplot of left fixation ratio
 #     plt.figure()
-#     sns.catplot('Condition', 'Fixations', data=ratio_fixations, kind='bar')
+#     sns.catplot('Condition', 'Fixations', data=ratio_fixations, kind='bar', estimator=np.nanmedian)
 #     plt.ylabel('Left-side fixations as ratio of total')
 #     plt.tight_layout()
 #     plt.savefig(f'{base_location}/plots/ratioFixations-bar.png', dpi=500)

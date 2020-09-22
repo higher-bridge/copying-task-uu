@@ -102,13 +102,13 @@ def get_condition_order(df, ID:str, conditions:list=[1, 2, 3, 4]):
         
     return condition_order
 
-def get_num_trials(df, conditions:list=[0, 1, 2, 3]):
+def get_num_trials(df, conditions:list=[0, 1, 2, 3], exclude=[1, 2, 3, 4, 5, 999]):
     num_trials = []
     
     # conditions = sorted(list(df['Condition'].unique()))
     for condition in conditions:
         df_c = df.loc[df['Condition'] == condition]
-        trials = list(df_c['Trial'].unique())
+        trials = [t for t in list(df_c['Trial'].unique()) if t not in exclude]
         
         if len(trials) > 0:
             num_trials.append(len(trials))
@@ -135,15 +135,28 @@ def get_left_side_fixations(xpos:list, midline=1100):
 def get_left_ratio_fixations(xpos:list, midline=1100):
     return len([x for x in xpos if x < midline]) / len(xpos)
 
+def get_dwell_times(xpos:list, starts:list, ends:list, midline=1100):
+    dwell_times = []
+    
+    for x, start, end in zip(xpos, starts, ends):
+        if x < midline:
+            dwell_times.append(end - start)
+    
+    if len(dwell_times) > 0:
+        # return np.nanmedian(dwell_times)
+        return sum(dwell_times)
+    else:
+        return np.nan
+    
 def test_normality(df, dep_var, ind_vars):
     p_values = []
     
     for iv in ind_vars:
         df_iv = df.loc[df['Condition'] == iv]
         
-        s, p = normaltest(df_iv[dep_var])
+        s, p = normaltest(df_iv[dep_var], nan_policy='omit')
         p_values.append(p)
-        print(f'Condition {iv}: s={s}, p={round(p, 3)}')
+        print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)}')
         
     return p_values
 
@@ -176,7 +189,10 @@ def test_anova(df, dep_var, ind_vars):
             y = df.loc[df['Condition'] == comb[1]][dep_var]
             
             s, p = mannwhitneyu(x, y)
-            print(f'{comb} MW-U: U={s}, p={round(p, 3)}')
+            
+            prefix = '*' if p < .01 else ' '
+            
+            print(f'{prefix}{comb} MW-U: U={round(s, 2)}, p={round(p, 3)}')
     else:
         return None
     

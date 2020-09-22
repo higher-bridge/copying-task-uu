@@ -53,8 +53,9 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     fixations = events.loc[events['type'] == 'fixation']
     
     # Plot all fixations
-    hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials',
-                             savestr=f'../results/{ID}/{ID}-fixationPlotAll.png')
+    if PLOT:
+        hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials',
+                                 savestr=f'../results/{ID}/{ID}-fixationPlotAll.png')
 
     # Create two empty lists in which we will fill in the appropriate trials/condition value
     trial_list = np.empty(len(events), dtype=int)
