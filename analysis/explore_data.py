@@ -12,13 +12,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import helperfunctions as hf
-
-EXCLUDE_TRIALS = list(range(1, 6))
-EXCLUDE_TRIALS.append(999)
+from constants import EXCLUDE_TRIALS, MIDLINE, base_location
 
 PLOT = True
-
-base_location = '../results'
 
 pp_info = pd.read_excel('../results/participant_info.xlsx')
 pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
@@ -177,7 +173,8 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
             if trial not in EXCLUDE_TRIALS:
                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
-                num_crossings = hf.get_midline_crossings(list(df_t['gavx']))
+                num_crossings = hf.get_midline_crossings(list(df_t['gavx']),
+                                                         midline=MIDLINE)
                 
                 c = pd.DataFrame({'Crossings': num_crossings,
                                   'Condition': condition,
@@ -231,7 +228,8 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
             if trial not in EXCLUDE_TRIALS:
                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
-                num_fixations = hf.get_left_side_fixations(list(df_t['gavx']))
+                num_fixations = hf.get_left_side_fixations(list(df_t['gavx']),
+                                                           midline=MIDLINE)
                 
                 c = pd.DataFrame({'Fixations': num_fixations,
                                   'Condition': condition,
@@ -289,7 +287,8 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 
                 num_fixations = hf.get_dwell_times(list(df_t['gavx']),
                                                    list(df_t['start']),
-                                                   list(df_t['end']))
+                                                   list(df_t['end']),
+                                                   midline=MIDLINE)
                 
                 c = pd.DataFrame({'Dwell Time': num_fixations,
                                   'Condition': condition,
@@ -345,7 +344,8 @@ if PLOT:
 #             if trial not in EXCLUDE_TRIALS:
 #                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
-#                 num_fixations = hf.get_left_ratio_fixations(list(df_t['gavx']))
+#                 num_fixations = hf.get_left_ratio_fixations(list(df_t['gavx']),
+#                                                             midline=MIDLINE)
                 
 #                 c = pd.DataFrame({'Fixations': num_fixations,
 #                                   'Condition': condition,

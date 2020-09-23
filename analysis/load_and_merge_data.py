@@ -13,11 +13,11 @@ import sys
 
 import helperfunctions as hf
 import mouse_analysis
+from constants import base_location
 
 
 PLOT = False
 
-base_location = '../results'
 all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignores actual files, only finds folders
 
 ID_dict = hf.write_IDs_to_dict(all_IDs)

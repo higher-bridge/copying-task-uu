@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from scipy.stats import normaltest, kruskal, mannwhitneyu
+from scipy.stats import normaltest, kruskal, mannwhitneyu, shapiro, ttest_rel
 
 
 def getListOfFiles(dirName):
@@ -117,6 +117,24 @@ def get_num_trials(df, conditions:list=[0, 1, 2, 3], exclude=[1, 2, 3, 4, 5, 999
         
     return num_trials
 
+def remove_from_pp_info(df, cols_to_check:list, min_value:int=10):
+    IDs_to_remove = []
+    
+    for ID in list(df['ID'].unique()):
+        df_id = df.loc[df['ID'] == ID]
+        
+        for col in cols_to_check:
+            trials = list(df_id[col])[0]
+            
+            if trials < min_value:
+                IDs_to_remove.append(ID)
+                
+    for ID in IDs_to_remove:
+        df = df.loc[df['ID'] != ID]
+        
+    return df
+            
+
 def get_midline_crossings(xpos:list, midline=1100):
     num_crossings = 0
     prev_x = 2560
@@ -154,24 +172,21 @@ def test_normality(df, dep_var, ind_vars):
     for iv in ind_vars:
         df_iv = df.loc[df['Condition'] == iv]
         
-        s, p = normaltest(df_iv[dep_var], nan_policy='omit')
+        # s, p = normaltest(df_iv[dep_var], nan_policy='omit')
+        s, p = shapiro(df_iv[dep_var])
         p_values.append(p)
         print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)}')
         
+    print('')
     return p_values
 
 def test_anova(df, dep_var, ind_vars):
+    print(f'\n{dep_var}:')
     ind_vars = sorted(ind_vars)
     
     normality_p = test_normality(df, dep_var, ind_vars)
     significants = [p for p in normality_p if p < 0.01]
     is_non_normal = len(significants) > 0
-    
-    # dep_var_list = pd.DataFrame()
-    # for iv in ind_vars:
-    #     df_iv = df.loc[df['Condition'] == iv]
-    #     dvar = list(df_iv[dep_var])
-    #     dep_var_list[iv] = dvar
     
     iv_combinations = []
     
@@ -179,23 +194,23 @@ def test_anova(df, dep_var, ind_vars):
         for iv1 in ind_vars:
             if (iv != iv1) and ((iv, iv1) not in iv_combinations) and ((iv1, iv) not in iv_combinations):
                 iv_combinations.append((iv, iv1))
+
+    for comb in iv_combinations:
+        x = df.loc[df['Condition'] == comb[0]][dep_var]
+        y = df.loc[df['Condition'] == comb[1]][dep_var]
     
-    # print(iv_combinations)
-    
-    print('')
-    if is_non_normal:
-        for comb in iv_combinations:
-            x = df.loc[df['Condition'] == comb[0]][dep_var]
-            y = df.loc[df['Condition'] == comb[1]][dep_var]
-            
+        if is_non_normal: 
             s, p = mannwhitneyu(x, y)
             
             prefix = '*' if p < .01 else ' '
-            
             print(f'{prefix}{comb} MW-U: U={round(s, 2)}, p={round(p, 3)}')
-    else:
-        return None
+        else:
+            s, p = ttest_rel(x, y, nan_policy='omit')
+            
+            prefix = '*' if p < .01 else ' '
+            print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 3)}')
     
+    print('')
     return
 
 def scatterplot_fixations(data, x, y, title:str, save=True, savestr:str=''):
