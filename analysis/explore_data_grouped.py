@@ -15,8 +15,6 @@ import helperfunctions as hf
 from constants import EXCLUDE_TRIALS, MIDLINE, base_location
 
 
-PLOT = True
-
 pp_info = pd.read_excel('../results/participant_info.xlsx')
 pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
 
@@ -40,7 +38,6 @@ results = pd.DataFrame(columns=cols)
 # =============================================================================
 # WRITE VARIABLES TO ROW FOR EACH ID, CONDITION AND TRIAL
 # =============================================================================
-
 # Data outside of trial start-end are marked with 999 so will be filtered in the next steps
 for ID in list(pp_info['ID'].unique()): 
     fix_filenames = [f for f in fixations_files if ID in f]
@@ -68,7 +65,7 @@ for ID in list(pp_info['ID'].unique()):
                 
                 end_times = task_df_t.loc[task_df_t['Event'] == 'Finished trial']['TrackerTime']
                 end = list(end_times)[0]
-                
+                                
                 completion_time = end - start
                 num_crossings = hf.get_midline_crossings(list(fix_df_t['gavx']), midline=MIDLINE)
                 num_fixations = hf.get_left_side_fixations(list(fix_df_t['gavx']), midline=MIDLINE)
@@ -87,6 +84,12 @@ for ID in list(pp_info['ID'].unique()):
                                   'Completion time minus dwell time': float(completion_time - dwell_times)},
                                  index=[0])
                 results = results.append(r, ignore_index=True)
+                
+                # hf.scatterplot_fixations(fix_df_t, 'gavx', 'gavy', 
+                #                           title=f'ID {ID}, condition {condition}, trial {trial}, crossings={num_crossings}',
+                #                           plot_line=True,
+                #                           save=False,
+                #                           savestr='')
                 
 results = results.dropna()
 

@@ -13,7 +13,7 @@ import sys
 
 import helperfunctions as hf
 import mouse_analysis
-from constants import base_location
+from constants import base_location, MIDLINE
 
 
 PLOT = False
@@ -30,7 +30,7 @@ trials_b2 = []
 trials_b3 = []
 trials_b4 = []
     
-for i, ID in enumerate(list(pp_info['ID'].unique())):  
+for i, ID in enumerate(list(pp_info['ID'].unique())):     
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
     mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking-')
@@ -84,8 +84,8 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
             end = list(end_times)[0]
             
             # Match the timestamp to the closest timestamp in the fixations df
-            start_idx = hf.find_nearest_index(fixations['start'], start)
-            end_idx = hf.find_nearest_index(fixations['end'], end)
+            start_idx = hf.find_nearest_index(events['end'], start)
+            end_idx = hf.find_nearest_index(events['start'], end)
             
             # mouse_start_idx = hf.find_nearest_index(mousedata['TrackerTime'], start)
             # mouse_end_idx = hf.find_nearest_index(mousedata['TrackerTime'], end)
@@ -98,11 +98,14 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 
                 # Plot
                 if PLOT:
-                    fixations_trial = fixations.iloc[start_idx:end_idx]
+                    events_trial = events.iloc[start_idx:end_idx]
+                    fixations_trial = events_trial.loc[events_trial['type'] == 'fixation']
+                    num_crossings = hf.get_midline_crossings(list(fixations_trial['gavx']), midline=MIDLINE)
                     hf.scatterplot_fixations(fixations_trial, 'gavx', 'gavy', 
-                                             title=f'ID {ID}, condition {condition}, trial {trial_num + 1}',
-                                             savestr=f'../results/{ID}/{ID}-fixationPlot-{condition}-{trial_num + 1}.png')
-    
+                                             title=f'ID {ID}, condition {condition}, trial {trial_num}, crossings={num_crossings}',
+                                             plot_line=False,
+                                             save=False,
+                                             savestr=f'../results/{ID}/{ID}-fixationPlot-{condition}-{trial_num}.png')
         
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
@@ -129,8 +132,7 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     
     print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
     sys.stdout.write("\033[F")
-    
-
+        
 pp_info['Trials condition 0'] = trials_b1
 pp_info['Trials condition 1'] = trials_b2
 pp_info['Trials condition 2'] = trials_b3

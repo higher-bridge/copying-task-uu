@@ -167,6 +167,7 @@ def get_dwell_times(xpos:list, starts:list, ends:list, midline=1100):
         return np.nan
     
 def test_normality(df, dep_var, ind_vars):
+    print('\nNormality tests:')
     p_values = []
     
     for iv in ind_vars:
@@ -175,13 +176,13 @@ def test_normality(df, dep_var, ind_vars):
         # s, p = normaltest(df_iv[dep_var], nan_policy='omit')
         s, p = shapiro(df_iv[dep_var])
         p_values.append(p)
-        print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)}')
+        print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)} (n={len(df_iv)})')
         
     print('')
     return p_values
 
 def test_anova(df, dep_var, ind_vars):
-    print(f'\n{dep_var}:')
+    print(f'\n{dep_var}')
     ind_vars = sorted(ind_vars)
     
     normality_p = test_normality(df, dep_var, ind_vars)
@@ -210,17 +211,19 @@ def test_anova(df, dep_var, ind_vars):
             prefix = '*' if p < .01 else ' '
             print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 3)}')
     
-    print('')
     return
 
-def scatterplot_fixations(data, x, y, title:str, save=True, savestr:str=''):
+def scatterplot_fixations(data, x, y, title:str, plot_line=False, save=True, savestr:str=''):
     # Plot fixations
     plt.figure()
     sns.scatterplot(x, y, data=data)
+    if plot_line:
+        sns.lineplot(x, y, data=data, sort=False)
     plt.xlim((0, 2560))
     plt.ylim((1440, 0)) # Note that the y-axis needs to be flipped
     plt.xlabel('x (pixels)')
     plt.ylabel('y (pixels)')
     plt.title(title)
-    plt.savefig(savestr, dpi=500)
+    if save:
+        plt.savefig(savestr, dpi=500)
     plt.show()
