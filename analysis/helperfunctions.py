@@ -199,17 +199,21 @@ def test_anova(df, dep_var, ind_vars):
     for comb in iv_combinations:
         x = df.loc[df['Condition'] == comb[0]][dep_var]
         y = df.loc[df['Condition'] == comb[1]][dep_var]
-    
-        if is_non_normal: 
-            s, p = mannwhitneyu(x, y)
-            
-            prefix = '*' if p < .01 else ' '
-            print(f'{prefix}{comb} MW-U: U={round(s, 2)}, p={round(p, 3)}')
-        else:
-            s, p = ttest_rel(x, y, nan_policy='omit')
-            
-            prefix = '*' if p < .01 else ' '
-            print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 3)}')
+     
+        try:
+            if is_non_normal: 
+                s, p = mannwhitneyu(x, y)
+                
+                prefix = '*' if p < .01 else ' '
+                print(f'{prefix}{comb} MW-U: U={round(s, 2)}, p={round(p, 3)}')
+            else:
+                s, p = ttest_rel(x, y, nan_policy='omit')
+                
+                prefix = '*' if p < .01 else ' '
+                print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 3)}')
+        
+        except Exception as e:
+            print(f'Error in {comb}: {e}')
     
     return
 

@@ -174,7 +174,7 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
                 num_crossings = hf.get_midline_crossings(list(df_t['gavx']),
-                                                         midline=MIDLINE)
+                                                          midline=MIDLINE)
                 
                 c = pd.DataFrame({'Crossings': num_crossings,
                                   'Condition': condition,
@@ -229,13 +229,13 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
                 num_fixations = hf.get_left_side_fixations(list(df_t['gavx']),
-                                                           midline=MIDLINE)
+                                                            midline=MIDLINE)
                 
                 c = pd.DataFrame({'Fixations': num_fixations,
                                   'Condition': condition,
                                   'Trial'    : trial,
                                   'ID'       : ID},
-                                 index=[0])
+                                  index=[0])
                 
                 left_fixations = left_fixations.append(c, ignore_index=True)
                 
@@ -286,15 +286,15 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 df_t = df_c.loc[df_c['Trial'] == trial]
                 
                 num_fixations = hf.get_dwell_times(list(df_t['gavx']),
-                                                   list(df_t['start']),
-                                                   list(df_t['end']),
-                                                   midline=MIDLINE)
+                                                    list(df_t['start']),
+                                                    list(df_t['end']),
+                                                    midline=MIDLINE)
                 
                 c = pd.DataFrame({'Dwell Time': num_fixations,
                                   'Condition': condition,
                                   'Trial'    : trial,
                                   'ID'       : ID},
-                                 index=[0])
+                                  index=[0])
                 
                 dwell_times = dwell_times.append(c, ignore_index=True)
                 
@@ -322,6 +322,57 @@ if PLOT:
     plt.ylabel('Median of total dwell time on left side of screen (ms)')
     plt.tight_layout()
     plt.savefig(f'{base_location}/plots/dwellTime-bar.png', dpi=500)
+    plt.show()
+
+# =============================================================================
+# EXPLORE VISIBLE TIME DISTRIBUTIONS
+# =============================================================================
+vis_times = pd.DataFrame(columns=['Visible Time', 'Condition', 'Trial', 'ID'])
+
+# Data outside of trial start-end are marked with 999 so will be filtered in the next steps
+for i, ID in enumerate(list(pp_info['ID'].unique())): 
+    filenames = [f for f in correct_placements_files if ID in f]
+    filename = filenames[0]
+    
+    df = pd.read_csv(filename)
+    
+    for condition in list(df['Condition'].unique()):
+        df_c = df.loc[df['Condition'] == condition]
+        
+        for trial in list(df_c['Trial'].unique()): 
+            if trial not in EXCLUDE_TRIALS:
+                df_t = df_c.loc[df_c['Trial'] == trial]
+                
+                vt = list(df_t['visibleTime'])[0]
+                
+                c = pd.DataFrame({'Visible Time': vt,
+                                  'Condition': condition,
+                                  'Trial'    : trial,
+                                  'ID'       : ID},
+                                 index=[0])
+                
+                vis_times = vis_times.append(c, ignore_index=True)
+                
+if PLOT:
+    # Distplot of number of left fixations
+    plt.figure()
+    for condition in sorted(list(vis_times['Condition'].unique())):
+        if condition != 0:
+            df = vis_times.loc[vis_times['Condition'] == condition]
+            sns.distplot(df['Visible Time'], label=condition)
+        
+    plt.legend(title='Condition')
+    # plt.xlim((-50, 4100))
+    # plt.xlabel('Total dwell time on left side of screen (ms)')
+    plt.savefig(f'{base_location}/plots/visibleTime-dist.png', dpi=500)
+    plt.show()
+    
+    # Barplot of number of left fixations
+    plt.figure()
+    sns.catplot('Condition', 'Visible Time', data=vis_times, kind='bar', estimator=np.median)
+    # plt.ylabel('Median of total dwell time on left side of screen (ms)')
+    plt.tight_layout()
+    plt.savefig(f'{base_location}/plots/visibleTime-bar.png', dpi=500)
     plt.show()
 
 # =============================================================================
