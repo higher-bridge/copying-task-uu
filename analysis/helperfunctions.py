@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-from scipy.stats import normaltest, kruskal, mannwhitneyu, shapiro, ttest_rel
+from scipy.stats import mannwhitneyu, shapiro, ttest_rel, friedmanchisquare, wilcoxon
 
 
 def getListOfFiles(dirName):
@@ -181,13 +181,14 @@ def test_normality(df, dep_var, ind_vars):
     print('')
     return p_values
 
-def test_anova(df, dep_var, ind_vars):
+def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
     print(f'\n{dep_var}')
     ind_vars = sorted(ind_vars)
     
-    normality_p = test_normality(df, dep_var, ind_vars)
-    significants = [p for p in normality_p if p < 0.01]
-    is_non_normal = len(significants) > 0
+    if is_non_normal == None:
+        normality_p = test_normality(df, dep_var, ind_vars)
+        significants = [p for p in normality_p if p < 0.01]
+        is_non_normal = len(significants) > 0
     
     iv_combinations = []
     
@@ -202,20 +203,41 @@ def test_anova(df, dep_var, ind_vars):
      
         try:
             if is_non_normal: 
-                s, p = mannwhitneyu(x, y)
+                s, p = wilcoxon(x, y)
                 
                 prefix = '*' if p < .01 else ' '
-                print(f'{prefix}{comb} MW-U: U={round(s, 2)}, p={round(p, 3)}')
+                print(f'{prefix}{comb} Wilco: W={round(s, 2)}, p={round(p, 2)}')
             else:
                 s, p = ttest_rel(x, y, nan_policy='omit')
                 
                 prefix = '*' if p < .01 else ' '
-                print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 3)}')
+                print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 2)}')
         
         except Exception as e:
             print(f'Error in {comb}: {e}')
     
     return
+
+def test_friedman(df, ind_var, dep_var):
+    print(f'\n{dep_var}:')
+    test_df = pd.DataFrame()
+    
+    for iv in list(df[ind_var].unique()):
+        df_iv = df.loc[df[ind_var] == iv]
+        
+        dv = list(df_iv[dep_var])
+        test_df[f'{dep_var} {iv}'] = dv
+        print(f'{iv}: mean={round(np.mean(dv),2)}, SD={round(np.std(dv),2)}')
+    
+    # print(test_df)
+    test_array = np.array(test_df)
+    
+    chi, p = friedmanchisquare(*[test_array[:, x] for x in np.arange(test_array.shape[1])])
+    
+    prefix = '*' if p < .01 else ' '
+    print(f'\n{prefix}Friedman: Chi2={round(chi, 2)}, p={round(p, 3)}')
+
+
 
 def scatterplot_fixations(data, x, y, title:str, plot_line=False, save=True, savestr:str=''):
     # Plot fixations

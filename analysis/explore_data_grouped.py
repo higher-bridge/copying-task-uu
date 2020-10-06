@@ -27,14 +27,15 @@ task_events_files = [f for f in hf.getListOfFiles(base_location) if 'allEvents.c
 all_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allAllPlacements.csv' in f]
 correct_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allCorrectPlacements.csv' in f]
 
-features = ['Completion time (s)', 
+features = [\
+            # 'Completion time (s)', 
             'Number of crossings', 
-            'Number of left-side fixations', 
+            # 'Number of left-side fixations', 
             'Total dwell time left side (s)',
-            'Completion time minus dwell time',
+            'Adjusted completion time (s)',
             'Fixations per second',
-            'Median saccade velocity',
-            'Median peak velocity']
+            'Saccade velocity',
+            'Peak velocity']
 cols = ['ID', 'Condition', 'Trial']
 [cols.append(f) for f in features]
 results = pd.DataFrame(columns=cols)
@@ -92,14 +93,14 @@ for ID in list(pp_info['ID'].unique()):
                 r = pd.DataFrame({'ID': ID,
                                   'Condition': int(condition),
                                   'Trial': int(trial),
-                                  'Completion time (s)': float(completion_time / 1000),
+                                  # 'Completion time (s)': float(completion_time / 1000),
                                   'Number of crossings': float(num_crossings),
-                                  'Number of left-side fixations': float(num_fixations),
+                                  # 'Number of left-side fixations': float(num_fixations),
                                   'Total dwell time left side (s)': float(dwell_times / 1000),
-                                  'Completion time minus dwell time': float((completion_time - dwell_times) / 1000),
+                                  'Adjusted completion time (s)': float((completion_time - dwell_times) / 1000),
                                   'Fixations per second': float(len(fixations) / (completion_time / 1000)),
-                                  'Median saccade velocity': float(np.median(saccades['avel'])),
-                                  'Median peak velocity': float(np.median(saccades['pvel']))},
+                                  'Saccade velocity': float(np.median(saccades['avel'])),
+                                  'Peak velocity': float(np.median(saccades['pvel']))},
                                  index=[0])
                 results = results.append(r, ignore_index=True)
                 
@@ -119,6 +120,8 @@ results_grouped = results.groupby(['ID', 'Condition']).agg({f: ['median'] for f 
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
 
+# results_grouped = results_grouped.drop(['Completion time (s)', 
+#                                         'Number of left-side fixations'], axis=1)
 
 # =============================================================================
 # PAIRPLOT
@@ -129,7 +132,6 @@ plt.figure()
 sns.pairplot(data=results_pairplot, hue='Condition', corner=True)
 plt.savefig(f'{base_location}/plots/pairplot.png', dpi=500)
 plt.show()
-
 
 # =============================================================================
 # SEPARATE PLOTS
@@ -155,16 +157,18 @@ for f in features:
     plt.savefig(f'{base_location}/plots/grouped {f} dist.png', dpi=500)
     plt.show()
 
-    hf.test_anova(results_grouped, f, list(results_grouped['Condition'].unique()))
+    print('\n###########################')
+    hf.test_friedman(results_grouped, 'Condition', f)
+    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()), is_non_normal=True)
 
 # =============================================================================
 # COMBINED BARPLOTS                
 # =============================================================================
 rcParams['font.family'] = 'serif'
 rcParams['font.serif'] = ['Times']
-rcParams['font.size'] = 11
+rcParams['font.size'] = 12
 
-sp = [f'24{x}' for x in range(1, 9)]
+sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
@@ -174,8 +178,11 @@ for i, feat in enumerate(features):
                 palette='Blues', ax=axes[i])
     axes[i].set_xlabel('')    
     
-    if i < 4:
+    if i < (len(features) / 2):
         axes[i].set_xticks([])
+        
+    if i == 4:
+        axes[i].set_xlabel('Condition')
 
 f.tight_layout(pad=1, w_pad=0.2)
 f.savefig(f'{base_location}/plots/combined-barplots.png', dpi=500)
@@ -186,7 +193,7 @@ plt.show()
 # COMBINED DISTPLOTS                
 # =============================================================================
 ls = ['-', '--', '-.', ':']
-sp = [f'24{x}' for x in range(1, 9)]
+sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
@@ -206,8 +213,8 @@ for i, feat in enumerate(features):
     
     axes[i].set_yticks([])
 
-f.tight_layout(pad=1)
-f.savefig(f'{base_location}/plots/combined-distplots.png', dpi=500)
+f.tight_layout()
+f.savefig(f'{base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
 plt.show()
 
 
