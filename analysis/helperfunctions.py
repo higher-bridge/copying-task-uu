@@ -161,11 +161,36 @@ def get_dwell_times(xpos:list, starts:list, ends:list, midline=1100):
             dwell_times.append(end - start)
     
     if len(dwell_times) > 0:
-        # return np.nanmedian(dwell_times)
         return sum(dwell_times)
     else:
         return np.nan
+
+def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=1100):
+    dwell_times = []
+    prev_x = 2560
     
+    keep_track = False
+    
+    for x, s, e in zip(xpos, starts, ends):
+        if prev_x > midline and x < midline:
+            keep_track = True
+            x_list = []
+            s_list = []
+            e_list = []
+        elif prev_x < midline and x > midline:
+            keep_track = False
+            dwell_times.append(get_dwell_times(x_list, s_list, e_list))
+        
+        if keep_track:
+            x_list.append(x)
+            s_list.append(s)
+            e_list.append(e)
+
+        prev_x = x
+            
+    return dwell_times
+        
+        
 def test_normality(df, dep_var, ind_vars):
     print('\nNormality tests:')
     p_values = []

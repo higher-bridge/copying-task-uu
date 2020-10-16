@@ -28,11 +28,12 @@ all_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allAllP
 correct_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allCorrectPlacements.csv' in f]
 
 features = [\
-            # 'Completion time (s)', 
             'Number of crossings', 
             # 'Number of left-side fixations', 
-            'Total dwell time left side (s)',
-            'Adjusted completion time (s)',
+            # 'Total dwell time left side (s)',
+            'Dwell time per crossing (s)',
+            # 'Adjusted completion time (s)',
+            'Completion time (s)', 
             'Fixations per second',
             'Saccade velocity',
             'Peak velocity']
@@ -85,19 +86,27 @@ for ID in list(pp_info['ID'].unique()):
                 num_crossings = hf.get_midline_crossings(list(fixations['gavx']), midline=MIDLINE)
                 num_fixations = hf.get_left_side_fixations(list(fixations['gavx']), midline=MIDLINE)
                 dwell_times = hf.get_dwell_times(list(fixations['gavx']),
-                                                   list(fixations['start']),
-                                                   list(fixations['end']), 
-                                                   midline=MIDLINE)
+                                                 list(fixations['start']),
+                                                 list(fixations['end']), 
+                                                 midline=MIDLINE)
+                dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
+                                                               list(fixations['start']),
+                                                               list(fixations['end']), 
+                                                               midline=MIDLINE)
                 errors = len(placement_df_t.loc[placement_df_t['Correct'] != True])                
+
+                # adjustment = 0 + (int(condition) * 1000)
+                # adjustment += 1000 if int(condition) > 0 else 0
                 
                 r = pd.DataFrame({'ID': ID,
                                   'Condition': int(condition),
                                   'Trial': int(trial),
-                                  # 'Completion time (s)': float(completion_time / 1000),
                                   'Number of crossings': float(num_crossings),
                                   # 'Number of left-side fixations': float(num_fixations),
-                                  'Total dwell time left side (s)': float(dwell_times / 1000),
-                                  'Adjusted completion time (s)': float((completion_time - dwell_times) / 1000),
+                                  # 'Total dwell time left side (s)': float(dwell_times / 1000),
+                                  'Dwell time per crossing (s)': float(np.median(dwell_time_pc) / 1000),
+                                  # 'Adjusted completion time (s)': float((completion_time - dwell_times) / 1000),
+                                  'Completion time (s)': float(completion_time / 1000),
                                   'Fixations per second': float(len(fixations) / (completion_time / 1000)),
                                   'Saccade velocity': float(np.median(saccades['avel'])),
                                   'Peak velocity': float(np.median(saccades['pvel']))},
@@ -140,11 +149,11 @@ colors = sns.color_palette("Blues")[2:]
 
 for f in features:
     plt.figure(figsize=(4, 5))
-    sns.barplot('Condition', f, data=results_grouped, capsize=.1, errwidth=1.5,
+    sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
                 palette=colors)
     plt.title(f)
     plt.tight_layout()
-    plt.savefig(f'{base_location}/plots/grouped {f} bar.png', dpi=500)
+    plt.savefig(f'{base_location}/plots/grouped {f} box.png', dpi=500)
     plt.show()
     
     plt.figure()
@@ -174,7 +183,7 @@ f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
 
 for i, feat in enumerate(features):
-    sns.barplot('Condition', feat, data=results_grouped, capsize=.1, errwidth=1.5,
+    sns.boxplot('Condition', feat, data=results_grouped, #capsize=.1, errwidth=1.5,
                 palette='Blues', ax=axes[i])
     axes[i].set_xlabel('')    
     
@@ -185,7 +194,7 @@ for i, feat in enumerate(features):
         axes[i].set_xlabel('Condition')
 
 f.tight_layout(pad=1, w_pad=0.2)
-f.savefig(f'{base_location}/plots/combined-barplots.png', dpi=500)
+f.savefig(f'{base_location}/plots/combined-boxplots.png', dpi=500)
 plt.show()
     
 
