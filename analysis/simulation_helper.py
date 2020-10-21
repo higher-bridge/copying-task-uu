@@ -30,42 +30,36 @@ def fitts_time(loc1:tuple, loc2:tuple, target_size:tuple, a:int=.05, b:int=.1, s
     
     return duration * noise
 
-# def create_n_encoding_schemes(conditions:list, n:int=100, min_k:int=1, max_k:int=6):
-#     # Creates n unique schemes (lists) of length len(conditions), 
-#     # with values in the range min_k:max_k. schemes can start at any value,
-#     # but thereafter must be descending or equal, and the difference may be 2 at most. 
-#     # There are many combinations in reality, so this is a sampling of the 
-#     # full problem space.
-#     combinations = []
+def generate_locations(n_items:int=4):
+    all_example_locations = [(515, 570), (650, 570), (785, 570),
+                             (515, 730), (650, 730), (785, 730),
+                             (515, 870), (650, 870), (785, 870)]
+    all_workspace_locations = [(1775, 570), (1910, 570), (2045, 570),
+                               (1775, 730), (1910, 730), (2045, 730),
+                               (1775, 870), (1910, 870), (2045, 870)]
+    all_resource_locations = [(1775, 1075), (1910, 1075), (2045, 1075),
+                              (1775, 1300), (1910, 1300), (2045, 1300)]
     
-#     i = 0
-#     while i < n:
-#         option = []
-        
-#         first = True
-#         temp_max_k = max_k
-        
-#         while len(option) < len(conditions):
-#             num = random.randint(min_k, temp_max_k)
-            
-#             if first:
-#                 option.append(num)
-#                 temp_max_k = num
-#                 first = False
-            
-#             elif num <= temp_max_k:
-#                 if abs(num - temp_max_k) <= 2:
-#                     option.append(num)
-#                     temp_max_k = num            
-                
-            
-#         if option not in combinations:
-#             combinations.append(option)
-#             i += 1
+    # Sample a set of locations so we can index matching one from example and workspace
+    locations = random.sample(list(range(len(all_example_locations))), n_items)
     
-#     return combinations
+    example_locations = [all_example_locations[i] for i in locations]
+    workspace_locations = [all_workspace_locations[i] for i in locations]
+    
+    resource_locations = all_resource_locations[0:n_items]
+    
+    return example_locations, workspace_locations, resource_locations
 
-def create_all_encoding_schemes(max_k=6):
+def example_grid_visible(time:int, visible_time:int, occlude_time:int):
+    while time > (visible_time + occlude_time):
+        time -= (visible_time + occlude_time)
+        
+    if time <= visible_time:
+        return True
+    else:
+        return False
+    
+def create_all_encoding_schemes(max_k:int=4):
     max_k += 1
     combinations = []
     
@@ -73,14 +67,14 @@ def create_all_encoding_schemes(max_k=6):
         for j in range(1, max_k):
             for k in range(1, max_k):
                 for l in range(1, max_k):
-                    if i >= j and j >= k and k >= l:
+                    if i <= j and j <= k and k <= l:
                         # if abs(i - j) < 3 and abs(j - k) < 3 and abs(k - l) < 3:
                         option = [i, j, k, l]
                         combinations.append(option)
                     
     return combinations
 
-combinations = create_all_encoding_schemes()
+# combinations = create_all_encoding_schemes()
 
 # =============================================================================
 # TEST

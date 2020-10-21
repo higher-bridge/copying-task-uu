@@ -31,7 +31,7 @@ features = [\
             'Number of crossings', 
             # 'Number of left-side fixations', 
             # 'Total dwell time left side (s)',
-            'Dwell time per crossing (s)',
+            'Dwell time per crossing (ms)',
             # 'Adjusted completion time (s)',
             'Completion time (s)', 
             'Fixations per second',
@@ -104,7 +104,7 @@ for ID in list(pp_info['ID'].unique()):
                                   'Number of crossings': float(num_crossings),
                                   # 'Number of left-side fixations': float(num_fixations),
                                   # 'Total dwell time left side (s)': float(dwell_times / 1000),
-                                  'Dwell time per crossing (s)': float(np.median(dwell_time_pc) / 1000),
+                                  'Dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
                                   # 'Adjusted completion time (s)': float((completion_time - dwell_times) / 1000),
                                   'Completion time (s)': float(completion_time / 1000),
                                   'Fixations per second': float(len(fixations) / (completion_time / 1000)),
@@ -168,7 +168,7 @@ for f in features:
 
     print('\n###########################')
     hf.test_friedman(results_grouped, 'Condition', f)
-    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()), is_non_normal=True)
+    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
 
 # =============================================================================
 # COMBINED BARPLOTS                

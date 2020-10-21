@@ -12,6 +12,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 from scipy.stats import mannwhitneyu, shapiro, ttest_rel, friedmanchisquare, wilcoxon
+from statsmodels.stats.anova import AnovaRM
+# from pingouin import sphericity
+import pingouin as pg
 
 
 def getListOfFiles(dirName):
@@ -192,22 +195,34 @@ def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=1100)
         
         
 def test_normality(df, dep_var, ind_vars):
-    print('\nNormality tests:')
+    # print('\nNormality tests:')
     p_values = []
     
     for iv in ind_vars:
         df_iv = df.loc[df['Condition'] == iv]
         
         # s, p = normaltest(df_iv[dep_var], nan_policy='omit')
-        s, p = shapiro(df_iv[dep_var])
+        # s, p = shapiro(df_iv[dep_var])
+        results = pg.normality(df_iv[dep_var])
+        p = list(results['pval'])[0]
+        
         p_values.append(p)
-        print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)} (n={len(df_iv)})')
+        # print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)} (n={len(df_iv)})')
         
     print('')
     return p_values
 
+def test_sphericity(df, dep_var, ind_var):
+            
+    p, W, _, _, pval = pg.sphericity(df, dep_var, ind_var, subject='ID')
+    p = bool(p)
+    # print(f'Sphericity: {p}, W={round(W, 2)}, p={round(pval, 3)}')
+        
+    print('')
+    return p
+
 def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
-    print(f'\n{dep_var}')
+    # print(f'\n{dep_var}')
     ind_vars = sorted(ind_vars)
     
     if is_non_normal == None:
@@ -228,24 +243,58 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
      
         try:
             if is_non_normal: 
-                s, p = wilcoxon(x, y)
+                # s, p = wilcoxon(x, y)
+                results = pg.wilcoxon(x, y, 'one-sided')
+                results = results.round(4)
+
+                W = list(results['W-val'])[0]
+                p =list(results['p-val'])[0]
                 
-                prefix = '*' if p < .01 else ' '
-                print(f'{prefix}{comb} Wilco: W={round(s, 2)}, p={round(p, 2)}')
+                prefix = '   '
+                
+                if p < .05:
+                    prefix = '*  '
+                if p < .01:
+                    prefix = '** '
+                if p < .001:
+                    prefix = '***'
+                
+                # prefix = '*' if p < .01 else ' '
+                print(f'{prefix}{comb} Wilco: W={round(W, 2)}, p={round(p, 3)}')
             else:
-                s, p = ttest_rel(x, y, nan_policy='omit')
+                # s, p = ttest_rel(x, y, nan_policy='omit')
+                results = pg.ttest(x, y, paired=True, tail='one-sided')
+                results = results.round(4)
                 
-                prefix = '*' if p < .01 else ' '
-                print(f'{prefix}{comb} Ttest: t={round(s, 2)}, p={round(p, 2)}')
+                t = list(results['T'])[0]
+                p =list(results['p-val'])[0]                
+                
+                prefix = '   '
+                
+                if p < .05:
+                    prefix = '*  '
+                if p < .01:
+                    prefix = '** '
+                if p < .001:
+                    prefix = '***'
+                    
+                print(f'{prefix}{comb} Ttest: t={round(t, 2)}, p={round(p, 3)}')
         
         except Exception as e:
             print(f'Error in {comb}: {e}')
     
     return
 
-def test_friedman(df, ind_var, dep_var):
+def test_friedman(df, ind_var, dep_var, is_non_normal=None):
     print(f'\n{dep_var}:')
     test_df = pd.DataFrame()
+
+    if is_non_normal == None:
+        normality_p = test_normality(df, dep_var, list(df['Condition'].unique()))
+        significants = [p for p in normality_p if p < 0.01]
+        is_non_normal = len(significants) > 0
+        
+        sphericity_p = test_sphericity(df, dep_var, ind_var)
     
     for iv in list(df[ind_var].unique()):
         df_iv = df.loc[df[ind_var] == iv]
@@ -255,13 +304,34 @@ def test_friedman(df, ind_var, dep_var):
         print(f'{iv}: mean={round(np.mean(dv),2)}, SD={round(np.std(dv),2)}')
     
     # print(test_df)
-    test_array = np.array(test_df)
+    # test_array = np.array(test_df)
     
-    chi, p = friedmanchisquare(*[test_array[:, x] for x in np.arange(test_array.shape[1])])
-    
-    prefix = '*' if p < .01 else ' '
-    print(f'\n{prefix}Friedman: Chi2={round(chi, 2)}, p={round(p, 3)}')
+    if not is_non_normal and sphericity_p:
+        # results = AnovaRM(data=df, depvar=dep_var, subject='ID', within=[ind_var]).fit()
 
+        print('\nRM ANOVA')
+        results = pg.rm_anova(data=df, dv=dep_var, within=ind_var, subject='ID', correction=False, detailed=True)
+        results = results.round(4)
+        print(results)
+    
+    else:
+        # chi, p = friedmanchisquare(*[test_array[:, x] for x in np.arange(test_array.shape[1])])
+        
+        # prefix = '*' if p < .01 else ' '
+        # print(f'\n{prefix}Friedman: Chi2={round(chi, 2)}, p={round(p, 3)}')
+
+        print('\nFriedman test')
+        results = pg.friedman(data=df, dv=dep_var, within=ind_var, subject='ID')
+        
+        X2 = list(results['Q'])[0]
+        N = len(list(df['ID'].unique()))
+        k = len(list(df[ind_var].unique()))
+        kendall_w = X2/ (N * (k-1))
+        
+        results['Kendall'] = [kendall_w]
+        
+        results = results.round(3)
+        print(results)        
 
 
 def scatterplot_fixations(data, x, y, title:str, plot_line=False, save=True, savestr:str=''):

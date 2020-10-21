@@ -1,3 +1,7 @@
 EXCLUDE_TRIALS = [1, 2, 3, 999]
 MIDLINE = 1200
+CONDITIONS = [0, 1, 2, 3]
+CONDITION_TIMES = [(6000, 0), (4000, 2000), (3000, 3000), (2000, 4000)]
+NUM_TRIALS = 35
+
 base_location = '../results'
