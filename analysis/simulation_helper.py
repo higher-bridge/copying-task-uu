@@ -9,26 +9,30 @@ import numpy as np
 import math
 import random
 
+import constants
+
 def euclidean_distance(loc1:tuple, loc2:tuple):
     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
     dist = math.sqrt(sum(dist))
     
     return dist
 
-def fitts_id(loc1:tuple, loc2:tuple, target_size:tuple):
+def fitts_id(loc1:tuple, loc2:tuple):
     # Fitts' law: ID = log2(2D / W). W = target_size[0] for now
+    
     distance = euclidean_distance(loc1, loc2)
-    fitts = np.log2((2 * distance) / target_size[0])
+    dw = (2 * distance) / constants.TARGET_SIZE[0]
+    fitts = np.log2(dw)
 
     return fitts
 
-def fitts_time(loc1:tuple, loc2:tuple, target_size:tuple, a:int=.05, b:int=.1, sigma:int=.1):
+def fitts_time(loc1:tuple, loc2:tuple, a:int=.05, b:int=.1, sigma:int=.1):
     # Fitts' time = a + b * ID
     # a & b can be empirically calculated. Maybe separately for eyes and mouse.
-    duration = a + b * fitts_id(loc1, loc2, target_size)
+    duration = a + b * fitts_id(loc1, loc2)
     noise = random.gauss(mu=1.0, sigma=sigma)
     
-    return duration * noise
+    return duration * noise * 1000 # milliseconds
 
 def generate_locations(n_items:int=4):
     all_example_locations = [(515, 570), (650, 570), (785, 570),
