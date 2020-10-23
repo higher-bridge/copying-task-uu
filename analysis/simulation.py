@@ -8,6 +8,7 @@ Author: Alex Hoogerbrugge (@higher-bridge)
 import numpy as np
 import pandas as pd
 import random
+import time
 
 import simulation_helper as sh
 import constants
@@ -15,8 +16,8 @@ import constants
 # for encoding_scheme in encoding_schemes:
 
 #     for condition in conditions:
+#         k_items = encoding_scheme[condition]
 #         while not finished:
-#             k_items = encoding_scheme[condition]
 
 #             if k_items > remaining_items:
 #                 k_items = remaining items
@@ -46,6 +47,7 @@ import constants
 
 #         Update whether finished (if all items placed)
 
+start = time.time()
 
 encoding_schemes = sh.create_all_encoding_schemes()
 
@@ -74,7 +76,7 @@ for encoding_scheme in encoding_schemes:
             # print(f'Trial {trial}, scheme {encoding_scheme}')
             
             # Tracking variables
-            time = 0
+            cumul_time = 0
             remaining_items = 4 
             num_crossings = 0
             num_fixations = 0
@@ -85,19 +87,20 @@ for encoding_scheme in encoding_schemes:
             
             # Init eye location in center of screen
             eye_location = (1280, 720)
+            mouse_location = (1280, 720)
 
             
-            while time < constants.TIMEOUT and remaining_items > 0:
+            while cumul_time < constants.TIMEOUT and remaining_items > 0:
                 
                 # If there are fewer items than in the encoding scheme
                 if k_items > remaining_items:
                     k_items = remaining_items
                 
                 
-                if sh.example_grid_visible(time, visible_time, occlude_time):
+                if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
                     # Shift eyes to center of example grid
                     new_location = (640, 720)
-                    time += sh.fitts_time(eye_location, new_location)
+                    cumul_time += sh.fitts_time(eye_location, new_location)
                     eye_location = new_location
  
                     num_fixations += 1
@@ -113,54 +116,64 @@ for encoding_scheme in encoding_schemes:
                         new_location = example_locs[new_item]
                         
                         # Move eyes to new item
-                        time += sh.fitts_time(eye_location, new_location)
+                        cumul_time += sh.fitts_time(eye_location, new_location)
                         eye_location = new_location
                         num_fixations += 1
                         
                         # Store item in memory
-                        time += 15
+                        cumul_time += 15
                         locations_memorized.append(new_item)
                 
                 
                 if len(locations_memorized) > 0:
                     # Shift eyes to resource grid
                     new_location = (1920, 720)
-                    time += sh.fitts_time(eye_location, new_location)
+                    cumul_time += sh.fitts_time(eye_location, new_location)
                     eye_location = new_location
                     num_fixations += 1
                     
-                    # try_locations = locations_memorized
-                    for l in range(len(locations_memorized)):
-                        k = locations_memorized[l]
+                    # Run through each location in memory
+                    for k in locations_memorized:
                         
-                        # Move eyes to new item
-                        new_location = resource_locs[k]
-                        time += sh.fitts_time(eye_location, new_location)
-                        eye_location = new_location
-                        num_fixations += 1
+                        # Run through each item in the resource grid and try
+                        # to match it to memory
+                        for l, r_loc in enumerate(resource_locs): 
+                            # Move eyes to new item in resource grid
+                            new_location = r_loc
+                            cumul_time += sh.fitts_time(eye_location, new_location)
+                            eye_location = new_location
+                            num_fixations += 1
                         
-                        # Match item to memory
-                        time += 20
-                        succesful = True if random.random() > .2 else False
+                            # Try to match item to memory
+                            cumul_time += 20
+                            
+                            # If the two items match, there is still a certain chance 
+                            # of successful retrieval which needs to be overcome
+                            if l == k:
+                                succesful = True if random.random() > .1 else False
                         
                         if succesful:
                             # Move mouse to resource grid
-                            time += 50
+                            new_mouse_location = resource_locs[k]
+                            cumul_time+= sh.fitts_time(mouse_location, new_mouse_location)
+                            mouse_location = new_mouse_location
                             
-                            # Click
-                            time += 10
+                            # Click on item
+                            cumul_time += 100 * random.gauss(1, .1)
                             
                             # Move eyes to workspace
                             new_location = workspace_locs[k]
-                            time += sh.fitts_time(eye_location, new_location)
+                            cumul_time += sh.fitts_time(eye_location, new_location)
                             eye_location = new_location
                             num_fixations += 1
                             
                             # Drag item to workspace
-                            time += 300
+                            new_mouse_location = workspace_locs[k]
+                            cumul_time += sh.fitts_time(mouse_location, new_mouse_location)
+                            mouse_location = new_mouse_location
                             
                             # Release click
-                            time += 10
+                            cumul_time += 100 * random.gauss(1, .1)
                             
                             # Succesfully placed
                             remaining_items -= 1
@@ -171,22 +184,22 @@ for encoding_scheme in encoding_schemes:
                     # If no items in memory and example grid not visible, just wait.
                     # In fact participants will likely be checking their work, but
                     # not necessary to model here
-                    time += 1   
+                    cumul_time += 1   
 
                 
-            # print(f'Trial time {time}ms')
+            # print(f'Trial time {cumul_time}ms')
             d = pd.DataFrame({'ID': '001',
                               'Encoding scheme': str(encoding_scheme),
                               'Condition': condition,
                               'Trial': trial,
                               'Crossings': num_crossings,
-                              'Completion time': time,
-                              'Timeout': time > constants.TIMEOUT,
+                              'Completion time': cumul_time / 1000,
+                              'Timeout': cumul_time > constants.TIMEOUT,
                               'Fixations': num_fixations,
-                              'Fixations per second': num_fixations / (time / 1000)},
+                              'Fixations per second': num_fixations / (cumul_time / 1000)},
                              index=[0])
             tracking_df = tracking_df.append(d, ignore_index=True)
         
-        
+print(f'{time.time() - start} seconds')        
 
 

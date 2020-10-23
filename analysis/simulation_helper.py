@@ -21,12 +21,12 @@ def fitts_id(loc1:tuple, loc2:tuple):
     # Fitts' law: ID = log2(2D / W). W = target_size[0] for now
     
     distance = euclidean_distance(loc1, loc2)
-    dw = (2 * distance) / constants.TARGET_SIZE[0]
+    dw = (2 * distance) / constants.TARGET_SIZE[0] + 1
     fitts = np.log2(dw)
 
     return fitts
 
-def fitts_time(loc1:tuple, loc2:tuple, a:int=.05, b:int=.1, sigma:int=.1):
+def fitts_time(loc1:tuple, loc2:tuple, a:int=.05, b:int=.05, sigma:int=.1):
     # Fitts' time = a + b * ID
     # a & b can be empirically calculated. Maybe separately for eyes and mouse.
     duration = a + b * fitts_id(loc1, loc2)
@@ -77,30 +77,6 @@ def create_all_encoding_schemes(max_k:int=4):
                         combinations.append(option)
                     
     return combinations
-
-# combinations = create_all_encoding_schemes()
-
-# =============================================================================
-# TEST
-# =============================================================================
-
-# def plot_combinations(combinations):
-#     import matplotlib.pyplot as plt
-    
-#     plt.figure()
-#     x = np.arange(.25, 1.25, .25)
-    
-#     for y in combinations:
-#        plt.plot(x, y, alpha=.8)
-       
-#     plt.xticks(np.arange(.25, 1.25, .25), np.arange(.25, 1.25, .25))
-#     plt.xlabel('Condition')
-#     plt.ylabel('Encode k')
-#     plt.show()
-
-# conditions = [.25, .5, .75, 1]
-# combinations = sorted(create_n_encoding_schemes(conditions), reverse=True)
-# plot_combinations(combinations)
 
 
 
