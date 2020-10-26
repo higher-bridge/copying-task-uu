@@ -64,6 +64,9 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     condition_list = np.empty(len(events), dtype=int)
     condition_list[:] = 999
     
+    dragging_list = np.empty(len(events), dtype=bool)
+    dragging_list[:] = False
+    
     # Create a list to track which rows in mousedata are valid
     # mouse_valid = np.zeros(len(mousedata), dtype=bool)
     # mouse_valid[:] = False
@@ -71,12 +74,14 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     # For each condition, each trial, get the start and end times and relate it to eye events
     for x, condition in enumerate(list(task_events['Condition'].unique())):
         condition_df = task_events.loc[task_events['Condition'] == condition]
+        correct_condition = correct_placements.loc[correct_placements['Condition'] == condition]
         
         all_trials = list(condition_df['Trial'].unique())
         for trial_num in all_trials:
             trial_df = condition_df.loc[condition_df['Trial'] == trial_num]
+            correct_trial = correct_condition.loc[correct_condition['Trial'] == trial_num]
             
-            # Retrieve where eventTracking has written trial init and trial finish
+            # Retrieve where eventTracking has written trial init and trial finish            
             start_times = trial_df.loc[trial_df['Event'] == 'Task init']['TrackerTime']
             start = list(start_times)[0]
             
@@ -86,6 +91,18 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
             # Match the timestamp to the closest timestamp in the fixations df
             start_idx = hf.find_nearest_index(events['end'], start)
             end_idx = hf.find_nearest_index(events['start'], end)
+            
+            # Find during which events items were being dragged with the mouse
+            task_init = trial_df.loc[trial_df['Event'] == 'Task init']
+            timediff = task_init['TimeDiff'].values[0]
+            
+            for index, row in correct_trial.iterrows():
+                end_drag = row['Time'] - timediff
+                start_drag = end_drag - row['dragDuration']
+                start_drag_idx = hf.find_nearest_index(events['start'], start_drag)
+                end_drag_idx = hf.find_nearest_index(events['end'], end_drag)
+                
+                dragging_list[start_drag_idx:end_drag_idx] = True
             
             # mouse_start_idx = hf.find_nearest_index(mousedata['TrackerTime'], start)
             # mouse_end_idx = hf.find_nearest_index(mousedata['TrackerTime'], end)
@@ -110,6 +127,7 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
     events['Condition'] = condition_list
+    events['Dragging'] = dragging_list
     
     num_trials = hf.get_num_trials(events)
     trials_b1.append(int(num_trials[0]))

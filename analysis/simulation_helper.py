@@ -26,13 +26,19 @@ def fitts_id(loc1:tuple, loc2:tuple):
 
     return fitts
 
-def fitts_time(loc1:tuple, loc2:tuple, a:int=.05, b:int=.05, sigma:int=.1):
+def fitts_time(loc1:tuple, loc2:tuple, a:int=.025, b:int=.04, sigma:int=.3):
     # Fitts' time = a + b * ID
     # a & b can be empirically calculated. Maybe separately for eyes and mouse.
     duration = a + b * fitts_id(loc1, loc2)
     noise = random.gauss(mu=1.0, sigma=sigma)
     
     return duration * noise * 1000 # milliseconds
+
+def estim_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.3):
+    duration = a + b * euclidean_distance(loc1, loc2)
+    noise = random.gauss(mu=1.0, sigma=sigma)
+    
+    return duration * noise # milliseconds
 
 def generate_locations(n_items:int=4):
     all_example_locations = [(515, 570), (650, 570), (785, 570),
