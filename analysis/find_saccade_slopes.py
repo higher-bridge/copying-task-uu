@@ -121,6 +121,7 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration'):
     
                 
 def get_saccades(ID, f):
+    # Set list of features. Split by dependent and independent features, in essence
     features = [\
             'Saccade',
             'Distance (pixels)',
@@ -132,8 +133,8 @@ def get_saccades(ID, f):
     results = pd.DataFrame(columns=cols)
         
     fix_df = pd.read_csv(f)
-    # fix_df = fix_df.loc[fix_df['Dragging'] == False]
-        
+
+    # Run trhough each condition and trial and retrieve the saccades made        
     for condition in list(fix_df['Condition'].unique()):
         fix_df_c = fix_df.loc[fix_df['Condition'] == condition]
         
@@ -143,6 +144,7 @@ def get_saccades(ID, f):
 
                 saccades = fix_df_t.loc[fix_df_t['type'] == 'saccade']
 
+                # Compute features for each saccade in trial and write to df
                 for i in range(len(saccades)):
                     df = saccades.iloc[i]
                     d = euclidean_distance((df['gstx'], df['gsty']), (df['genx'], df['geny']))

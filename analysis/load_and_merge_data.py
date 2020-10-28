@@ -9,31 +9,14 @@ Created on Thu Aug 20 16:46:31 2020
 import pandas as pd
 import numpy as np
 import os
-import sys
+from joblib import Parallel, delayed
 
 import helperfunctions as hf
 import mouse_analysis
 from constants import base_location
 
 
-PLOT = False
-
-all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignores actual files, only finds folders
-all_IDs.remove('plots')
-
-ID_dict = hf.write_IDs_to_dict(all_IDs)
-pp_info = pd.read_excel('../results/participant_info.xlsx')
-pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
-
-
-trials_b1 = []
-trials_b2 = []
-trials_b3 = []
-trials_b4 = []
-    
-for i, ID in enumerate(list(pp_info['ID'].unique())):
-
-# def load_and_merge(ID, ID_dict, pp_info, base_location): 
+def load_and_merge(ID, ID_dict, pp_info, base_location): 
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
     mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking-')
@@ -51,14 +34,6 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     # (I didn't design the mousetracker filenames with chronological ordering)
     condition_order = hf.get_condition_order(pp_info, ID)
     mousedata = hf.order_by_condition(mousedata, condition_order)
-    
-    # Filter only fixations
-    fixations = events.loc[events['type'] == 'fixation']
-    
-    # # Plot all fixations
-    # if PLOT:
-    #     hf.scatterplot_fixations(fixations, 'gavx', 'gavy', title=f'{ID}: All trials',
-    #                              savestr=f'../results/{ID}/{ID}-fixationPlotAll.png')
 
     # Create two empty lists in which we will fill in the appropriate trials/condition value
     trial_list = np.empty(len(events), dtype=int)
@@ -67,6 +42,7 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     condition_list = np.empty(len(events), dtype=int)
     condition_list[:] = 999
     
+    # Create empty list to track whether mouse is being dragged
     dragging_list = np.empty(len(events), dtype=bool)
     dragging_list[:] = False
     
@@ -132,34 +108,63 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
     events['Condition'] = condition_list
     events['Dragging'] = dragging_list
     
+    # Retrieve how many valid trials were recorded per condition
     num_trials = hf.get_num_trials(events)
-    trials_b1.append(int(num_trials[0]))
-    trials_b2.append(int(num_trials[1]))
-    trials_b3.append(int(num_trials[2]))
-    trials_b4.append(int(num_trials[3]))
+    b1 = int(num_trials[0])
+    b2 = int(num_trials[1])
+    b3 = int(num_trials[2])
+    b4 = int(num_trials[3])
     
-    
+    # Remove invalid rows from mousetracker
     mousedata['Valid'] = mouse_valid
     mousedata = mousedata.loc[mousedata['Valid'] == True]
     
+    # Compute mouse 'fixations' and 'saccades' for modelling later on
     mouse_events = mouse_analysis.get_mouse_events(list(mousedata['x']), list(mousedata['y']),
                                                           list(mousedata['TrackerTime']))
     
+    # Write everything to csv
     mouse_events.to_csv(f'../results/{ID}/{ID}-mouseEvents.csv')
     events.to_csv(f'../results/{ID}/{ID}-allFixations.csv')
     task_events.to_csv(f'../results/{ID}/{ID}-allEvents.csv')
     all_placements.to_csv(f'../results/{ID}/{ID}-allAllPlacements.csv')
     correct_placements.to_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
     
-    print(f'Parsed {i + 1} of {len(ID_dict.keys())} files')
-    sys.stdout.write("\033[F")
-        
-pp_info['Trials condition 0'] = trials_b1
-pp_info['Trials condition 1'] = trials_b2
-pp_info['Trials condition 2'] = trials_b3
-pp_info['Trials condition 3'] = trials_b4
+    return [b1, b2, b3, b4]
 
-pp_info.to_excel('../results/participant_info.xlsx')
+
+if __name__ == '__main__':
+    all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f]) # Ignores actual files, only finds folders
+    all_IDs.remove('plots')
     
+    ID_dict = hf.write_IDs_to_dict(all_IDs)
+    pp_info = pd.read_excel('../results/participant_info.xlsx')
+    pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
+    
+            
+    ID_list = list(pp_info['ID'].unique())
+    ID_dict_list = [ID_dict] * len(ID_list)
+    pp_info_list = [pp_info] * len(ID_list)
+    base_location_list = [base_location] * len(ID_list)
+    
+    # Sit back, this will take a while
+    results = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(load_and_merge)\
+                                                                (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list, 
+                                                                                                                  ID_dict_list,
+                                                                                                                  pp_info_list,
+                                                                                                                  base_location_list))
+    
+    # results = []
+    # for ID in ID_list:
+    #     results.append(load_and_merge(ID, ID_dict, pp_info, base_location))
+    #     print(f'Parsed {len(results)} of {len(ID_list)} files')
+        
+    pp_info['Trials condition 0'] = [b[0] for b in results]
+    pp_info['Trials condition 1'] = [b[1] for b in results]
+    pp_info['Trials condition 2'] = [b[2] for b in results]
+    pp_info['Trials condition 3'] = [b[3] for b in results]
+    
+    pp_info.to_excel('../results/participant_info.xlsx')
+        
   
     

@@ -9,6 +9,7 @@ Created on Tue Sep  8 13:52:14 2020
 import pandas as pd
 import numpy as np
 from math import sqrt
+import time
 
 def euclidean_distance(vector1, vector2):
     dist = [(a - b)**2 for a, b in zip(vector1, vector2)]
@@ -20,17 +21,19 @@ class MouseEvents():
         self.event_dict = self.init_event_dict()
 
     def init_event_dict(self):
-        keys = ['kind', 'start_x', 'start_y', 'end_x', 'end_y', 'dist', 'velocity',
-                'peak_velocity',
-                'avg_xpos', 'avg_ypos', 'start', 'end', 'duration']
+        keys = ['kind', 'start_x', 'start_y', 'end_x', 'end_y', 
+                'dist', 'velocity', 'peak_velocity',
+                'avg_xpos', 'avg_ypos', 
+                'start', 'end', 'duration',
+                'indices']
         
         event_dict = {key: [] for key in keys}
         return event_dict
            
     def add_to_event_dict(self, kind:str, start_location:tuple, end_location:tuple,
                              dist:float, start:int, end:int,
-                             velocity:float=np.nan, peak_velocity:float=np.nan):
-        
+                             velocity:float=np.nan, peak_velocity:float=np.nan,
+                             indices=[]):        
         self.event_dict['kind'].append(kind)
         self.event_dict['start_x'].append(start_location[0])
         self.event_dict['start_y'].append(start_location[1])
@@ -48,10 +51,12 @@ class MouseEvents():
         self.event_dict['start'].append(start)
         self.event_dict['end'].append(end)
         self.event_dict['duration'].append(end - start)
+        self.event_dict['indices'].append(indices)
         
     def get_event_dict(self, astype:str='dataframe'):
         if astype == 'dataframe':
             df = pd.DataFrame(self.event_dict)
+            df = df.drop('indices', axis=1)
             df = df.sort_values(by=['start'], ignore_index=True, kind='mergesort')
             return df
         elif astype == 'dict':
@@ -63,9 +68,15 @@ class MouseEvents():
         
 def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, max_deviation:int, 
                         min_duration:int, max_duration:int):
-    i = 0
+
+    xdata = np.array(xdata)
+    ydata = np.array(ydata)
+    timedata = np.array(timedata)
     
+    i = 0
     while i < len(timedata):
+        start_i = i
+        
         # Set the start variables for this possible fixation        
         start_location = (xdata[i], ydata[i])
         start_time = timedata[i]
@@ -103,36 +114,51 @@ def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, max_deviatio
                                         end_location=end_location,
                                         dist=euclidean_distance(start_location, end_location),
                                         start=start_time, 
-                                        end=timedata[i-1])
+                                        end=timedata[i-1],
+                                        indices=np.arange(start_i, i - 1))
     
     return me
                 
 def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation:int,
                        min_duration:int, max_duration:int):
+
+    xdata = np.array(xdata)
+    ydata = np.array(ydata)
+    timedata = np.array(timedata)
     
     # Discard all data in xdata, ydata and timedata where a fixation was measured
     valid = np.empty(len(timedata), dtype=bool)
     valid[:] = True
     
     fix_dict = me.get_event_dict('dict')
-    fix_starts = fix_dict['start']
-    fix_ends = fix_dict['end']
+
+    indices = fix_dict['indices']
+    for ind in indices:
+        valid[ind] = False
+
+    # fix_starts = fix_dict['start']
+    # fix_ends = fix_dict['end']
+        
+    # for s, e in zip(fix_starts, fix_ends):
+    #     invalid_idx = np.where((timedata > s) & (timedata < e))
+    #     valid[invalid_idx] = False
     
-    xdata = np.array(xdata)
-    ydata = np.array(ydata)
-    timedata = np.array(timedata)
-    
-    for s, e in zip(fix_starts, fix_ends):
-        invalid_idx = np.where((timedata > s) & (timedata < e))
-        valid[invalid_idx] = False
-    
-    # new_xdata = list(xdata[valid == True])
-    # new_ydata = list(ydata[valid == True])
-    # new_timedata = list(timedata[valid == True])
+    # starting_point = 0
+    # for i in range(len(timedata)):
+    #     t = timedata[i]
+        
+    #     for j in range(len(fix_starts))[starting_point:]:
+    #         s, e = fix_starts[j], fix_ends[j]
+    #         if t > s and t < e:
+    #             valid[i] = False
+    #             starting_point = j - 1
+    #             break
+
 
     i = 0
     while i < len(timedata):
         velocities = []
+        distances = []
         
         start_time = timedata[i]
         end_time = timedata[i]
@@ -140,6 +166,7 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation
         start_location = (xdata[i], ydata[i])
         end_location  = (xdata[i], ydata[i])
         
+        saccade_measured = False
         val = valid[i]        
         while val:
             x = xdata[i]
@@ -148,30 +175,37 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation
             
             timediff = t - timedata[i - 1]
             distance = euclidean_distance((xdata[i - 1], ydata[i - 1]), (x, y))
+            distances.append(distance)
             
-            velocity = distance / (timediff / 1000) if timediff > 0 else 0
+            velocity = distance / (timediff / 1000) if timediff > 0 else 0.01
             velocities.append(velocity)
             
             end_location = (x, y)
             end_time = t
-                        
+            
+            saccade_measured = True
+            
             try:
                 i += 1
                 val = valid[i]
             except IndexError:
                 val = False
         
-            
-        if distance < min_deviation:
-            if (end_time - start_time) > min_duration and (end_time - start_time) < max_duration:
-                me.add_to_event_dict(kind='saccade', 
-                                        start_location=start_location, 
-                                            end_location=end_location,
-                                            dist=distance,
-                                            velocity=np.mean(velocities),
-                                            peak_velocity=max(velocities),
-                                            start=start_time, 
-                                            end=end_time)
+        if saccade_measured:
+            # print('Saccade measured')
+            total_distance = sum(distances)
+            if total_distance > min_deviation:
+                # print('Distance within limits')
+                if ((end_time - start_time) > min_duration) and ((end_time - start_time) < max_duration):
+                    # print('Duration within limits')
+                    me.add_to_event_dict(kind='saccade', 
+                                            start_location=start_location, 
+                                                end_location=end_location,
+                                                dist=total_distance,
+                                                velocity=np.mean(velocities),
+                                                peak_velocity=max(velocities),
+                                                start=start_time, 
+                                                end=end_time)
                 
         i += 1 # If we can't get in the while loop, i += 1
     
@@ -185,8 +219,10 @@ def get_mouse_events(xdata:list, ydata:list, timedata:list, fix_max_deviation:in
                      sac_min_duration:int=5, sac_max_duration:int=3000):
     
     me = MouseEvents()
+    
     me = _get_fixation_events(me, xdata, ydata, timedata, 
                              fix_max_deviation, fix_min_duration, fix_max_duration)
+    
     me = _get_saccade_events(me, xdata, ydata, timedata,
                             fix_max_deviation, sac_min_duration, sac_max_duration)
     
