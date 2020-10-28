@@ -127,7 +127,7 @@ def get_saccades(ID, f):
             'Distance (degrees)',
             'Duration',
             'Dragging']
-    cols = ['ID', 'Condition', 'Trial']
+    cols = ['ID', 'Condition', 'Trial', 'Start time', 'End time']
     [cols.append(f) for f in features]
     results = pd.DataFrame(columns=cols)
         
@@ -152,6 +152,8 @@ def get_saccades(ID, f):
                     r = pd.DataFrame({'ID': ID,
                                       'Condition': int(condition),
                                       'Trial': int(trial),
+                                      'Start time': df['start'],
+                                      'End time': df['end'],
                                       'Saccade': i,
                                       'Distance (pixels)': d,
                                       'Distance (degrees)': angle_change,
@@ -172,13 +174,14 @@ if __name__ == '__main__':
     fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f])
     files = [f for f in fixations_files if not '/008/' in f]
     
-    dfs = Parallel(n_jobs=11, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
+    dfs = Parallel(n_jobs=-2, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
     results = pd.concat(dfs, ignore_index=True)
+    results.to_csv('../results/all-saccades.csv')
     
     conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
     for condition in sorted(list(results['Condition'].unique())):
         # plot_saccades(results, condition)
-        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (degrees)')
+        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (pixels)')
 
         conditions.append(condition)
         intercepts.append(intercept)

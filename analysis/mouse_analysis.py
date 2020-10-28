@@ -15,65 +15,54 @@ def euclidean_distance(vector1, vector2):
     dist = sqrt(sum(dist))
     return dist
 
-class MouseFixations():
+class MouseEvents():
     def __init__(self):
-        self.fix_dict = self.init_fixation_dict()
+        self.event_dict = self.init_event_dict()
 
-    def init_fixation_dict(self):
-        keys = ['start_x', 'start_y', 'end_x', 'end_y', 'dist', 'velocity',
-                'avx', 'avy', 'start', 'end', 'duration']
+    def init_event_dict(self):
+        keys = ['kind', 'start_x', 'start_y', 'end_x', 'end_y', 'dist', 'velocity',
+                'peak_velocity',
+                'avg_xpos', 'avg_ypos', 'start', 'end', 'duration']
         
-        fix_dict = {key: [] for key in keys}
-        return fix_dict
+        event_dict = {key: [] for key in keys}
+        return event_dict
            
-    def add_to_fixation_dict(self, start_location:tuple, end_location:tuple, start, end):
-        dist = euclidean_distance(start_location, end_location)
-        dur = end - start
-        # velocity = dist / dur
+    def add_to_event_dict(self, kind:str, start_location:tuple, end_location:tuple,
+                             dist:float, start:int, end:int,
+                             velocity:float=np.nan, peak_velocity:float=np.nan):
         
-        self.fix_dict['start_x'].append(start_location[0])
-        self.fix_dict['start_y'].append(start_location[1])
+        self.event_dict['kind'].append(kind)
+        self.event_dict['start_x'].append(start_location[0])
+        self.event_dict['start_y'].append(start_location[1])
         
-        self.fix_dict['end_x'].append(end_location[0])
-        self.fix_dict['end_y'].append(end_location[1])
+        self.event_dict['end_x'].append(end_location[0])
+        self.event_dict['end_y'].append(end_location[1])
         
-        self.fix_dict['dist'].append(dist)
-        # self.fix_dict['velocity'].append(velocity)
-        self.fix_dict['velocity'].append(np.nan)
+        self.event_dict['dist'].append(dist)
+        self.event_dict['velocity'].append(velocity)
+        self.event_dict['peak_velocity'].append(peak_velocity)
         
-        self.fix_dict['avx'].append((start_location[0] + end_location[0]) / 2)
-        self.fix_dict['avy'].append((start_location[1] + end_location[1]) / 2)
+        self.event_dict['avg_xpos'].append((start_location[0] + end_location[0]) / 2)
+        self.event_dict['avg_ypos'].append((start_location[1] + end_location[1]) / 2)
         
-        self.fix_dict['start'].append(start)
-        self.fix_dict['end'].append(end)
-        self.fix_dict['duration'].append(dur)
+        self.event_dict['start'].append(start)
+        self.event_dict['end'].append(end)
+        self.event_dict['duration'].append(end - start)
         
-    def get_fix_dict(self, astype:str='dataframe'):
+    def get_event_dict(self, astype:str='dataframe'):
         if astype == 'dataframe':
-            return pd.DataFrame(self.fix_dict)
+            df = pd.DataFrame(self.event_dict)
+            df = df.sort_values(by=['start'], ignore_index=True, kind='mergesort')
+            return df
         elif astype == 'dict':
-            return self.fix_dict
+            return self.event_dict
         else:
             print(f'Could not convert fix_dict to {astype}. Try dataframe or dict.')
             return None
-
-        
-# class MouseSaccade():
-#     def __init__(self, start_location:tuple, end_location:tuple, start, end):
-#         self.start_x = start_location[0]
-#         self.start_y = start_location[1]
-        
-#         self.end_x = end_location[0]
-#         self.end_y = end_location[1]
-        
-#         self.start = start
-#         self.end = end
-#         self.duration = end - start
         
         
-def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int=10, 
-                        min_duration:int=80, max_duration:int=10000):
-    mf = MouseFixations()
+def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, max_deviation:int, 
+                        min_duration:int, max_duration:int):
     i = 0
     
     while i < len(timedata):
@@ -94,7 +83,8 @@ def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int
                 new_time = timedata[i]
                 
                 # Calculate distance between now and start loc, if too great, break out of while loop
-                if euclidean_distance(start_location, new_location) > max_deviation:
+                dist = euclidean_distance(start_location, new_location)
+                if dist > max_deviation:
                     fixating = False
                 
                 # Min duration must have been reached to count as fixation
@@ -107,19 +97,101 @@ def get_fixation_events(xdata:list, ydata:list, timedata:list, max_deviation:int
             
             # If minimum time reached and no longer fixating, write
             if not fixating and time_lim_reached:
-                mf.add_to_fixation_dict(start_location, (xdata[i-1], ydata[i-1]), 
-                                        start_time, timedata[i-1])
+                end_location = (xdata[i-1], ydata[i-1])
+                me.add_to_event_dict(kind='fixation', 
+                                        start_location=start_location, 
+                                        end_location=end_location,
+                                        dist=euclidean_distance(start_location, end_location),
+                                        start=start_time, 
+                                        end=timedata[i-1])
     
-    events = mf.get_fix_dict()
-    events = events.loc[events['duration'] < max_duration] # Remove all that is longer than max_duration 
-    events = events.loc[events['duration'] >= min_duration] # Due to merging different dataframes?           
+    return me
+                
+def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation:int,
+                       min_duration:int, max_duration:int):
     
-    return events
+    # Discard all data in xdata, ydata and timedata where a fixation was measured
+    valid = np.empty(len(timedata), dtype=bool)
+    valid[:] = True
+    
+    fix_dict = me.get_event_dict('dict')
+    fix_starts = fix_dict['start']
+    fix_ends = fix_dict['end']
+    
+    xdata = np.array(xdata)
+    ydata = np.array(ydata)
+    timedata = np.array(timedata)
+    
+    for s, e in zip(fix_starts, fix_ends):
+        invalid_idx = np.where((timedata > s) & (timedata < e))
+        valid[invalid_idx] = False
+    
+    # new_xdata = list(xdata[valid == True])
+    # new_ydata = list(ydata[valid == True])
+    # new_timedata = list(timedata[valid == True])
+
+    i = 0
+    while i < len(timedata):
+        velocities = []
+        
+        start_time = timedata[i]
+        end_time = timedata[i]
+        
+        start_location = (xdata[i], ydata[i])
+        end_location  = (xdata[i], ydata[i])
+        
+        val = valid[i]        
+        while val:
+            x = xdata[i]
+            y = ydata[i]
+            t = timedata[i]
+            
+            timediff = t - timedata[i - 1]
+            distance = euclidean_distance((xdata[i - 1], ydata[i - 1]), (x, y))
+            
+            velocity = distance / (timediff / 1000) if timediff > 0 else 0
+            velocities.append(velocity)
+            
+            end_location = (x, y)
+            end_time = t
+                        
+            try:
+                i += 1
+                val = valid[i]
+            except IndexError:
+                val = False
+        
+            
+        if distance < min_deviation:
+            if (end_time - start_time) > min_duration and (end_time - start_time) < max_duration:
+                me.add_to_event_dict(kind='saccade', 
+                                        start_location=start_location, 
+                                            end_location=end_location,
+                                            dist=distance,
+                                            velocity=np.mean(velocities),
+                                            peak_velocity=max(velocities),
+                                            start=start_time, 
+                                            end=end_time)
                 
-                
+        i += 1 # If we can't get in the while loop, i += 1
+    
+    
+    return me
                 
             
         
-        
+def get_mouse_events(xdata:list, ydata:list, timedata:list, fix_max_deviation:int=10, 
+                     fix_min_duration:int=80, fix_max_duration:int=5000,
+                     sac_min_duration:int=5, sac_max_duration:int=3000):
+    
+    me = MouseEvents()
+    me = _get_fixation_events(me, xdata, ydata, timedata, 
+                             fix_max_deviation, fix_min_duration, fix_max_duration)
+    me = _get_saccade_events(me, xdata, ydata, timedata,
+                            fix_max_deviation, sac_min_duration, sac_max_duration)
+    
+    events = me.get_event_dict()
+    
+    return events
         
         
