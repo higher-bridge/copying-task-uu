@@ -34,7 +34,7 @@ def fitts_time(loc1:tuple, loc2:tuple, a:int=.025, b:int=.04, sigma:int=.3):
     
     return duration * noise * 1000 # milliseconds
 
-def estim_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.3):
+def estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.3):
     duration = a + b * euclidean_distance(loc1, loc2)
     noise = random.gauss(mu=1.0, sigma=sigma)
     

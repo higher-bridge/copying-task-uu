@@ -113,7 +113,7 @@ for ID in range(1, 3):
                     if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
                         # Shift eyes to center of example grid
                         new_location = (640, 720)
-                        cumul_time += sh.estim_time(eye_location, new_location, a=intercept, b=coefficient)
+                        cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
                         eye_location = new_location
      
                         num_fixations += 1
@@ -129,7 +129,7 @@ for ID in range(1, 3):
                             new_location = example_locs[new_item]
                             
                             # Move eyes to new item
-                            cumul_time += sh.estim_time(eye_location, new_location, a=intercept, b=coefficient)
+                            cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
                             eye_location = new_location
                             num_fixations += 1
                             
@@ -141,7 +141,7 @@ for ID in range(1, 3):
                     if len(locations_memorized) > 0:
                         # Shift eyes to resource grid
                         new_location = (1920, 1160)
-                        cumul_time += sh.estim_time(eye_location, new_location, a=intercept, b=coefficient)
+                        cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
                         eye_location = new_location
                         num_fixations += 1
                         
@@ -153,7 +153,7 @@ for ID in range(1, 3):
                             for l, r_loc in enumerate(resource_locs): 
                                 # Move eyes to new item in resource grid
                                 new_location = r_loc
-                                cumul_time += sh.estim_time(eye_location, new_location, a=intercept, b=coefficient)
+                                cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
                                 eye_location = new_location
                                 num_fixations += 1
                             
@@ -176,7 +176,7 @@ for ID in range(1, 3):
                                 
                                 # Move eyes to workspace
                                 new_location = workspace_locs[k]
-                                cumul_time += sh.estim_time(eye_location, new_location, a=intercept, b=coefficient)
+                                cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
                                 eye_location = new_location
                                 num_fixations += 1
                                 

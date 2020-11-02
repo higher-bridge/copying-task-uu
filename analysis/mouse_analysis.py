@@ -21,20 +21,22 @@ class MouseEvents():
         self.event_dict = self.init_event_dict()
 
     def init_event_dict(self):
-        keys = ['kind', 'start_x', 'start_y', 'end_x', 'end_y', 
+        keys = ['type', 'start_x', 'start_y', 'end_x', 'end_y', 
                 'dist', 'velocity', 'peak_velocity',
                 'avg_xpos', 'avg_ypos', 
                 'start', 'end', 'duration',
+                'Trial', 'Condition', 'Dragging',
                 'indices']
         
         event_dict = {key: [] for key in keys}
         return event_dict
            
     def add_to_event_dict(self, kind:str, start_location:tuple, end_location:tuple,
-                             dist:float, start:int, end:int,
+                             dist:float, start:int, end:int, trial:int, condition:int,
+                             dragging:bool,
                              velocity:float=np.nan, peak_velocity:float=np.nan,
                              indices=[]):        
-        self.event_dict['kind'].append(kind)
+        self.event_dict['type'].append(kind)
         self.event_dict['start_x'].append(start_location[0])
         self.event_dict['start_y'].append(start_location[1])
         
@@ -53,6 +55,10 @@ class MouseEvents():
         self.event_dict['duration'].append(end - start)
         self.event_dict['indices'].append(indices)
         
+        self.event_dict['Trial'].append(trial)
+        self.event_dict['Condition'].append(condition)
+        self.event_dict['Dragging'].append(dragging)
+        
     def get_event_dict(self, astype:str='dataframe'):
         if astype == 'dataframe':
             df = pd.DataFrame(self.event_dict)
@@ -66,8 +72,10 @@ class MouseEvents():
             return None
         
         
-def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, max_deviation:int, 
-                        min_duration:int, max_duration:int):
+def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+                         dragging:list,
+                         max_deviation:int, 
+                         min_duration:int, max_duration:int):
 
     xdata = np.array(xdata)
     ydata = np.array(ydata)
@@ -110,17 +118,22 @@ def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, max_deviatio
             if not fixating and time_lim_reached:
                 end_location = (xdata[i-1], ydata[i-1])
                 me.add_to_event_dict(kind='fixation', 
-                                        start_location=start_location, 
-                                        end_location=end_location,
-                                        dist=euclidean_distance(start_location, end_location),
-                                        start=start_time, 
-                                        end=timedata[i-1],
-                                        indices=np.arange(start_i, i - 1))
+                                     start_location=start_location, 
+                                     end_location=end_location,
+                                     dist=euclidean_distance(start_location, end_location),
+                                     start=start_time, 
+                                     end=timedata[i-1],
+                                     trial=trials[i-1],
+                                     condition=conditions[i-1],
+                                     dragging=dragging[i-1],
+                                     indices=np.arange(start_i, i - 1))
     
     return me
                 
-def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation:int,
-                       min_duration:int, max_duration:int):
+def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+                        dragging:list,
+                        min_deviation:int,
+                        min_duration:int, max_duration:int):
 
     xdata = np.array(xdata)
     ydata = np.array(ydata)
@@ -183,6 +196,10 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation
             end_location = (x, y)
             end_time = t
             
+            trial = trials[i]
+            condition = conditions[i]
+            drag = dragging[i]
+
             saccade_measured = True
             
             try:
@@ -199,13 +216,16 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation
                 if ((end_time - start_time) > min_duration) and ((end_time - start_time) < max_duration):
                     # print('Duration within limits')
                     me.add_to_event_dict(kind='saccade', 
-                                            start_location=start_location, 
-                                                end_location=end_location,
-                                                dist=total_distance,
-                                                velocity=np.mean(velocities),
-                                                peak_velocity=max(velocities),
-                                                start=start_time, 
-                                                end=end_time)
+                                         start_location=start_location, 
+                                         end_location=end_location,
+                                         trial=trial,
+                                         condition=condition,
+                                         dragging=drag,
+                                         dist=total_distance,
+                                         velocity=np.mean(velocities),
+                                         peak_velocity=max(velocities),
+                                         start=start_time, 
+                                         end=end_time)
                 
         i += 1 # If we can't get in the while loop, i += 1
     
@@ -214,16 +234,18 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, min_deviation
                 
             
         
-def get_mouse_events(xdata:list, ydata:list, timedata:list, fix_max_deviation:int=10, 
+def get_mouse_events(xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+                     dragging:list,
+                     fix_max_deviation:int=10, 
                      fix_min_duration:int=80, fix_max_duration:int=5000,
                      sac_min_duration:int=5, sac_max_duration:int=3000):
     
     me = MouseEvents()
     
-    me = _get_fixation_events(me, xdata, ydata, timedata, 
+    me = _get_fixation_events(me, xdata, ydata, timedata, trials, conditions, dragging,
                              fix_max_deviation, fix_min_duration, fix_max_duration)
     
-    me = _get_saccade_events(me, xdata, ydata, timedata,
+    me = _get_saccade_events(me, xdata, ydata, timedata, trials, conditions, dragging,
                             fix_max_deviation, sac_min_duration, sac_max_duration)
     
     events = me.get_event_dict()

@@ -24,7 +24,7 @@ import operator
 
 import helperfunctions as hf
 import constants
-from simulation_helper import euclidean_distance
+from simulation_helper import euclidean_distance, fitts_id
 
 def get_angle(x=None, y=None):
     if x != None and y == None:
@@ -48,31 +48,31 @@ def compute_angle_change(loc1:tuple, loc2:tuple):
     
     return angle_change 
 
-# def get_linear_regression(df, condition, X, Y):
-#     x = np.array(df[X]).reshape(-1, 1)
-#     y = np.array(df[Y]).reshape(-1, 1)
+def get_poly_linear_regression(df, condition, X, Y):
+    x = np.array(df[X]).reshape(-1, 1)
+    y = np.array(df[Y]).reshape(-1, 1)
     
-#     polynomial_features = PolynomialFeatures(degree=3)
-#     x_poly = polynomial_features.fit_transform(x)
+    polynomial_features = PolynomialFeatures(degree=5)
+    x_poly = polynomial_features.fit_transform(x)
 
-#     model = LinearRegression()
-#     model.fit(x_poly, y)
-#     y_poly_pred = model.predict(x_poly)
+    model = LinearRegression()
+    model.fit(x_poly, y)
+    y_poly_pred = model.predict(x_poly)
     
-#     rmse = np.sqrt(mean_squared_error(y,y_poly_pred))
-#     r2 = r2_score(y,y_poly_pred).round(4)
-#     print(f'\nCondition {condition}, RMSE={rmse}, R2={r2}')
+    rmse = np.sqrt(mean_squared_error(y,y_poly_pred))
+    r2 = r2_score(y,y_poly_pred).round(4)
+    print(f'\nCondition {condition}, RMSE={rmse}, R2={r2}')
     
-#     plt.scatter(x, y, s=10)
-#     # sort the values of x before line plot
-#     sort_axis = operator.itemgetter(0)
-#     sorted_zip = sorted(zip(x,y_poly_pred), key=sort_axis)
-#     x, y_poly_pred = zip(*sorted_zip)
-#     plt.plot(x, y_poly_pred, color='m')
-#     plt.title(f'Condition {condition}, r2={r2}')
-#     plt.xlabel(X)
-#     plt.ylabel(Y)
-#     plt.show()
+    plt.scatter(x, y, s=10)
+    # sort the values of x before line plot
+    sort_axis = operator.itemgetter(0)
+    sorted_zip = sorted(zip(x,y_poly_pred), key=sort_axis)
+    x, y_poly_pred = zip(*sorted_zip)
+    plt.plot(x, y_poly_pred, color='m')
+    plt.title(f'Condition {condition}, r2={r2}')
+    plt.xlabel(X)
+    plt.ylabel(Y)
+    plt.show()
 
 
 def get_linear_regression(df, X, Y):    
@@ -87,15 +87,18 @@ def get_linear_regression(df, X, Y):
     
     return intercept, coef, r_squared, p
 
-def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration'):
-    df = results.loc[results['Condition'] == condition]
-    df = df.loc[df[Y] < 500]
-    df = df.loc[df[Y] > 1]
+def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration (ms)',
+                  x_limit=2560, y_limit=500, x_min=5):
     
-    # df = df.loc[df[X] < 1800]
-    # df = df.loc[df[X] > 5]
+    df = results.loc[results['Condition'] == condition]
 
-    # get_linear_regression(df, condition, X, Y)
+    df = df.loc[df[X] < x_limit]
+    df = df.loc[df[X] > x_min]
+
+    df = df.loc[df[Y] < y_limit]
+    df = df.loc[df[Y] > 3]
+
+    # get_poly_linear_regression(df, condition, X, Y)
     
     intercept, coef, r_squared, p = get_linear_regression(df, X, Y)
     print(f'Condition {condition}\
@@ -107,18 +110,45 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration'):
     y = [xx * coef + intercept for xx in x]
     
     plt.figure()
-    sns.scatterplot(x=X, y=Y, data=df)
+    sns.scatterplot(x=X, y=Y, data=df, hue='Dragging')
     plt.plot(x, y, 'r')
     plt.title(f'Condition {condition}, r2={r_squared}')
     plt.show()
     
     
-    plt.figure()
-    sns.histplot(df['Duration']) #, stat='density')
-    plt.show()
+    # plt.figure()
+    # sns.histplot(df['Duration (ms)']) #, stat='density')
+    # plt.show()
     
     return intercept, coef, r_squared, p
+
+def plot_slopes(model_results, title:str, x_str:str='Distance (pixels)', x_limit:int=constants.RESOLUTION[0]):    
+    d = {key: [] for key in [x_str, 'Duration (ms)', 'Condition']}
     
+    for i, condition in enumerate(list(model_results['Condition'].unique())):
+        mr = model_results.loc[model_results['Condition'] == condition]
+        intercept = list(mr['Intercept'])[0]
+        coef = list(mr['Coefficient'])[0]
+        # r2 = list(mr['r2'])[0]
+        
+        x_range = np.arange(0, x_limit)
+        
+        for x in x_range:
+            y = x * coef + intercept
+            
+            d[x_str].append(x)
+            d['Duration (ms)'].append(y)
+            d['Condition'].append(condition)
+
+
+    df = pd.DataFrame(d)
+
+    plt.figure()        
+    sns.lineplot(x=x_str, y='Duration (ms)', hue='Condition', style='Condition', data=df)
+    
+    plt.title(title)
+    plt.show()
+        
                 
 def get_saccades(ID, f):
     # Set list of features. Split by dependent and independent features, in essence
@@ -126,13 +156,21 @@ def get_saccades(ID, f):
             'Saccade',
             'Distance (pixels)',
             'Distance (degrees)',
-            'Duration',
+            'Distance (fitts)',
+            'Duration (ms)',
             'Dragging']
     cols = ['ID', 'Condition', 'Trial', 'Start time', 'End time']
     [cols.append(f) for f in features]
     results = pd.DataFrame(columns=cols)
         
     fix_df = pd.read_csv(f)
+    
+    if 'Fixations' in f:
+        features = ['gstx', 'gsty', 'genx', 'geny']
+    elif 'mouse' in f:
+        features = ['start_x', 'start_y', 'end_x', 'end_y']
+    else:
+        raise KeyError('Could not determine whether to use gaze or mouse')
 
     # Run trhough each condition and trial and retrieve the saccades made        
     for condition in list(fix_df['Condition'].unique()):
@@ -147,9 +185,12 @@ def get_saccades(ID, f):
                 # Compute features for each saccade in trial and write to df
                 for i in range(len(saccades)):
                     df = saccades.iloc[i]
-                    d = euclidean_distance((df['gstx'], df['gsty']), (df['genx'], df['geny']))
-                    angle_change = compute_angle_change((df['gstx'], df['gsty']), (df['genx'], df['geny']))
+                    d = euclidean_distance((df[features[0]], df[features[1]]), (df[features[2]], df[features[3]]))
+                    angle_change = compute_angle_change((df[features[0]], df[features[1]]), (df[features[2]], df[features[3]]))
+                    fitts = fitts_id((df[features[0]], df[features[1]]), (df[features[2]], df[features[3]]))
+                    
                     dragging = df['Dragging']
+                    # dragging = False
                 
                     r = pd.DataFrame({'ID': ID,
                                       'Condition': int(condition),
@@ -159,7 +200,8 @@ def get_saccades(ID, f):
                                       'Saccade': i,
                                       'Distance (pixels)': d,
                                       'Distance (degrees)': angle_change,
-                                      'Duration': df['end'] - df['start'],
+                                      'Distance (fitts)': fitts,
+                                      'Duration (ms)': df['end'] - df['start'],
                                       'Dragging': dragging},
                                      index=[0])
                     results = results.append(r, ignore_index=True)
@@ -172,18 +214,53 @@ if __name__ == '__main__':
     
     pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
     IDs = sorted(list(pp_info['ID'].unique()))
+
+    # =============================================================================
+    # EYE ANALYSIS    
+    # =============================================================================    
+    # fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f])
+    # files = [f for f in fixations_files if not '/008/' in f]
     
-    fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f])
+    # dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
+    # results = pd.concat(dfs, ignore_index=True)
+    # results.to_csv('../results/all-saccades.csv')
+    
+    # conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
+    # for condition in sorted(list(results['Condition'].unique())):
+    #     # plot_saccades(results, condition)
+    #     intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (pixels)', x_limit=1800)
+
+    #     conditions.append(condition)
+    #     intercepts.append(intercept)
+    #     coefs.append(coef)
+    #     r2s.append(r_squared)
+    #     ps.append(p)
+        
+    # lm_results = pd.DataFrame()
+    # lm_results['Condition'] = conditions
+    # lm_results['Intercept'] = intercepts
+    # lm_results['Coefficient'] = coefs
+    # lm_results['R-squared'] = r2s
+    # lm_results['p'] = ps
+    # lm_results.to_excel('../results/lm_results.xlsx')
+    
+    # plot_slopes(lm_results, 'Regressions of saccade duration per condition', x_limit=1000)
+    
+    # =============================================================================
+    # MOUSE ANALYSIS    
+    # =============================================================================
+    fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-mouseEvents.csv' in f])
     files = [f for f in fixations_files if not '/008/' in f]
     
-    dfs = Parallel(n_jobs=-2, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
+    dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
     results = pd.concat(dfs, ignore_index=True)
-    results.to_csv('../results/all-saccades.csv')
+    results.to_csv('../results/all-saccades-mouse.csv')
     
     conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
     for condition in sorted(list(results['Condition'].unique())):
         # plot_saccades(results, condition)
-        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (pixels)')
+        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (fitts)', 
+                                                      y_limit=2000, x_limit=1000, x_min=0)
 
         conditions.append(condition)
         intercepts.append(intercept)
@@ -197,7 +274,10 @@ if __name__ == '__main__':
     lm_results['Coefficient'] = coefs
     lm_results['R-squared'] = r2s
     lm_results['p'] = ps
-    lm_results.to_excel('../results/lm_results.xlsx')
+    lm_results.to_excel('../results/lm_results_mouse.xlsx')    
+    
+    plot_slopes(lm_results, 'Regressions of mouse movement duration per condition', x_limit=6, x_str='Distance (fitts)')
+    
 
 
 

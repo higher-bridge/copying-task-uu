@@ -46,6 +46,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
     dragging_list = np.empty(len(events), dtype=bool)
     dragging_list[:] = False
     
+    dragging_mouse = np.empty(len(mousedata), dtype=bool)
+    dragging_mouse[:] = False
+    
     # Create a list to track which rows in mousedata are valid
     mouse_valid = np.zeros(len(mousedata), dtype=bool)
     mouse_valid[:] = False
@@ -82,6 +85,11 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
                 end_drag_idx = hf.find_nearest_index(events['end'], end_drag)
                 
                 dragging_list[start_drag_idx:end_drag_idx] = True
+                
+                start_drag_mouse = hf.find_nearest_index(mousedata['TrackerTime'], start_drag)
+                end_drag_mouse = hf.find_nearest_index(mousedata['TrackerTime'], end_drag)
+                
+                dragging_mouse[start_drag_mouse:end_drag_mouse] = True
             
             mouse_start_idx = hf.find_nearest_index(mousedata['TrackerTime'], start)
             mouse_end_idx = hf.find_nearest_index(mousedata['TrackerTime'], end)
@@ -117,11 +125,15 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
     
     # Remove invalid rows from mousetracker
     mousedata['Valid'] = mouse_valid
+    mousedata['Dragging'] = dragging_mouse
     mousedata = mousedata.loc[mousedata['Valid'] == True]
     
     # Compute mouse 'fixations' and 'saccades' for modelling later on
     mouse_events = mouse_analysis.get_mouse_events(list(mousedata['x']), list(mousedata['y']),
-                                                          list(mousedata['TrackerTime']))
+                                                   list(mousedata['TrackerTime']),
+                                                   list(mousedata['Trial']),
+                                                   list(mousedata['Condition']),
+                                                   list(mousedata['Dragging']))
     
     # Write everything to csv
     mouse_events.to_csv(f'../results/{ID}/{ID}-mouseEvents.csv')
@@ -148,7 +160,7 @@ if __name__ == '__main__':
     base_location_list = [base_location] * len(ID_list)
     
     # Sit back, this will take a while
-    results = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(load_and_merge)\
+    results = Parallel(n_jobs=-4, backend='loky', verbose=True)(delayed(load_and_merge)\
                                                                 (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list, 
                                                                                                                   ID_dict_list,
                                                                                                                   pp_info_list,
