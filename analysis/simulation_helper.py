@@ -17,28 +17,61 @@ def euclidean_distance(loc1:tuple, loc2:tuple):
     
     return dist
 
+def compute_dme_activation(current_time:int, activated_at:list,
+                           decay:float, epsilon:float):
+    
+    summed = sum([(current_time - act_at) ** -decay for act_at in activated_at])
+    activation = np.log(summed) + epsilon
+    
+    return activation
+
+def compute_dme_retrieval(f:float, e:float, 
+                          current_time:int, activated_at:list,
+                          decay:float, epsilon:float):
+    
+    ai = compute_dme_activation(current_time, activated_at, decay, epsilon)
+    rt = f * e ** -ai
+    
+    return rt
+
 def fitts_id(loc1:tuple, loc2:tuple):
     # Fitts' law: ID = log2(2D / W). W = target_size[0] for now
     
     distance = euclidean_distance(loc1, loc2)
     dw = (2 * distance) / constants.TARGET_SIZE[0] + 1
-    fitts = np.log2(dw)
+    fitts = np.log2(dw)   
 
     return fitts
 
-def fitts_time(loc1:tuple, loc2:tuple, a:int=.025, b:int=.04, sigma:int=.3):
-    # Fitts' time = a + b * ID
-    # a & b can be empirically calculated. Maybe separately for eyes and mouse.
-    duration = a + b * fitts_id(loc1, loc2)
-    noise = random.gauss(mu=1.0, sigma=sigma)
+# def fitts_time(loc1:tuple, loc2:tuple, a:int=.025, b:int=.04, sigma:int=.3):
+#     # Fitts' time = a + b * ID
+#     # a & b can be empirically calculated. Maybe separately for eyes and mouse.
+#     duration = a + b * fitts_id(loc1, loc2)
+#     noise = random.gauss(mu=1.0, sigma=sigma)
     
-    return duration * noise * 1000 # milliseconds
+#     return duration * noise * 1000 # milliseconds
 
-def estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.3):
-    duration = a + b * euclidean_distance(loc1, loc2)
-    noise = random.gauss(mu=1.0, sigma=sigma)
+def estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.25):
+    duration = a + (b * euclidean_distance(loc1, loc2))
+    noise = random.gauss(mu=(1.0), sigma=sigma)
+    result = duration * noise
     
-    return duration * noise # milliseconds
+    while result < 5:
+        noise = random.gauss(mu=(1.0), sigma=sigma)
+        result = duration * noise
+    
+    return result
+
+def estim_mouse_time(loc1:tuple, loc2:tuple, a:int=15, b:int=105, sigma:int=.25):
+    duration = a + (b * fitts_id(loc1, loc2))
+    noise = random.gauss(mu=(1.0), sigma=sigma)
+    result = duration * noise 
+    
+    while result < 5:
+        noise = random.gauss(mu=(1.0), sigma=sigma)
+        result = duration * noise 
+        
+    return result
 
 def generate_locations(n_items:int=4):
     all_example_locations = [(515, 570), (650, 570), (785, 570),

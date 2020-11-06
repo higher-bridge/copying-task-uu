@@ -135,40 +135,40 @@ results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
 # =============================================================================
 # PAIRPLOT
 # =============================================================================
-results_pairplot = results_grouped.drop('ID', axis=1)
+# results_pairplot = results_grouped.drop('ID', axis=1)
 
-plt.figure()
-sns.pairplot(data=results_pairplot, hue='Condition', corner=True)
-plt.savefig(f'{base_location}/plots/pairplot.png', dpi=500)
-plt.show()
+# plt.figure()
+# sns.pairplot(data=results_pairplot, hue='Condition', corner=True)
+# plt.savefig(f'{base_location}/plots/pairplot.png', dpi=500)
+# plt.show()
 
 # =============================================================================
 # SEPARATE PLOTS
 # =============================================================================
-colors = sns.color_palette("Blues")[2:]
+# colors = sns.color_palette("Blues")[2:]
 
-for f in features:
-    plt.figure(figsize=(4, 5))
-    sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
-                palette=colors)
-    plt.title(f)
-    plt.tight_layout()
-    plt.savefig(f'{base_location}/plots/grouped {f} box.png', dpi=500)
-    plt.show()
+# for f in features:
+#     plt.figure(figsize=(4, 5))
+#     sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
+#                 palette=colors)
+#     plt.title(f)
+#     plt.tight_layout()
+#     plt.savefig(f'{base_location}/plots/grouped {f} box.png', dpi=500)
+#     plt.show()
     
-    plt.figure()
-    for c in list(results_grouped['Condition'].unique()):
-        plot_df = results_grouped.loc[results_grouped['Condition'] == c]
-        sns.distplot(plot_df[f], label=c)
+#     plt.figure()
+#     for c in list(results_grouped['Condition'].unique()):
+#         plot_df = results_grouped.loc[results_grouped['Condition'] == c]
+#         sns.distplot(plot_df[f], label=c)
     
-    plt.title(f)
-    plt.legend(title='Condition')
-    plt.savefig(f'{base_location}/plots/grouped {f} dist.png', dpi=500)
-    plt.show()
+#     plt.title(f)
+#     plt.legend(title='Condition')
+#     plt.savefig(f'{base_location}/plots/grouped {f} dist.png', dpi=500)
+#     plt.show()
 
-    print('\n###########################')
-    hf.test_friedman(results_grouped, 'Condition', f)
-    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
+#     print('\n###########################')
+#     hf.test_friedman(results_grouped, 'Condition', f)
+#     hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
 
 # =============================================================================
 # COMBINED BARPLOTS                
@@ -179,13 +179,16 @@ rcParams['font.size'] = 12
 
 sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
+y_lims = [(1.5, 7.5), (150, 1000), (4 ,15), (2.5, 5), (100, 240), (200, 425)]
+
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
 
 for i, feat in enumerate(features):
     sns.boxplot('Condition', feat, data=results_grouped, #capsize=.1, errwidth=1.5,
                 palette='Blues', ax=axes[i])
-    axes[i].set_xlabel('')    
+    axes[i].set_xlabel('')   
+    axes[i].set_ylim(y_lims[i])
     
     if i < (len(features) / 2):
         axes[i].set_xticks([])

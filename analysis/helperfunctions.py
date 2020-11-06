@@ -247,7 +247,7 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
                 results = pg.wilcoxon(x, y, 'one-sided')
                 results = results.round(4)
 
-                W = list(results['W-val'])[0]
+                t = list(results['W-val'])[0]
                 p =list(results['p-val'])[0]
                 
                 prefix = '   '
@@ -260,7 +260,7 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
                     prefix = '***'
                 
                 # prefix = '*' if p < .01 else ' '
-                print(f'{prefix}{comb} Wilco: W={round(W, 2)}, p={round(p, 3)}')
+                print(f'{prefix}{comb} Wilco: W={round(t, 2)}, p={round(p, 3)}')
             else:
                 # s, p = ttest_rel(x, y, nan_policy='omit')
                 results = pg.ttest(x, y, paired=True, tail='one-sided')
@@ -333,6 +333,29 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         results = results.round(3)
         print(results)        
 
+def test_ttest(x, y):
+    results = pg.ttest(x, y)
+    
+    t = list(results['T'])[0]
+    p =list(results['p-val'])[0]
+
+    # mse = sum([(obs - pred) ** 2 for obs, pred in zip(x, y)]) / len(x)
+    # rmse = np.sqrt(mse)
+    
+    squared_error = (np.mean(x) - np.mean(y)) ** 2
+    
+    # prefix = '   '
+    
+    # if p < .05:
+    #     prefix = '*  '
+    # if p < .01:
+    #     prefix = '** '
+    # if p < .001:
+    #     prefix = '***'
+        
+    # print(f'{prefix} Ttest: t={round(t, 2)}, p={round(p, 3)}')
+    
+    return t, p, squared_error
 
 def scatterplot_fixations(data, x, y, title:str, plot_line=False, save=True, savestr:str=''):
     # Plot fixations

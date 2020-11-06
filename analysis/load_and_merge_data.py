@@ -160,7 +160,7 @@ if __name__ == '__main__':
     base_location_list = [base_location] * len(ID_list)
     
     # Sit back, this will take a while
-    results = Parallel(n_jobs=-4, backend='loky', verbose=True)(delayed(load_and_merge)\
+    results = Parallel(n_jobs=-5, backend='loky', verbose=True)(delayed(load_and_merge)\
                                                                 (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list, 
                                                                                                                   ID_dict_list,
                                                                                                                   pp_info_list,

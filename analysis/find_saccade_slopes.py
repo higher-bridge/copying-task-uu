@@ -110,7 +110,7 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration (ms)',
     y = [xx * coef + intercept for xx in x]
     
     plt.figure()
-    sns.scatterplot(x=X, y=Y, data=df, hue='Dragging')
+    sns.scatterplot(x=X, y=Y, data=df) #, hue='Dragging')
     plt.plot(x, y, 'r')
     plt.title(f'Condition {condition}, r2={r_squared}')
     plt.show()
@@ -118,6 +118,7 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration (ms)',
     
     # plt.figure()
     # sns.histplot(df['Duration (ms)']) #, stat='density')
+    # plt.title(f'Condition {condition}, r2={r_squared}')
     # plt.show()
     
     return intercept, coef, r_squared, p
@@ -218,49 +219,17 @@ if __name__ == '__main__':
     # =============================================================================
     # EYE ANALYSIS    
     # =============================================================================    
-    # fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f])
-    # files = [f for f in fixations_files if not '/008/' in f]
-    
-    # dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
-    # results = pd.concat(dfs, ignore_index=True)
-    # results.to_csv('../results/all-saccades.csv')
-    
-    # conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
-    # for condition in sorted(list(results['Condition'].unique())):
-    #     # plot_saccades(results, condition)
-    #     intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (pixels)', x_limit=1800)
-
-    #     conditions.append(condition)
-    #     intercepts.append(intercept)
-    #     coefs.append(coef)
-    #     r2s.append(r_squared)
-    #     ps.append(p)
-        
-    # lm_results = pd.DataFrame()
-    # lm_results['Condition'] = conditions
-    # lm_results['Intercept'] = intercepts
-    # lm_results['Coefficient'] = coefs
-    # lm_results['R-squared'] = r2s
-    # lm_results['p'] = ps
-    # lm_results.to_excel('../results/lm_results.xlsx')
-    
-    # plot_slopes(lm_results, 'Regressions of saccade duration per condition', x_limit=1000)
-    
-    # =============================================================================
-    # MOUSE ANALYSIS    
-    # =============================================================================
-    fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-mouseEvents.csv' in f])
+    fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f])
     files = [f for f in fixations_files if not '/008/' in f]
     
     dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
     results = pd.concat(dfs, ignore_index=True)
-    results.to_csv('../results/all-saccades-mouse.csv')
+    results.to_csv('../results/all-saccades.csv')
     
     conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
     for condition in sorted(list(results['Condition'].unique())):
         # plot_saccades(results, condition)
-        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (fitts)', 
-                                                      y_limit=2000, x_limit=1000, x_min=0)
+        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (pixels)', x_limit=1800)
 
         conditions.append(condition)
         intercepts.append(intercept)
@@ -274,9 +243,41 @@ if __name__ == '__main__':
     lm_results['Coefficient'] = coefs
     lm_results['R-squared'] = r2s
     lm_results['p'] = ps
-    lm_results.to_excel('../results/lm_results_mouse.xlsx')    
+    lm_results.to_excel('../results/lm_results.xlsx')
     
-    plot_slopes(lm_results, 'Regressions of mouse movement duration per condition', x_limit=6, x_str='Distance (fitts)')
+    # plot_slopes(lm_results, 'Regressions of saccade duration per condition', x_limit=1000)
+    
+    # =============================================================================
+    # MOUSE ANALYSIS    
+    # =============================================================================
+    # fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-mouseEvents.csv' in f])
+    # files = [f for f in fixations_files if not '/008/' in f]
+    
+    # dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
+    # results = pd.concat(dfs, ignore_index=True)
+    # results.to_csv('../results/all-saccades-mouse.csv')
+    
+    # conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
+    # for condition in sorted(list(results['Condition'].unique())):
+    #     # plot_saccades(results, condition)
+    #     intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (fitts)', 
+    #                                                   y_limit=2000, x_limit=1000, x_min=0)
+
+    #     conditions.append(condition)
+    #     intercepts.append(intercept)
+    #     coefs.append(coef)
+    #     r2s.append(r_squared)
+    #     ps.append(p)
+        
+    # lm_results = pd.DataFrame()
+    # lm_results['Condition'] = conditions
+    # lm_results['Intercept'] = intercepts
+    # lm_results['Coefficient'] = coefs
+    # lm_results['R-squared'] = r2s
+    # lm_results['p'] = ps
+    # lm_results.to_excel('../results/lm_results_mouse.xlsx')    
+    
+    # plot_slopes(lm_results, 'Regressions of mouse movement duration per condition', x_limit=6, x_str='Distance (fitts)')
     
 
 
