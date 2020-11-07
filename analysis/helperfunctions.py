@@ -334,26 +334,15 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         print(results)        
 
 def test_ttest(x, y):
-    results = pg.ttest(x, y)
+    # results = pg.ttest(x, y)
     
-    t = list(results['T'])[0]
-    p =list(results['p-val'])[0]
+    # t = list(results['T'])[0]
+    # p =list(results['p-val'])[0]
 
-    # mse = sum([(obs - pred) ** 2 for obs, pred in zip(x, y)]) / len(x)
-    # rmse = np.sqrt(mse)
+    t = 0
+    p = 0
     
     squared_error = (np.mean(x) - np.mean(y)) ** 2
-    
-    # prefix = '   '
-    
-    # if p < .05:
-    #     prefix = '*  '
-    # if p < .01:
-    #     prefix = '** '
-    # if p < .001:
-    #     prefix = '***'
-        
-    # print(f'{prefix} Ttest: t={round(t, 2)}, p={round(p, 3)}')
     
     return t, p, squared_error
 

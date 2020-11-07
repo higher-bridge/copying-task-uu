@@ -14,6 +14,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from joblib import Parallel, delayed
+import pickle
 
 import simulation_helper as sh
 import constants
@@ -54,19 +55,23 @@ import constants
 
 
 
-def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mouse_model, features):    
+def simulate_participant(ID, linear_saccade_model, linear_mouse_model, features):    
     ID = str(ID).zfill(3)
     
-    cols = ['ID', 'Encoding scheme', 'Repetitions', 'Condition', 'Trial']
+    cols = ['ID', 'Encoding scheme', 'Repetitions', 'Parameters', 'Condition', 'Trial', 'Waited']
     [cols.append(f) for f in features]
     # tracking_df = pd.DataFrame(columns=cols)
     tracking_dict = {key: [] for key in cols}
 
-    # encoding_schemes = sh.create_all_encoding_schemes()
+    encoding_schemes = sh.create_all_encoding_schemes()
     memory_repetitions = sh.create_all_encoding_schemes(max_k=constants.MAX_MEMORY_REPETITIONS)    
+    
+    range_params = sh.get_param_combinations()
     
     for encoding_scheme in encoding_schemes:
         for repetition_range in memory_repetitions:
+            for params in range_params:
+                f, e, noise = params[0], params[1], params[2]
         
             for i, condition in enumerate(constants.CONDITIONS):
                 # Get coefficients for saccade speed in this condition. Convert from ms to s by /1000
@@ -88,7 +93,9 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                 # Retrieve the amount of repetitions to perform when encoding
                 n_repetitions = repetition_range[condition]
                 
-                for trial in range(1, constants.NUM_TRIALS + 1):            
+                for trial in range(1, constants.NUM_TRIALS + 1):
+                    waited = 0
+                    
                     # Tracking variables
                     cumul_time = 0
                     remaining_items = 4 
@@ -98,6 +105,8 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                     # Generate lists of stimulus locations
                     example_locs, workspace_locs, resource_locs = sh.generate_locations(n_items=remaining_items)
                     placed_locs = []
+                    
+                    activated_at = {i: [] for i in range(len(example_locs))}
                     
                     # Init eye location in center of screen
                     eye_location = (1280, 720)
@@ -138,10 +147,14 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                                     
                                     if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
                                         # Store item in memory
+                                        activated_at[i].append(cumul_time)
                                         cumul_time += 50 * random.gauss(1, .01)
                                         
                                         for rep in range(n_repetitions):
-                                            cumul_time += 50 * random.gauss(1, .01)
+                                            retrieval, succesful = sh.compute_dme_retrieval(cumul_time, activated_at[i],
+                                                                                            f=f, e=e, noise=noise)
+                                            cumul_time += retrieval
+                                            # cumul_time += 75 * random.gauss(1, .01)
 
                                         succesful = True if random.uniform(0, 1) > .1 else False                                                
                                         if succesful:
@@ -157,6 +170,7 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                             
                             # Run through each location in memory
                             for k in locations_memorized:
+                                found_match = False
                                 
                                 # Run through each item in the resource grid and try
                                 # to match it to memory
@@ -168,14 +182,20 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                                     num_fixations += 1
                                 
                                     # Try to match item to memory
-                                    cumul_time += 150 * random.gauss(1, .1)
+                                    retrieval, succesful = sh.compute_dme_retrieval(cumul_time, activated_at[k],
+                                                                                     f=f, e=e, noise=noise)
+                                    cumul_time += retrieval
+                                    activated_at[k].append(cumul_time)
+
+                                    # cumul_time += 150 * random.gauss(1, .1)
                                     
                                     # If the two items match, there is still a certain chance 
                                     # of successful retrieval which needs to be overcome
                                     if l == k:
-                                        succesful = True if random.uniform(0, 1) > .2 else False
+                                        # succesful = True if random.uniform(0, 1) > .2 else False
+                                        found_match = True
                                 
-                                if succesful:
+                                if succesful and found_match:
                                     # Move mouse to resource grid
                                     new_mouse_location = resource_locs[k]
                                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
@@ -183,7 +203,7 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                                     mouse_location = new_mouse_location
                                     
                                     # Click on item
-                                    cumul_time += 150 * random.gauss(1, .1)
+                                    cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000
                                     
                                     # Move eyes to workspace
                                     new_location = workspace_locs[k]
@@ -210,6 +230,7 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                             # In fact participants will likely be checking their work, but
                             # not necessary to model here
                             cumul_time += 1   
+                            waited += 1
         
                     # Code would check for finished trial every 500ms to conserve time, 
                     # so we add a random value between 1-500ms
@@ -218,16 +239,18 @@ def simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mous
                     tracking_dict['ID'].append(ID)
                     tracking_dict['Encoding scheme'].append(str(encoding_scheme))
                     tracking_dict['Repetitions'].append(str(repetition_range))
+                    tracking_dict['Parameters'].append((str(params)))
                     tracking_dict['Condition'].append(int(condition))
                     tracking_dict['Trial'].append(int(trial))
-                    tracking_dict['Number of crossings'].append(float(num_crossings))
-                    tracking_dict['Completion time (s)'].append(float(cumul_time / 1000))
-                    tracking_dict['Fixations per second'].append(float(num_fixations / (cumul_time / 1000)))
+                    tracking_dict['Number of crossings'].append(int(num_crossings))
+                    tracking_dict['Completion time (s)'].append(cumul_time / 1000)
+                    tracking_dict['Fixations per second'].append(num_fixations / (cumul_time / 1000))
+                    tracking_dict['Waited'].append(waited)
                     
                 
-    tracking_df = pd.DataFrame(tracking_dict)
+    # tracking_df = pd.DataFrame(tracking_dict)
                 
-    return tracking_df
+    return tracking_dict
 
 
 if __name__ == '__main__':
@@ -235,30 +258,29 @@ if __name__ == '__main__':
     
     features = ['Number of crossings',
                 'Completion time (s)',
-                # 'Timeout',
-                # 'Fixations',
                 'Fixations per second']
     
     IDs = np.arange(1, constants.NUM_PPS_SIM + 1)
     linear_saccade_model = pd.read_excel('../results/lm_results.xlsx')
     linear_mouse_model = pd.read_excel('../results/lm_results_mouse.xlsx')    
-    encoding_schemes = sh.create_all_encoding_schemes()
 
-    schemes = [encoding_schemes] * len(IDs)
     lm_saccades = [linear_saccade_model] * len(IDs)
     lm_mouse = [linear_mouse_model] * len(IDs)
     feature_list = [features] * len(IDs)
 
     dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(simulate_participant)\
-                                                            (ID, scheme, lm_s, lm_m, f) for \
-                                                                ID, scheme, lm_s, lm_m, f in \
-                                                                    zip(IDs, schemes, lm_saccades, lm_mouse, feature_list))
+                                                            (ID, lm_s, lm_m, f) for \
+                                                                ID, lm_s, lm_m, f in \
+                                                                    zip(IDs, lm_saccades, lm_mouse, feature_list))
 
     # dfs = []
     # for ID in IDs:
-    #     dfs.append(simulate_participant(ID, encoding_schemes, linear_saccade_model, linear_mouse_model, features))
+    #     dfs.append(simulate_participant(ID, linear_saccade_model, linear_mouse_model, features))
 
-    results = pd.concat(dfs, ignore_index=True)
+    pickle.dump(dfs, open('simulation_results.p', 'wb'))    
+
+    dataframes = [pd.DataFrame(d) for d in dfs]
+    results = pd.concat(dataframes, ignore_index=True)
     results.to_csv('../results/simulation_results.csv')
     
     print(f'{round(time.time() - start, 1)} seconds')

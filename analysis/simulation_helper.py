@@ -21,18 +21,21 @@ def compute_dme_activation(current_time:int, activated_at:list,
                            decay:float, epsilon:float):
     
     summed = sum([(current_time - act_at) ** -decay for act_at in activated_at])
-    activation = np.log(summed) + epsilon
+    activation = np.log(summed) + epsilon if summed != 0 else epsilon
     
     return activation
 
-def compute_dme_retrieval(f:float, e:float, 
-                          current_time:int, activated_at:list,
-                          decay:float, epsilon:float):
+def compute_dme_retrieval(current_time:int, activated_at:list,
+                          f:float=.9, e:float=.325,
+                          noise:float=.28, decay:float=.5):
     
-    ai = compute_dme_activation(current_time, activated_at, decay, epsilon)
-    rt = f * e ** -ai
+    ai = compute_dme_activation(current_time, activated_at, decay, noise)
+    rt = (f * e ** -ai) * 1000
     
-    return rt
+    if rt > e:
+        return rt, False
+    else:    
+        return rt, True
 
 def fitts_id(loc1:tuple, loc2:tuple):
     # Fitts' law: ID = log2(2D / W). W = target_size[0] for now
@@ -117,7 +120,19 @@ def create_all_encoding_schemes(max_k:int=4):
                     
     return combinations
 
-
+def get_param_combinations():
+    f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])
+    e_range = np.arange(constants.E_RANGE[0], constants.E_RANGE[1], constants.E_RANGE[2])
+    noise_range = np.arange(constants.NOISE_RANGE[0], constants.NOISE_RANGE[1], constants.NOISE_RANGE[2])
+    
+    result = []
+    
+    for l1 in f_range:
+        for l2 in e_range:
+            for l3 in noise_range:
+                result.append([round(l1, 3), round(l2, 3), round(l3, 3)])
+                
+    return result
 
 
 

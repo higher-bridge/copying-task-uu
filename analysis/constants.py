@@ -3,7 +3,7 @@ base_location = '../results'
 # EXPERIMENT PARAMETERS
 EXCLUDE_TRIALS = [1, 2, 3, 999]
 NUM_PPS_SIM = 13
-NUM_TRIALS = 35
+NUM_TRIALS = 30
 
 CONDITIONS = [0, 1, 2, 3]
 CONDITION_TIMES = [(6000, 0), (4000, 2000), (3000, 3000), (2000, 4000)]
@@ -22,9 +22,9 @@ DISTANCE = 700 # mm
 MAX_MEMORY_REPETITIONS = 4
 
 # Consist of (start, stop, step)
-F_RANGE = (.9, 1.2, .1) 
-E_RANGE = (.25, .35, .025)
-NOISE_RANGE = (.28, .32, .02)
+F_RANGE = (.7, 1.3, .1) 
+E_RANGE = (.225, .375, .025)
+NOISE_RANGE = (.26, .34, .02)
 
 # NO NEED TO FILL IN
 SCREEN_CENTER = (RESOLUTION[0] / 2, RESOLUTION[1] / 2)

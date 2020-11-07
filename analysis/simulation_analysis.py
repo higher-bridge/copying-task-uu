@@ -33,7 +33,7 @@ features = [
             'Fixations per second'
             ]
 
-results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 
+results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 'Parameters', 
                                     'Mean RMSE', 'Mean MSE']} #, 't', 'p']}
 
 # Loop through scheme and repetition strategies
@@ -42,52 +42,59 @@ for scheme in list(sim_data['Encoding scheme'].unique()):
     
     for repetitions in list(sim_data_s['Repetitions'].unique()):
         sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]
+        
+        for params in list(sim_data_r['Parameters'].unique()):
+            sim_data_p = sim_data_r.loc[sim_data_r['Parameters'] == params]
 
-        squared_errors = {key: [] for key in features}
-        for condition in sorted(list(exp_data['Condition'].unique())):
-            exp_data_c = exp_data.loc[exp_data['Condition'] == condition]
-            sim_data_c = sim_data_r.loc[sim_data_r['Condition'] == condition]    
-            
-            sim_grouped = sim_data_c.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
-            sim_grouped.columns = sim_grouped.columns.get_level_values(0)
-            
-            # For every feature, perform t-test for data in this condition,
-            # and calculate squared difference between the means in this condition
-            t_vals, p_vals, se_vals = [], [], []
-            for feat in features:
-                x = list(exp_data_c[feat])
-                y = list(sim_grouped[feat])
+            squared_errors = {key: [] for key in features}
+            for condition in sorted(list(exp_data['Condition'].unique())):
+                exp_data_c = exp_data.loc[exp_data['Condition'] == condition]
+                sim_data_c = sim_data_p.loc[sim_data_p['Condition'] == condition]    
                 
-                t, p, se = hf.test_ttest(x, y)
-    
-                t_vals.append(t)
-                p_vals.append(p)
+                sim_grouped = sim_data_c.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
+                sim_grouped.columns = sim_grouped.columns.get_level_values(0)
                 
-                squared_errors[feat].append(se)
-                            
-            # mean_t = round(np.mean(t_vals), 4)
-            # mean_p = round(np.mean(p_vals), 4)
-
-        # After calculating statistics for each condition, calculate the RMSE for each feature
-        all_rmse = [np.sqrt(np.mean(squared_errors[feat])) for feat in features]
-        all_mse = [np.mean(squared_errors[feat]) for feat in features]
+                # For every feature, perform t-test for data in this condition,
+                # and calculate squared difference between the means in this condition
+                t_vals, p_vals, se_vals = [], [], []
+                for feat in features:
+                    x = list(exp_data_c[feat])
+                    y = list(sim_grouped[feat])
                     
-        results_dict['Encoding scheme'].append(scheme)
-        results_dict['Repetitions'].append(repetitions)
-        results_dict['Mean RMSE'].append(np.mean(all_rmse))
-        results_dict['Mean MSE'].append(np.mean(all_mse))
-        # results_dict['t'].append(mean_t)
-        # results_dict['p'].append(mean_p)
-            
+                    t, p, se = hf.test_ttest(x, y)
+        
+                    # t_vals.append(t)
+                    # p_vals.append(p)
+                    
+                    squared_errors[feat].append(se)
+                                
+                # mean_t = round(np.mean(t_vals), 4)
+                # mean_p = round(np.mean(p_vals), 4)
+    
+            # After calculating statistics for each condition, calculate the RMSE for each feature
+            all_rmse = [np.sqrt(np.mean(squared_errors[feat])) for feat in features]
+            all_mse = [np.mean(squared_errors[feat]) for feat in features]
+                        
+            results_dict['Encoding scheme'].append(scheme)
+            results_dict['Repetitions'].append(repetitions)
+            results_dict['Parameters'].append(params)
+            results_dict['Mean RMSE'].append(np.mean(all_rmse))
+            results_dict['Mean MSE'].append(np.mean(all_mse))
+            # results_dict['t'].append(mean_t)
+            # results_dict['p'].append(mean_p)
+                
 
 results = pd.DataFrame(results_dict)
-results = results.sort_values(by=['Mean MSE'], ignore_index=True, kind='mergesort', ascending=True)
+results = results.sort_values(by=['Mean RMSE'], ignore_index=True, kind='mergesort', ascending=True)
 print(results.head())
 
 best_scheme = results.iloc[0]['Encoding scheme']
 best_reps = results.iloc[0]['Repetitions']
+best_params = results.iloc[0]['Parameters']
+
 best_results = sim_data.loc[sim_data['Encoding scheme'] == best_scheme]
 best_results = best_results.loc[best_results['Repetitions'] == best_reps]
+best_results = best_results.loc[best_results['Parameters'] == best_params]
 
 # Group by ID and Condition, use median
 results_grouped = best_results.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
@@ -120,7 +127,7 @@ for i, feat in enumerate(features):
     except:
         pass
 
-plt.suptitle(f'Results for model with scheme {best_scheme}, repetitions {best_reps}')
+plt.suptitle(f'Results for model with scheme {best_scheme}, repetitions {best_reps}, params {best_params}')
 f.tight_layout() #(pad=1, w_pad=0.2)
 f.savefig('../results/plots/model-boxplots.png', dpi=500)
 plt.show()
@@ -156,10 +163,12 @@ for i, feat in enumerate(features):
         axes[i].get_legend().remove()
         
 
-plt.suptitle(f'Results for model with scheme {best_scheme}, repetitions {best_reps}')
+plt.suptitle(f'Results for model with scheme {best_scheme}, repetitions {best_reps}, params {best_params}')
 f.tight_layout() #(pad=1, w_pad=0.2)
 f.savefig('../results/plots/model-barplots.png', dpi=500)
 plt.show()
+
+
 
 
 # =============================================================================
@@ -177,9 +186,6 @@ best_results = best_results.loc[best_results['Repetitions'] == best_reps]
 results_grouped = best_results.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
              
-# =============================================================================
-# COMBINE BARPLOTS
-# =============================================================================
 results_grouped['Source'] = ['Model'] * len(results_grouped)
 exp_data['Source'] = ['Observed'] * len(exp_data)
 
