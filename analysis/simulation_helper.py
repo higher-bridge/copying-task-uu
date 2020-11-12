@@ -18,21 +18,23 @@ def euclidean_distance(loc1:tuple, loc2:tuple):
     return dist
 
 def compute_dme_activation(current_time:int, activated_at:list,
-                           decay:float, epsilon:float):
+                           decay:float, noise:float):
     
     summed = sum([(current_time - act_at) ** -decay for act_at in activated_at])
-    activation = np.log(summed) + epsilon if summed != 0 else epsilon
+    
+    log_noise = random.gauss(1.0, noise)
+    activation = np.log(summed) + log_noise if summed != 0 else log_noise
     
     return activation
 
 def compute_dme_retrieval(current_time:int, activated_at:list,
-                          f:float=.9, e:float=.325,
+                          f:float=.9, thresh:float=.325,
                           noise:float=.28, decay:float=.5):
     
     ai = compute_dme_activation(current_time, activated_at, decay, noise)
-    rt = (f * e ** -ai) * 1000
+    rt = f * math.exp(-ai)
     
-    if rt > e:
+    if ai < thresh:
         return rt, False
     else:    
         return rt, True
@@ -59,22 +61,22 @@ def estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.2
     noise = random.gauss(mu=(1.0), sigma=sigma)
     result = duration * noise
     
-    while result < 5:
-        noise = random.gauss(mu=(1.0), sigma=sigma)
-        result = duration * noise
+    # while result < 5:
+    #     noise = random.gauss(mu=(1.0), sigma=sigma)
+    #     result = duration * noise
     
-    return result
+    return int(round(result))
 
 def estim_mouse_time(loc1:tuple, loc2:tuple, a:int=15, b:int=105, sigma:int=.25):
     duration = a + (b * fitts_id(loc1, loc2))
     noise = random.gauss(mu=(1.0), sigma=sigma)
     result = duration * noise 
     
-    while result < 5:
-        noise = random.gauss(mu=(1.0), sigma=sigma)
-        result = duration * noise 
+    # while result < 5:
+    #     noise = random.gauss(mu=(1.0), sigma=sigma)
+    #     result = duration * noise 
         
-    return result
+    return int(round(result))
 
 def generate_locations(n_items:int=4):
     all_example_locations = [(515, 570), (650, 570), (785, 570),
@@ -122,15 +124,18 @@ def create_all_encoding_schemes(max_k:int=4):
 
 def get_param_combinations():
     f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])
-    e_range = np.arange(constants.E_RANGE[0], constants.E_RANGE[1], constants.E_RANGE[2])
+    decay_range = np.arange(constants.DECAY_RANGE[0], constants.DECAY_RANGE[1], constants.DECAY_RANGE[2])
+    thresh_range = np.arange(constants.THRESH_RANGE[0], constants.THRESH_RANGE[1], constants.THRESH_RANGE[2])
     noise_range = np.arange(constants.NOISE_RANGE[0], constants.NOISE_RANGE[1], constants.NOISE_RANGE[2])
-    
+
+
     result = []
     
     for l1 in f_range:
-        for l2 in e_range:
-            for l3 in noise_range:
-                result.append([round(l1, 3), round(l2, 3), round(l3, 3)])
+        for l2 in decay_range:
+            for l3 in thresh_range:
+                for l4 in noise_range:
+                    result.append([round(l1, 3), round(l2, 3), round(l3, 3), round(l4, 3)])
                 
     return result
 

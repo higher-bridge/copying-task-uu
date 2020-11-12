@@ -13,7 +13,7 @@ from matplotlib import rcParams
 import seaborn as sns
 
 import helperfunctions as hf
-from constants import EXCLUDE_TRIALS, MIDLINE, base_location
+import constants
 
 
 pp_info = pd.read_excel('../results/participant_info.xlsx')
@@ -22,10 +22,10 @@ pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
 pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
 
 
-fixations_files = [f for f in hf.getListOfFiles(base_location) if '-allFixations.csv' in f]
-task_events_files = [f for f in hf.getListOfFiles(base_location) if 'allEvents.csv' in f]
-all_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allAllPlacements.csv' in f]
-correct_placements_files = [f for f in hf.getListOfFiles(base_location) if '-allCorrectPlacements.csv' in f]
+fixations_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f]
+task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if 'allEvents.csv' in f]
+all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allAllPlacements.csv' in f]
+correct_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
 
 features = [\
             'Number of crossings', 
@@ -67,7 +67,7 @@ for ID in list(pp_info['ID'].unique()):
         placement_df_c = placement_df.loc[placement_df['Condition'] == condition]
         
         for trial in list(fix_df_c['Trial'].unique()): 
-            if trial not in EXCLUDE_TRIALS:                
+            if trial not in constants.EXCLUDE_TRIALS:                
                 fix_df_t = fix_df_c.loc[fix_df_c['Trial'] == trial]
                 task_df_t = task_df_c.loc[task_df_c['Trial'] == trial]
                 placement_df_t = placement_df_c.loc[placement_df_c['Trial'] == trial]
@@ -83,16 +83,14 @@ for ID in list(pp_info['ID'].unique()):
                 end = list(end_times)[0]
                                 
                 completion_time = end - start
-                num_crossings = hf.get_midline_crossings(list(fixations['gavx']), midline=MIDLINE)
-                num_fixations = hf.get_left_side_fixations(list(fixations['gavx']), midline=MIDLINE)
+                num_crossings = hf.get_midline_crossings(list(fixations['gavx']))
+                num_fixations = hf.get_left_side_fixations(list(fixations['gavx']))
                 dwell_times = hf.get_dwell_times(list(fixations['gavx']),
                                                  list(fixations['start']),
-                                                 list(fixations['end']), 
-                                                 midline=MIDLINE)
+                                                 list(fixations['end']))
                 dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
                                                                list(fixations['start']),
-                                                               list(fixations['end']), 
-                                                               midline=MIDLINE)
+                                                               list(fixations['end']))
                 errors = len(placement_df_t.loc[placement_df_t['Correct'] != True])                
 
                 # adjustment = 0 + (int(condition) * 1000)
@@ -127,7 +125,7 @@ results = results.dropna()
 # Group by ID and Condition, use median
 results_grouped = results.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
-results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
+results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
 
 # results_grouped = results_grouped.drop(['Completion time (s)', 
 #                                         'Number of left-side fixations'], axis=1)
@@ -139,7 +137,7 @@ results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
 
 # plt.figure()
 # sns.pairplot(data=results_pairplot, hue='Condition', corner=True)
-# plt.savefig(f'{base_location}/plots/pairplot.png', dpi=500)
+# plt.savefig(f'{constants.base_location}/plots/pairplot.png', dpi=500)
 # plt.show()
 
 # =============================================================================
@@ -153,7 +151,7 @@ results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
 #                 palette=colors)
 #     plt.title(f)
 #     plt.tight_layout()
-#     plt.savefig(f'{base_location}/plots/grouped {f} box.png', dpi=500)
+#     plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
 #     plt.show()
     
 #     plt.figure()
@@ -163,7 +161,7 @@ results_grouped.to_csv(f'{base_location}/results-grouped-ID-condition.csv')
     
 #     plt.title(f)
 #     plt.legend(title='Condition')
-#     plt.savefig(f'{base_location}/plots/grouped {f} dist.png', dpi=500)
+#     plt.savefig(f'{constants.base_location}/plots/grouped {f} dist.png', dpi=500)
 #     plt.show()
 
 #     print('\n###########################')
@@ -197,7 +195,7 @@ for i, feat in enumerate(features):
         axes[i].set_xlabel('Condition')
 
 f.tight_layout(pad=1, w_pad=0.2)
-f.savefig(f'{base_location}/plots/combined-boxplots.png', dpi=500)
+f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=500)
 plt.show()
     
 
@@ -226,7 +224,7 @@ for i, feat in enumerate(features):
     axes[i].set_yticks([])
 
 f.tight_layout()
-f.savefig(f'{base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
+f.savefig(f'{constants.base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
 plt.show()
 
 

@@ -11,10 +11,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+
 from scipy.stats import mannwhitneyu, shapiro, ttest_rel, friedmanchisquare, wilcoxon
 from statsmodels.stats.anova import AnovaRM
-# from pingouin import sphericity
+
 import pingouin as pg
+
+from sklearn.preprocessing import MinMaxScaler
+import constants
 
 
 def getListOfFiles(dirName):
@@ -138,9 +142,9 @@ def remove_from_pp_info(df, cols_to_check:list, min_value:int=10):
     return df
             
 
-def get_midline_crossings(xpos:list, midline=1100):
+def get_midline_crossings(xpos:list, midline=constants.MIDLINE):
     num_crossings = 0
-    prev_x = 2560
+    prev_x = constants.SCREEN_CENTER[0]
     
     for x in xpos:
         if prev_x > midline and x < midline:
@@ -150,13 +154,13 @@ def get_midline_crossings(xpos:list, midline=1100):
     
     return num_crossings
 
-def get_left_side_fixations(xpos:list, midline=1100):
+def get_left_side_fixations(xpos:list, midline=constants.MIDLINE):
     return len([x for x in xpos if x < midline])
     
-def get_left_ratio_fixations(xpos:list, midline=1100):
+def get_left_ratio_fixations(xpos:list, midline=constants.MIDLINE):
     return len([x for x in xpos if x < midline]) / len(xpos)
 
-def get_dwell_times(xpos:list, starts:list, ends:list, midline=1100):
+def get_dwell_times(xpos:list, starts:list, ends:list, midline=constants.MIDLINE):
     dwell_times = []
     
     for x, start, end in zip(xpos, starts, ends):
@@ -168,7 +172,7 @@ def get_dwell_times(xpos:list, starts:list, ends:list, midline=1100):
     else:
         return np.nan
 
-def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=1100):
+def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=constants.MIDLINE):
     dwell_times = []
     prev_x = 2560
     
@@ -333,18 +337,16 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         results = results.round(3)
         print(results)        
 
-def test_ttest(x, y):
-    # results = pg.ttest(x, y)
-    
-    # t = list(results['T'])[0]
-    # p =list(results['p-val'])[0]
-
-    t = 0
-    p = 0
-    
+def compute_se(x, y):
     squared_error = (np.mean(x) - np.mean(y)) ** 2
     
-    return t, p, squared_error
+    mms = MinMaxScaler()
+    x = mms.fit_transform(np.array(x).reshape(-1, 1))
+    y = mms.transform(np.array(y).reshape(-1, 1))
+    
+    norm_squared_error = (np.mean(x) - np.mean(y)) ** 2
+    
+    return squared_error, norm_squared_error
 
 def scatterplot_fixations(data, x, y, title:str, plot_line=False, save=True, savestr:str=''):
     # Plot fixations
