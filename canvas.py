@@ -21,7 +21,6 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import pickle
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap, QCursor, QFont
@@ -97,7 +96,6 @@ class Canvas(QWidget):
                                                    'Correct', 'Time',  
                                                    'Trial', 'Condition', 'visibleTime'])
         
-        # self.mouseTracker = pd.DataFrame(columns=['x', 'y', 'Time', 'Trial'])
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 
         self.eventTracker = pd.DataFrame(columns=['Time', 'TrackerTime', 'TimeDiff', 'Event', 'Condition', 'Trial'])
@@ -105,9 +103,6 @@ class Canvas(QWidget):
         self.ppNumber = None
         self.setParticipantNumber()        
 
-        # self.disp = libscreen.Display()
-        # self.tracker = EyeTracker(self.disp)
-        # self.disp.close()
         self.disp = None
         self.tracker = None
         self.recordingSession = 0
@@ -247,9 +242,6 @@ class Canvas(QWidget):
         mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
         mouseTrackerDF.to_csv(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}-trackingSession-{self.recordingSession}.csv'))
         
-        # pickle.dump(self.mouseTrackerDict, 
-        #             open(Path(f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}.p'),
-        #             'wb'))        
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
         
     def checkIfFinished(self, timeOut=False):        
@@ -290,43 +282,7 @@ class Canvas(QWidget):
         
         self.writeEvent(f'Writing eyetracker session {self.recordingSession}')
 
-        print(f'Saved session {self.recordingSession} to {toLocation}')
-
-    # def performDriftCorrection(self):
-    #     self.clearScreen()
-    #     self.showMaximized()
-
-    #     try:
-    #         self.tracker.stop_recording()
-    #     #     self.tracker.close()
-    #     #     self.moveAndRenameTrackerFile()
-    #     #     self.disp = None
-    #     #     self.tracker = None
-    #     except Exception as e:
-    #         print(e)
-        
-
-        
-    #     # self.disp = libscreen.Display()
-    #     # self.tracker = EyeTracker(self.disp)
-        
-    #     corrected = self.tracker.fix_triggered_drift_correction()
-
-    #     event = pd.DataFrame({'Time': time.time(), 'Event': f'Drift correction (result={str(corrected)})',
-    #                           'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
-    #     self.eventTracker = self.eventTracker.append(event, ignore_index=True)
-        
-    #     print(f'Drift correction (result={str(corrected)})')
-        
-    #     self.disp.close()
-    #     self.showFullScreen()
-        
-    #     self.recordingSession += 1
-    #     self.tracker.start_recording()
-        
-    #     time.sleep(1)
-    #     self.initOpeningScreen()
-        
+        print(f'Saved session {self.recordingSession} to {toLocation}')        
 
     def eventFilter(self, widget, e):
         if e.type() == QtCore.QEvent.KeyPress:
@@ -364,13 +320,11 @@ class Canvas(QWidget):
                     # Program crashes if both pygaze and this want to use fullscreen, so maximize instead of FS
                     self.showMaximized()
                     
-                    # time.sleep(5)
                     self.disp = libscreen.Display()
                     self.tracker = EyeTracker(self.disp)
     
                     self.tracker.calibrate()
                     self.disp.close()
-                    # self.disp = None
                     
                     self.showFullScreen()
     
@@ -495,7 +449,6 @@ When you are ready to start the experiment, please tell the experimenter and we 
 Good luck!")
 
             elif self.conditionOrderIndex > 0:
-                # self.performDriftCorrection()
                 self.label = QLabel(\
 f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
 If you wish to carry on immediately, let the experimenter know.\n \
@@ -577,7 +530,6 @@ If you have taken a break, please wait for the experimenter to start the calibra
 
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
-        # self.emptyGridBox.setSizePolicy(self.sizePolicy)
         self.emptyGridBox.setStyleSheet(self.styleStr + "; border:0px")
     
     def exampleGridLayout(self):
@@ -636,7 +588,6 @@ If you have taken a break, please wait for the experimenter to start the calibra
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
-        # self.copyGridBox.setSizePolicy(self.sizePolicy)
         self.copyGridBox.setStyleSheet(self.styleStr)
         
     def resourceGridLayout(self):
@@ -668,6 +619,4 @@ If you have taken a break, please wait for the experimenter to start the calibra
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
         self.resourceGridBox.setSizePolicy(self.sizePolicy)
-        # self.resourceGridBox.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.resourceGridBox.setStyleSheet(self.styleStr)
-        # self.resourceGridBox.setWindowFlags(QtCore.Qt.FramelessWindowHint)

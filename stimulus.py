@@ -36,14 +36,11 @@ def load_stimulus(path:str, image_width:int):
     
     image = QImage()
     image.loadFromData(im)
-    
-    # print(image.isNull())
-    
+        
     if image.width() <= 0:
         raise ValueError(f'Image "{path}" has a width of 0.')
         
     image = image.scaledToWidth(image_width)
-    # path = path.replace('/Users/mba/copying-task-uu/stimuli/', '')
     
     return Stimulus(image, path)
 
@@ -63,19 +60,12 @@ def load_stimuli(path:str, image_width:int=100, extension:str='.png'):
         list -- n stimuli
     """
     
-    # [print(path, file) for file in os.listdir(path) if extension in file]
-    
-    # paths = sorted([os.path.join(path, file) for file in os.listdir(path) \
-                    # if extension in file])
-    
     paths = sorted([path / Path(file) for file in os.listdir(path) if extension in file])
-    # print(paths)
     
     stimuli = []
     for p in paths:
         stimuli.append(load_stimulus(str(p), image_width))
     
-    # n = len(stimuli) if n is None else n    
     return stimuli
 
 def pick_stimuli(stimuli:list, n:int=6):

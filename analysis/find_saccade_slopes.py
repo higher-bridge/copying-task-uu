@@ -22,11 +22,6 @@ from joblib import Parallel, delayed
 from pingouin import linear_regression
 from math import atan2
 
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.preprocessing import PolynomialFeatures
-import operator
-
 import helperfunctions as hf
 import constants
 from simulation_helper import euclidean_distance, fitts_id

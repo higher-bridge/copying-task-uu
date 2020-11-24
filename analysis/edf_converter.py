@@ -17,9 +17,6 @@ from pyedfread import edf
 import pandas as pd
 from joblib import Parallel, delayed
 
-import os
-import sys
-
 import helperfunctions as hf
 
     

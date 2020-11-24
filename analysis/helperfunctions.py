@@ -19,9 +19,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-from scipy.stats import mannwhitneyu, shapiro, ttest_rel, friedmanchisquare, wilcoxon
-from statsmodels.stats.anova import AnovaRM
-
 import pingouin as pg
 
 from sklearn.preprocessing import MinMaxScaler
