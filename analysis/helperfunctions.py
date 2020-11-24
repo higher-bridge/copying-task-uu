@@ -1,9 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Tue Sep  8 13:40:00 2020
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-@author: alexos
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import pandas as pd
@@ -109,7 +116,7 @@ def get_condition_order(df, ID:str, conditions:list=[1, 2, 3, 4]):
         
     return condition_order
 
-def get_num_trials(df, conditions:list=[0, 1, 2, 3], exclude=[1, 2, 3, 4, 5, 999]):
+def get_num_trials(df, conditions=constants.CONDITIONS, exclude=constants.EXCLUDE_TRIALS):
     num_trials = []
     
     # conditions = sorted(list(df['Condition'].unique()))
@@ -140,7 +147,18 @@ def remove_from_pp_info(df, cols_to_check:list, min_value:int=10):
         df = df.loc[df['ID'] != ID]
         
     return df
-            
+
+def condition_number_to_name(x):
+    if x == 0:
+        return 'baseline'
+    elif x == 1:
+        return 'high'
+    elif x == 2:
+        return 'medium'
+    elif x == 3:
+        return 'low'
+    else:
+        return 999
 
 def get_midline_crossings(xpos:list, midline=constants.MIDLINE):
     num_crossings = 0
@@ -184,7 +202,7 @@ def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=const
             x_list = []
             s_list = []
             e_list = []
-        elif prev_x < midline and x > midline:
+        elif prev_x < midline and x > midline and keep_track:
             keep_track = False
             dwell_times.append(get_dwell_times(x_list, s_list, e_list))
         
@@ -199,19 +217,15 @@ def get_dwell_time_per_crossing(xpos:list, starts:list, ends:list, midline=const
         
         
 def test_normality(df, dep_var, ind_vars):
-    # print('\nNormality tests:')
     p_values = []
     
     for iv in ind_vars:
         df_iv = df.loc[df['Condition'] == iv]
         
-        # s, p = normaltest(df_iv[dep_var], nan_policy='omit')
-        # s, p = shapiro(df_iv[dep_var])
         results = pg.normality(df_iv[dep_var])
         p = list(results['pval'])[0]
         
         p_values.append(p)
-        # print(f'Condition {iv}: s={round(s, 2)}, p={round(p, 3)} (n={len(df_iv)})')
         
     print('')
     return p_values
@@ -220,7 +234,6 @@ def test_sphericity(df, dep_var, ind_var):
             
     p, W, _, _, pval = pg.sphericity(df, dep_var, ind_var, subject='ID')
     p = bool(p)
-    # print(f'Sphericity: {p}, W={round(W, 2)}, p={round(pval, 3)}')
         
     print('')
     return p
@@ -263,10 +276,8 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
                 if p < .001:
                     prefix = '***'
                 
-                # prefix = '*' if p < .01 else ' '
                 print(f'{prefix}{comb} Wilco: W={round(t, 2)}, p={round(p, 3)}')
             else:
-                # s, p = ttest_rel(x, y, nan_policy='omit')
                 results = pg.ttest(x, y, paired=True, tail='one-sided')
                 results = results.round(4)
                 
@@ -307,11 +318,7 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         test_df[f'{dep_var} {iv}'] = dv
         print(f'{iv}: mean={round(np.mean(dv),2)}, SD={round(np.std(dv),2)}')
     
-    # print(test_df)
-    # test_array = np.array(test_df)
-    
     if not is_non_normal and sphericity_p:
-        # results = AnovaRM(data=df, depvar=dep_var, subject='ID', within=[ind_var]).fit()
 
         print('\nRM ANOVA')
         results = pg.rm_anova(data=df, dv=dep_var, within=ind_var, subject='ID', correction=False, detailed=True)
@@ -319,11 +326,6 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         print(results)
     
     else:
-        # chi, p = friedmanchisquare(*[test_array[:, x] for x in np.arange(test_array.shape[1])])
-        
-        # prefix = '*' if p < .01 else ' '
-        # print(f'\n{prefix}Friedman: Chi2={round(chi, 2)}, p={round(p, 3)}')
-
         print('\nFriedman test')
         results = pg.friedman(data=df, dv=dep_var, within=ind_var, subject='ID')
         

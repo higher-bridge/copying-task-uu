@@ -1,12 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Fri Oct 23 13:26:03 2020
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-@author: alexos
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-
 
 import pandas as pd
 import numpy as np
@@ -48,31 +53,31 @@ def compute_angle_change(loc1:tuple, loc2:tuple):
     
     return angle_change 
 
-def get_poly_linear_regression(df, condition, X, Y):
-    x = np.array(df[X]).reshape(-1, 1)
-    y = np.array(df[Y]).reshape(-1, 1)
+# def get_poly_linear_regression(df, condition, X, Y):
+#     x = np.array(df[X]).reshape(-1, 1)
+#     y = np.array(df[Y]).reshape(-1, 1)
     
-    polynomial_features = PolynomialFeatures(degree=5)
-    x_poly = polynomial_features.fit_transform(x)
+#     polynomial_features = PolynomialFeatures(degree=5)
+#     x_poly = polynomial_features.fit_transform(x)
 
-    model = LinearRegression()
-    model.fit(x_poly, y)
-    y_poly_pred = model.predict(x_poly)
+#     model = LinearRegression()
+#     model.fit(x_poly, y)
+#     y_poly_pred = model.predict(x_poly)
     
-    rmse = np.sqrt(mean_squared_error(y,y_poly_pred))
-    r2 = r2_score(y,y_poly_pred).round(4)
-    print(f'\nCondition {condition}, RMSE={rmse}, R2={r2}')
+#     rmse = np.sqrt(mean_squared_error(y,y_poly_pred))
+#     r2 = r2_score(y,y_poly_pred).round(4)
+#     print(f'\nCondition {condition}, RMSE={rmse}, R2={r2}')
     
-    plt.scatter(x, y, s=10)
-    # sort the values of x before line plot
-    sort_axis = operator.itemgetter(0)
-    sorted_zip = sorted(zip(x,y_poly_pred), key=sort_axis)
-    x, y_poly_pred = zip(*sorted_zip)
-    plt.plot(x, y_poly_pred, color='m')
-    plt.title(f'Condition {condition}, r2={r2}')
-    plt.xlabel(X)
-    plt.ylabel(Y)
-    plt.show()
+#     plt.scatter(x, y, s=10)
+#     # sort the values of x before line plot
+#     sort_axis = operator.itemgetter(0)
+#     sorted_zip = sorted(zip(x,y_poly_pred), key=sort_axis)
+#     x, y_poly_pred = zip(*sorted_zip)
+#     plt.plot(x, y_poly_pred, color='m')
+#     plt.title(f'Condition {condition}, r2={r2}')
+#     plt.xlabel(X)
+#     plt.ylabel(Y)
+#     plt.show()
 
 
 def get_linear_regression(df, X, Y):    
@@ -97,8 +102,6 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration (ms)',
 
     df = df.loc[df[Y] < y_limit]
     df = df.loc[df[Y] > 3]
-
-    # get_poly_linear_regression(df, condition, X, Y)
     
     intercept, coef, r_squared, p = get_linear_regression(df, X, Y)
     print(f'Condition {condition}\
@@ -114,12 +117,6 @@ def plot_saccades(results, condition, X='Distance (pixels)', Y='Duration (ms)',
     plt.plot(x, y, 'r')
     plt.title(f'Condition {condition}, r2={r_squared}')
     plt.show()
-    
-    
-    # plt.figure()
-    # sns.histplot(df['Duration (ms)']) #, stat='density')
-    # plt.title(f'Condition {condition}, r2={r_squared}')
-    # plt.show()
     
     return intercept, coef, r_squared, p
 
@@ -144,10 +141,12 @@ def plot_slopes(model_results, title:str, x_str:str='Distance (pixels)', x_limit
 
     df = pd.DataFrame(d)
 
-    plt.figure()        
+    plt.figure(figsize=(3.75, 2.5))        
     sns.lineplot(x=x_str, y='Duration (ms)', hue='Condition', style='Condition', data=df)
     
     plt.title(title)
+    plt.tight_layout()
+    plt.savefig(f'../results/{title}.png', dpi=500)
     plt.show()
         
                 
@@ -191,7 +190,6 @@ def get_saccades(ID, f):
                     fitts = fitts_id((df[features[0]], df[features[1]]), (df[features[2]], df[features[3]]))
                     
                     dragging = df['Dragging']
-                    # dragging = False
                 
                     r = pd.DataFrame({'ID': ID,
                                       'Condition': int(condition),
@@ -245,39 +243,39 @@ if __name__ == '__main__':
     lm_results['p'] = ps
     lm_results.to_excel('../results/lm_results.xlsx')
     
-    # plot_slopes(lm_results, 'Regressions of saccade duration per condition', x_limit=1000)
+    plot_slopes(lm_results, 'Regressions of saccade duration', x_limit=1000)
     
     # =============================================================================
     # MOUSE ANALYSIS    
     # =============================================================================
-    # fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-mouseEvents.csv' in f])
-    # files = [f for f in fixations_files if not '/008/' in f]
+    fixations_files = sorted([f for f in hf.getListOfFiles(constants.base_location) if '-mouseEvents.csv' in f])
+    files = [f for f in fixations_files if not '/008/' in f]
     
-    # dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
-    # results = pd.concat(dfs, ignore_index=True)
-    # results.to_csv('../results/all-saccades-mouse.csv')
+    dfs = Parallel(n_jobs=-3, backend='loky', verbose=True)(delayed(get_saccades)(ID, f) for ID, f in zip(IDs, files))
+    results = pd.concat(dfs, ignore_index=True)
+    results.to_csv('../results/all-saccades-mouse.csv')
     
-    # conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
-    # for condition in sorted(list(results['Condition'].unique())):
-    #     # plot_saccades(results, condition)
-    #     intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (fitts)', 
-    #                                                   y_limit=2000, x_limit=1000, x_min=0)
+    conditions, intercepts, coefs, r2s, ps = [], [], [], [], []
+    for condition in sorted(list(results['Condition'].unique())):
+        # plot_saccades(results, condition)
+        intercept, coef, r_squared, p = plot_saccades(results, condition, X='Distance (fitts)', 
+                                                      y_limit=2000, x_limit=1000, x_min=0)
 
-    #     conditions.append(condition)
-    #     intercepts.append(intercept)
-    #     coefs.append(coef)
-    #     r2s.append(r_squared)
-    #     ps.append(p)
+        conditions.append(condition)
+        intercepts.append(intercept)
+        coefs.append(coef)
+        r2s.append(r_squared)
+        ps.append(p)
         
-    # lm_results = pd.DataFrame()
-    # lm_results['Condition'] = conditions
-    # lm_results['Intercept'] = intercepts
-    # lm_results['Coefficient'] = coefs
-    # lm_results['R-squared'] = r2s
-    # lm_results['p'] = ps
-    # lm_results.to_excel('../results/lm_results_mouse.xlsx')    
+    lm_results = pd.DataFrame()
+    lm_results['Condition'] = conditions
+    lm_results['Intercept'] = intercepts
+    lm_results['Coefficient'] = coefs
+    lm_results['R-squared'] = r2s
+    lm_results['p'] = ps
+    lm_results.to_excel('../results/lm_results_mouse.xlsx')    
     
-    # plot_slopes(lm_results, 'Regressions of mouse movement duration per condition', x_limit=6, x_str='Distance (fitts)')
+    plot_slopes(lm_results, 'Regressions of mouse movement duration', x_limit=6, x_str='Distance (fitts)')
     
 
 

@@ -1,15 +1,22 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Tue Sep  8 13:52:14 2020
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-@author: alexos
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import pandas as pd
 import numpy as np
 from math import sqrt
-import time
+
 
 def euclidean_distance(vector1, vector2):
     dist = [(a - b)**2 for a, b in zip(vector1, vector2)]
@@ -148,25 +155,6 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, 
     indices = fix_dict['indices']
     for ind in indices:
         valid[ind] = False
-
-    # fix_starts = fix_dict['start']
-    # fix_ends = fix_dict['end']
-        
-    # for s, e in zip(fix_starts, fix_ends):
-    #     invalid_idx = np.where((timedata > s) & (timedata < e))
-    #     valid[invalid_idx] = False
-    
-    # starting_point = 0
-    # for i in range(len(timedata)):
-    #     t = timedata[i]
-        
-    #     for j in range(len(fix_starts))[starting_point:]:
-    #         s, e = fix_starts[j], fix_ends[j]
-    #         if t > s and t < e:
-    #             valid[i] = False
-    #             starting_point = j - 1
-    #             break
-
 
     i = 0
     while i < len(timedata):

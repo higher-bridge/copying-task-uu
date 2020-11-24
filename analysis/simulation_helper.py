@@ -1,8 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Thu Apr 16 12:55:34 2020
-Author: Alex Hoogerbrugge (@higher-bridge)
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import numpy as np
@@ -22,8 +30,8 @@ def compute_dme_activation(current_time:int, activated_at:list,
     
     summed = sum([(current_time - act_at) ** -decay for act_at in activated_at])
     
-    log_noise = random.gauss(1.0, noise)
-    activation = np.log(summed) + log_noise if summed != 0 else log_noise
+    log_noise = random.gauss(0, noise) ** 2
+    activation = np.log(summed) + log_noise  # if summed != 0 else log_noise
     
     return activation
 
@@ -48,33 +56,17 @@ def fitts_id(loc1:tuple, loc2:tuple):
 
     return fitts
 
-# def fitts_time(loc1:tuple, loc2:tuple, a:int=.025, b:int=.04, sigma:int=.3):
-#     # Fitts' time = a + b * ID
-#     # a & b can be empirically calculated. Maybe separately for eyes and mouse.
-#     duration = a + b * fitts_id(loc1, loc2)
-#     noise = random.gauss(mu=1.0, sigma=sigma)
-    
-#     return duration * noise * 1000 # milliseconds
-
 def estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.25):
     duration = a + (b * euclidean_distance(loc1, loc2))
     noise = random.gauss(mu=(1.0), sigma=sigma)
     result = duration * noise
-    
-    # while result < 5:
-    #     noise = random.gauss(mu=(1.0), sigma=sigma)
-    #     result = duration * noise
-    
+        
     return int(round(result))
 
 def estim_mouse_time(loc1:tuple, loc2:tuple, a:int=15, b:int=105, sigma:int=.25):
     duration = a + (b * fitts_id(loc1, loc2))
     noise = random.gauss(mu=(1.0), sigma=sigma)
     result = duration * noise 
-    
-    # while result < 5:
-    #     noise = random.gauss(mu=(1.0), sigma=sigma)
-    #     result = duration * noise 
         
     return int(round(result))
 
@@ -116,7 +108,6 @@ def create_all_encoding_schemes(max_k:int=4):
             for k in range(1, max_k):
                 for l in range(1, max_k):
                     if i <= j and j <= k and k <= l:
-                        # if abs(i - j) < 3 and abs(j - k) < 3 and abs(k - l) < 3:
                         option = [i, j, k, l]
                         combinations.append(option)
                     
@@ -128,6 +119,7 @@ def get_param_combinations():
     thresh_range = np.arange(constants.THRESH_RANGE[0], constants.THRESH_RANGE[1], constants.THRESH_RANGE[2])
     noise_range = np.arange(constants.NOISE_RANGE[0], constants.NOISE_RANGE[1], constants.NOISE_RANGE[2])
 
+    # print(len(f_range), len(decay_range), len(thresh_range), len(noise_range))
 
     result = []
     

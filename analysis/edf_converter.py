@@ -1,9 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Wed Aug 12 17:36:05 2020
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-@author: alexos
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from pyedfread import edf
@@ -25,9 +32,6 @@ def convert_edf(file, allfiles):
             samples.to_csv(file.replace('.edf', '-samples.csv'))
             events.to_csv(file.replace('.edf', '-events.csv'))
         
-        # print(f'Parsed {i + 1} of {len(files)} files')
-        # sys.stdout.write("\033[F")
-        
         return True
     
     except Exception as e:
@@ -44,5 +48,3 @@ if __name__ == '__main__':
     allfiles_repeated = [allfiles] * len(files)
     
     results = Parallel(n_jobs=10, backend='loky', verbose=True)(delayed(convert_edf)(f, af) for f, af in zip(files, allfiles_repeated))
-
-    # print(f'Succesfully converted {len(files)} files!')

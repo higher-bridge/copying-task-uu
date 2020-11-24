@@ -1,9 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Mon Sep 21 11:47:07 2020
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-@author: mba
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import pandas as pd
@@ -354,7 +361,6 @@ for i, ID in enumerate(list(pp_info['ID'].unique())):
                 vis_times = vis_times.append(c, ignore_index=True)
                 
 if PLOT:
-    # Distplot of number of left fixations
     plt.figure()
     for condition in sorted(list(vis_times['Condition'].unique())):
         if condition != 0:
@@ -362,69 +368,14 @@ if PLOT:
             sns.distplot(df['Visible Time'], label=condition)
         
     plt.legend(title='Condition')
-    # plt.xlim((-50, 4100))
-    # plt.xlabel('Total dwell time on left side of screen (ms)')
     plt.savefig(f'{base_location}/plots/visibleTime-dist.png', dpi=500)
     plt.show()
     
     # Barplot of number of left fixations
     plt.figure()
     sns.catplot('Condition', 'Visible Time', data=vis_times, kind='bar', estimator=np.median)
-    # plt.ylabel('Median of total dwell time on left side of screen (ms)')
     plt.tight_layout()
     plt.savefig(f'{base_location}/plots/visibleTime-bar.png', dpi=500)
     plt.show()
 
-# =============================================================================
-# EXPLORE FIXATIONS ON THE EXAMPLE GRID AS RATIO OF TOTAL
-# =============================================================================
-# ratio_fixations = pd.DataFrame(columns=['Fixations', 'Condition', 'Trial', 'ID'])
-
-# # Data outside of trial start-end are marked with 999 so will be filtered in the next steps
-# for i, ID in enumerate(list(pp_info['ID'].unique())): 
-#     filenames = [f for f in fixations_files if ID in f]
-#     filename = filenames[0]
-    
-#     df = pd.read_csv(filename)
-#     df = df.loc[df['type'] == 'fixation']
-    
-#     for condition in list(df['Condition'].unique()):
-#         df_c = df.loc[df['Condition'] == condition]
-        
-#         for trial in list(df_c['Trial'].unique()): 
-#             if trial not in EXCLUDE_TRIALS:
-#                 df_t = df_c.loc[df_c['Trial'] == trial]
-                
-#                 num_fixations = hf.get_left_ratio_fixations(list(df_t['gavx']),
-#                                                             midline=MIDLINE)
-                
-#                 c = pd.DataFrame({'Fixations': num_fixations,
-#                                   'Condition': condition,
-#                                   'Trial'    : trial,
-#                                   'ID'       : ID},
-#                                   index=[0])
-                
-#                 ratio_fixations = ratio_fixations.append(c, ignore_index=True)
-
-
-# if PLOT:
-#     # Distplot of left fixation ratio
-#     plt.figure()
-#     for condition in sorted(list(ratio_fixations['Condition'].unique())):
-#         df = ratio_fixations.loc[ratio_fixations['Condition'] == condition]
-#         sns.distplot(df['Fixations'], label=condition, bins=15)
-        
-#     plt.legend()
-#     plt.xlim((-0.05, 1.05))
-#     plt.xlabel('Left-side fixations as ratio of total')
-#     plt.savefig(f'{base_location}/plots/ratioFixations-dist.png', dpi=500)
-#     plt.show()
-    
-#     # Barplot of left fixation ratio
-#     plt.figure()
-#     sns.catplot('Condition', 'Fixations', data=ratio_fixations, kind='bar', estimator=np.nanmedian)
-#     plt.ylabel('Left-side fixations as ratio of total')
-#     plt.tight_layout()
-#     plt.savefig(f'{base_location}/plots/ratioFixations-bar.png', dpi=500)
-#     plt.show()
 
