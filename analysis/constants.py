@@ -46,8 +46,18 @@ DECAY_RANGE = (.5, 1., .1)
 THRESH_RANGE = (.175, .275, .025)
 NOISE_RANGE = (.26, .32, .02)
 
-
 ERROR_RATES = [.11, .2, .29, .38]
+
+# Center locations of each stimulus
+all_example_locations = [(515, 570), (650, 570), (785, 570),
+                         (515, 730), (650, 730), (785, 730),
+                         (515, 870), (650, 870), (785, 870)]
+all_workspace_locations = [(1775, 570), (1910, 570), (2045, 570),
+                           (1775, 730), (1910, 730), (2045, 730),
+                           (1775, 870), (1910, 870), (2045, 870)]
+all_resource_locations = [(1775, 1075), (1910, 1075), (2045, 1075),
+                          (1775, 1300), (1910, 1300), (2045, 1300)]
+
 
 # NO NEED TO FILL IN
 SCREEN_CENTER = (RESOLUTION[0] / 2, RESOLUTION[1] / 2)

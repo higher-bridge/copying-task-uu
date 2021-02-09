@@ -28,7 +28,7 @@ def euclidean_distance(loc1:tuple, loc2:tuple):
 def compute_dme_activation(current_time:int, activated_at:list,
                            decay:float, noise:float):
     
-    summed = sum([(current_time - act_at) ** -decay for act_at in activated_at])
+    summed = sum([abs(current_time - act_at) ** -decay for act_at in activated_at])
     
     log_noise = random.gauss(0, noise) ** 2
     activation = np.log(summed) + log_noise  # if summed != 0 else log_noise

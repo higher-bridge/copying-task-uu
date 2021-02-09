@@ -24,72 +24,12 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 from joblib import Parallel, delayed
-from sklearn.preprocessing import MinMaxScaler
 
 import helperfunctions as hf
-import constants
+from cimulation_analysis_helper import parse_results
 
 
-
-PARSE_RESULTS = False
-
-def compute_se(x, y):
-    squared_error = (np.mean(x) - np.mean(y)) ** 2
-    
-    mms = MinMaxScaler()
-    x = mms.fit_transform(np.array(x).reshape(-1, 1))
-    y = mms.transform(np.array(y).reshape(-1, 1))
-    
-    norm_squared_error = (np.mean(x) - np.mean(y)) ** 2
-    
-    return squared_error, norm_squared_error
-
-def parse_results(sim_data_s, scheme, features):    
-    results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 'Parameters', 
-                                        'Mean Scaled RMSE',
-                                        'Crossings', 'Time', 'Fixations']}
-    
-    # Loop through params and repetition strategies
-    all_repetitions = list(sim_data_s['Repetitions'].unique())
-    all_params = list(sim_data_s['Parameters'].unique())
-        
-    for repetitions in all_repetitions:
-        sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]
-        
-        for params in all_params:
-            sim_data_p = sim_data_r.loc[sim_data_r['Parameters'] == params]
-
-            scaled_squared_errors = {key: [] for key in features}
-            
-            for condition in constants.CONDITIONS:
-                exp_data_c = exp_data.loc[exp_data['Condition'] == condition]
-                sim_data_c = sim_data_p.loc[sim_data_p['Condition'] == condition]    
-                
-                sim_grouped = sim_data_c.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
-                sim_grouped.columns = sim_grouped.columns.get_level_values(0)
-                
-                # For every feature, calculate scaled squared error
-                for feat in features:
-                    x = list(exp_data_c[feat])
-                    y = list(sim_grouped[feat])
-                    
-                    se, nse = compute_se(x, y)
-                    
-                    scaled_squared_errors[feat].append(nse)
-                 
-    
-            # After calculating statistics for each condition, calculate the RMSE for each feature
-            all_scaled_rmse = [np.sqrt(np.mean(scaled_squared_errors[feat])) for feat in features]
-                        
-            results_dict['Encoding scheme'].append(scheme)
-            results_dict['Repetitions'].append(repetitions)
-            results_dict['Parameters'].append(params)
-            results_dict['Mean Scaled RMSE'].append(np.mean(all_scaled_rmse))
-            results_dict['Crossings'].append(all_scaled_rmse[0])
-            results_dict['Time'].append(all_scaled_rmse[1])
-            results_dict['Fixations'].append(all_scaled_rmse[2])
-                
-    return results_dict
+PARSE_RESULTS = True
 
 
 if __name__ == '__main__':    
@@ -132,11 +72,18 @@ if __name__ == '__main__':
         all_schemes = sorted(list(sim_data['Encoding scheme'].unique()))
         scheme_dfs = [sim_data.loc[sim_data['Encoding scheme'] == scheme] for scheme in all_schemes]
         features_rep = [features] * len(all_schemes)
+        exp_datas = [exp_data] * len(all_schemes)
         
-        r = Parallel(n_jobs=7, backend='loky', verbose=True)(delayed(parse_results)(df, scheme, f) \
-                                                              for df, scheme, f \
-                                                              in zip(scheme_dfs, all_schemes, features_rep))
+        r = Parallel(n_jobs=7, backend='loky', verbose=True)(delayed(parse_results)(df, ep, scheme, f) \
+                                                              for df, ep, scheme, f \
+                                                              in zip(scheme_dfs, exp_datas, all_schemes, features_rep))
 
+        
+        # r = []
+        # for i in range(len(all_schemes)):
+        #     scheme = sim_data.loc[sim_data['Encoding scheme'] == all_schemes[i]]
+        #     r.append(parse_results(scheme, exp_data, all_schemes[i], features))
+            
         # Convert dicts to dataframes, and concatenate them into one df
         result_dfs = [pd.DataFrame(d) for d in r]
         results = pd.concat(result_dfs)

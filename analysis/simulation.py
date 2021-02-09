@@ -276,16 +276,16 @@ def simulate_participant(ID, linear_saccade_model, linear_mouse_model):
                         tracking_dict['Fixations per second'].append(num_fixations / (cumul_time / 1000))
                         tracking_dict['Processing Time'].append(float(time.time() - start))
 
-    try:    
-        pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))    
-    except Exception as e:
-        print(f'Could not save pickle {ID}:', e)     
+    # try:    
+    #     pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))    
+    # except Exception as e:
+    #     print(f'Could not save pickle {ID}:', e)     
 
-    try:    
-        df = pd.DataFrame(tracking_dict)
-        df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
-    except Exception as e:
-        print(f'Could not save dataframe {ID}:', e)          
+    # try:    
+    #     df = pd.DataFrame(tracking_dict)
+    #     df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
+    # except Exception as e:
+    #     print(f'Could not save dataframe {ID}:', e)          
     
     
     return True
@@ -295,13 +295,13 @@ if __name__ == '__main__':
     start = time.time()
     
     IDs = np.arange(1, constants.NUM_PPS_SIM + 1)
-    linear_saccade_model = pd.read_excel('../results/lm_results.xlsx')
-    linear_mouse_model = pd.read_excel('../results/lm_results_mouse.xlsx')    
+    linear_saccade_model = pd.read_excel('../results/lm_results.xlsx', engine='openpyxl')
+    linear_mouse_model = pd.read_excel('../results/lm_results_mouse.xlsx', engine='openpyxl')    
 
     lm_saccades = [linear_saccade_model] * len(IDs)
     lm_mouse = [linear_mouse_model] * len(IDs)
 
-    results = Parallel(n_jobs=-5, backend='loky', verbose=True)(delayed(simulate_participant)\
+    results = Parallel(n_jobs=8, backend='loky', verbose=True)(delayed(simulate_participant)\
                                                             (ID, lm_s, lm_m) for \
                                                                 ID, lm_s, lm_m in \
                                                                     zip(IDs, lm_saccades, lm_mouse))
