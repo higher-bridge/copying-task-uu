@@ -143,3 +143,8 @@ settings.json
 *.png
 *.p
 *.zip
+
+# macOS stuff
+**/.DS_Store
+.DS_Store
+results/.DS_Store

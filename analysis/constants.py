@@ -17,7 +17,7 @@ base_location = '../results'
 
 # EXPERIMENT PARAMETERS
 EXCLUDE_TRIALS = [1, 2, 3, 999]
-NUM_PPS_SIM = 8
+NUM_PPS_SIM = 4
 NUM_TRIALS = 4
 
 STIMULI_PER_TRIAL = 4
