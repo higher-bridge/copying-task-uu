@@ -384,8 +384,8 @@ class Canvas(QWidget):
             # Generating a noise and its invert keeps the sum duration the same as without permutation
             noise = gauss(mu=1.0, sigma=0.1)
             
-            self.visibleTime = int(visibleTime * noise)
-            self.occludedTime = sumDuration - visibleTime
+            self.occludedTime = int(occludedTime * noise)
+            self.visibleTime = sumDuration - occludedTime
         else:
             self.visibleTime = visibleTime
             self.occludedTime = occludedTime 
