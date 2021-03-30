@@ -197,7 +197,7 @@ class Canvas(QWidget):
             self.checkIfFinishedStart = now
                     
     def runTimer(self):
-        self.timer.setInterval(1) # 1 ms
+        self.timer.setInterval(2) # 1 ms
         self.timer.timeout.connect(self.updateTimer)
         
         # Unfortunately we need three tracking vars to keep updates not too time-consuming

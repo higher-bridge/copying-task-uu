@@ -75,6 +75,7 @@ class DraggableLabel(QLabel):
 
         drag = QDrag(self)
         drag.setMimeData(mimedata)
+
         pixmap = QPixmap(self.size())
         painter = QPainter(pixmap)
         painter.drawPixmap(self.rect(), self.grab())
@@ -83,6 +84,8 @@ class DraggableLabel(QLabel):
         drag.setPixmap(pixmap)
         drag.setHotSpot(e.pos())
         drag.exec_(Qt.CopyAction | Qt.MoveAction)
+
+        del(mimedata, drag, pixmap, painter)
 
 class CustomLabel(QLabel):
     
