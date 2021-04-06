@@ -23,10 +23,10 @@ from pathlib import Path
 from canvas import Canvas
 from stimulus import load_stimuli
 
-NUM_STIMULI = 4
+NUM_STIMULI = 6
 IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
-TIME_OUT_MS = 20000
+TIME_OUT_MS = 30000
 
 NUM_TRIALS = 35
 CONDITIONS = [(6000, 0),

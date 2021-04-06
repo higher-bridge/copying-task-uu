@@ -39,7 +39,7 @@ class Canvas(QWidget):
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
-                 left:int=50, top:int=50, width:int=1920, height:int=1080):
+                 left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
         # Set window params
@@ -503,7 +503,7 @@ If you have taken a break, please wait for the experimenter to start the calibra
         
         masterGridRows = 3
         masterGridCols = 6
-        gridLocs = [(1, 1), (1,4), (2, 4)]
+        gridLocs = [(1, 1), (1, 4), (2, 4)]
         
         self.emptyGridLayout()
         for row in range(masterGridRows):
@@ -605,10 +605,11 @@ If you have taken a break, please wait for the experimenter to start the calibra
                 if self.grid[x, y]:
                     image = shuffledImages[i]
                     label = DraggableLabel(self, image)
+                    label.setFrameStyle(QFrame.Panel)  # temp
                     label.setAlignment(QtCore.Qt.AlignCenter)
                     label.setSizePolicy(self.sizePolicy)
                     
-                    if i % 3 == 0:
+                    if i % self.ncol == 0:
                         row += 1
                         col = 0
 

@@ -26,7 +26,7 @@ from stimulus import load_stimuli
 NUM_STIMULI = 6
 IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
-TIME_OUT_MS = 20000
+TIME_OUT_MS = 30000
 
 NUM_TRIALS = 5
 CONDITIONS = [(4000, 0),
