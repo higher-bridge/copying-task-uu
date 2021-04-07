@@ -43,11 +43,11 @@ class Canvas(QWidget):
         
         super().__init__()
         # Set window params
-        self.title = 'Copying task TEST'
+        self.title = 'Copying task'
         self.left = left
         self.top = top
-        self.width = width * 1.5
-        self.height = height * 1.5
+        self.width = width
+        self.height = height
 
         self.sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.sizePolicy.setHeightForWidth(True)
@@ -83,7 +83,7 @@ class Canvas(QWidget):
         self.timer = QTimer(self)
         self.mouse = QCursor()
         self.dragStartTime = None
-        self.dragStartPos = None
+        self.dragStartPosition = None
         
         # Track correct placements
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
@@ -499,8 +499,7 @@ If you have taken a break, please wait for the experimenter to start the calibra
     def createMasterGrid(self):
         self.masterGrid = QGroupBox("Grid", self)
         layout = QGridLayout()
-        
-        
+
         masterGridRows = 3
         masterGridCols = 6
         gridLocs = [(1, 1), (1, 4), (2, 4)]
@@ -522,7 +521,7 @@ If you have taken a break, please wait for the experimenter to start the calibra
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
-        self.masterGrid.setStyleSheet(self.styleStr)# + "; border:0px")
+        self.masterGrid.setStyleSheet(self.styleStr)
             
     def emptyGridLayout(self):
         self.emptyGridBox = QGroupBox("Grid", self)

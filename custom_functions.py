@@ -57,19 +57,20 @@ class DraggableLabel(QLabel):
         self.dragStartP = None
         self.parent = parent
 
-        self.image = image
+        self.setFixedSize(image.qimage.size())
+
         self.imageName = image.name
         self.setPixmap(QPixmap(image.qimage))
         self.show()
 
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:
-            # 'Global' tracking var
-            self.parent.dragStartPos = e.pos()
-            self.parent.dragStartTime = round(time.time() * 1000)
-
             # Local tracking var
             self.dragStartP = e.pos()
+
+            # 'Global' tracking var
+            self.parent.dragStartPosition = e.pos()
+            self.parent.dragStartTime = round(time.time() * 1000)
 
     def mouseMoveEvent(self, e):
         if not (e.buttons() & Qt.LeftButton):
@@ -79,7 +80,7 @@ class DraggableLabel(QLabel):
             return
 
         mimedata = QMimeData()
-        mimedata.setImageData(self.pixmap().toImage())
+        mimedata.setImageData(self.pixmap())
         mimedata.setText(self.imageName)
 
         drag = QDrag(self)
@@ -92,14 +93,12 @@ class DraggableLabel(QLabel):
 
         drag.setPixmap(pixmap)
         drag.setHotSpot(e.pos())
-        drag.exec_(Qt.CopyAction) # | Qt.MoveAction)
+        drag.exec_(Qt.CopyAction | Qt.MoveAction)
 
     def dragEnterEvent(self, e):
-        # e.ignore()
         e.rejectProposedAction()
 
     def dropEvent(self, e):
-        # e.ignore()
         e.rejectProposedAction()
         e.mimeData().clear()
 
@@ -155,7 +154,7 @@ class CustomLabel(QLabel):
 
             # Retrieve drag characteristics
             dragDuration = round(time.time() * 1000) - self.parent.dragStartTime
-            dragDistance = (e.pos() - self.parent.dragStartPos).manhattanLength()
+            dragDistance = (e.pos() - self.parent.dragStartPosition).manhattanLength()
             # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
             # Fill correctPlacements dataframe
