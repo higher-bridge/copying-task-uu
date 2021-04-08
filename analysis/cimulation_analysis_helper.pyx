@@ -14,17 +14,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import numpy as np
+# cimport numpy as np
 import pandas as pd
 import time
 
 from sklearn.preprocessing import MinMaxScaler
 
 import constants
+from typing import List, Any
 
 
 PARSE_RESULTS = False
 
-cdef compute_se(x, y):
+cdef compute_se(x : np.array, y : np.array):
     squared_error = (np.mean(x) - np.mean(y)) ** 2
     
     mms = MinMaxScaler()
@@ -33,13 +35,16 @@ cdef compute_se(x, y):
     
     norm_squared_error = (np.mean(x) - np.mean(y)) ** 2
     
-    return squared_error, norm_squared_error
+    return (squared_error, norm_squared_error)
 
-def parse_results(sim_data_s, exp_data, scheme, features):    
-    # start = time.time()
+def parse_results(sim_data_s : pd.DataFrame,
+                  exp_data : pd.DataFrame,
+                  scheme : List[Any],
+                  features : List[str]):
+    start = time.time()
     
     cdef dict results_dict, scaled_squared_errors
-    
+
     cdef exp_datas =  [exp_data.loc[exp_data['Condition'] == c] for c in constants.CONDITIONS]
     
     results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 'Parameters', 
@@ -47,11 +52,11 @@ def parse_results(sim_data_s, exp_data, scheme, features):
                                         'Crossings', 'Time', 'Fixations']}
     
     # Loop through params and repetition strategies
-    all_repetitions = np.array(sim_data_s['Repetitions'].unique())
-    all_params = np.array(sim_data_s['Parameters'].unique())
-        
+    cdef all_repetitions = np.array(sim_data_s['Repetitions'].unique())
+    cdef all_params = np.array(sim_data_s['Parameters'].unique())
+
     for repetitions in all_repetitions:
-        # start1 = time.time()
+        start1 = time.time()
         sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]
         
         for params in all_params:
@@ -87,9 +92,9 @@ def parse_results(sim_data_s, exp_data, scheme, features):
             results_dict['Time'].append(all_scaled_rmse[1])
             results_dict['Fixations'].append(all_scaled_rmse[2])
             
-    #     print(f'Inner loop took {round(time.time() - start1, 3)}s')
+        print(f'Inner loop took {round(time.time() - start1, 3)}s')
         
-    # print(f'Loop took {round(time.time() - start, 3)}s')
+    print(f'Loop took {round(time.time() - start, 3)}s')
                 
     return results_dict
 

@@ -57,7 +57,7 @@ cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):
     cdef float error_probability
     cdef int visible_time, occlude_time, k_items, n_repetitions
     cdef int num_crossings, num_fixations
-    cdef float cumul_time
+    cdef float cumul_time, cond_start
       
     for encoding_scheme in encoding_schemes:
         cond_start = time.time()

@@ -19,16 +19,17 @@ import random
 
 import constants
 
-# from typing import Tuple
+from typing import Tuple
 # Tuple[float, float]
 
-cdef euclidean_distance(loc1:tuple, loc2:tuple):    
+cdef float euclidean_distance(tuple loc1, tuple loc2):
+    cdef list dist
     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
     return sqrt(sum(dist))
 
-cdef compute_dme_activation(current_time:int, activated_at:list,
-                           float decay, noise:float):
-    cdef float summed, act_at
+cdef float compute_dme_activation(int current_time, list activated_at,
+                                  float decay, float noise):
+    cdef float summed, act_at, log_noise, activation
     
     summed = sum([abs(current_time - act_at) ** (-decay) for act_at in activated_at])
     
@@ -37,34 +38,45 @@ cdef compute_dme_activation(current_time:int, activated_at:list,
     
     return activation
 
-cpdef compute_dme_retrieval(current_time:int, activated_at:list,
-                          f:float=.9, thresh:float=.325,
-                          noise:float=.28, decay:float=.5):
-    
+cpdef tuple compute_dme_retrieval(int current_time, list activated_at,
+                          float f=.9, float thresh=.325,
+                          float noise=.28, float decay=.5):
+    cdef float ai, rt
+    cdef bint surpassed
+
     ai = compute_dme_activation(current_time, activated_at, decay, noise)
     rt = f * exp(-ai)
+    surpassed = ai > thresh
     
-    return rt, ai > thresh
+    return (rt, surpassed)
 
-cdef fitts_id(loc1:tuple, loc2:tuple):
+cdef float fitts_id(tuple loc1, tuple loc2):
     # Fitts' law: ID = log2(2D / W). W = target_size[0] for now
-    
+
+    cdef float distance, dw, fitts
+
     distance = euclidean_distance(loc1, loc2)
     dw = (2 * distance) / constants.TARGET_SIZE[0] + 1
     fitts = log2(dw)   
 
     return fitts
 
-cpdef estim_saccade_time(loc1:tuple, loc2:tuple, a:int=25, b:int=.04, sigma:int=.25):
+cpdef int estim_saccade_time(tuple loc1, tuple loc2, int a=25, float b=.04, float sigma=.25):
+    cdef float duration, noise
+    cdef int result
+
     duration = a + (b * euclidean_distance(loc1, loc2))
-    noise = random.gauss(mu=(1.0), sigma=sigma)
+    noise = random.gauss(mu=1.0, sigma=sigma)
     result = int(round(duration * noise))
         
     return result
 
-cpdef estim_mouse_time(loc1:tuple, loc2:tuple, a:int=15, b:int=105, sigma:int=.25):
+cpdef int estim_mouse_time(tuple loc1, tuple loc2, int a=15, float b=105, float sigma=.25):
+    cdef float duration, noise
+    cdef int result
+
     duration = a + (b * fitts_id(loc1, loc2))
-    noise = random.gauss(mu=(1.0), sigma=sigma)
+    noise = random.gauss(mu=1.0, sigma=sigma)
     result = int(round(duration * noise))
         
     return result

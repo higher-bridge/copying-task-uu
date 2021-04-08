@@ -1474,8 +1474,8 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   int __pyx_v_num_crossings;
   int __pyx_v_num_fixations;
   float __pyx_v_cumul_time;
+  CYTHON_UNUSED float __pyx_v_cond_start;
   PyObject *__pyx_v_encoding_scheme = NULL;
-  CYTHON_UNUSED PyObject *__pyx_v_cond_start = NULL;
   PyObject *__pyx_v_repetition_range = NULL;
   PyObject *__pyx_v_params = NULL;
   PyObject *__pyx_v_condition_number = NULL;
@@ -1496,11 +1496,11 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   PyObject *(*__pyx_t_6)(PyObject *);
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
-  Py_ssize_t __pyx_t_9;
-  PyObject *(*__pyx_t_10)(PyObject *);
-  Py_ssize_t __pyx_t_11;
-  PyObject *(*__pyx_t_12)(PyObject *);
-  float __pyx_t_13;
+  float __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  PyObject *(*__pyx_t_11)(PyObject *);
+  Py_ssize_t __pyx_t_12;
+  PyObject *(*__pyx_t_13)(PyObject *);
   float __pyx_t_14;
   float __pyx_t_15;
   float __pyx_t_16;
@@ -2232,7 +2232,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_t_2 = 0;
 
   /* "cimulate_batch.pyx":62
- *     cdef float cumul_time
+ *     cdef float cumul_time, cond_start
  * 
  *     for encoding_scheme in encoding_schemes:             # <<<<<<<<<<<<<<
  *         cond_start = time.time()
@@ -2307,8 +2307,9 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 63, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_cond_start, __pyx_t_8);
-    __pyx_t_8 = 0;
+    __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_8); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_v_cond_start = __pyx_t_9;
 
     /* "cimulate_batch.pyx":64
  *     for encoding_scheme in encoding_schemes:
@@ -2318,34 +2319,34 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
  *                 f, decay, thresh, noise = params[0], params[1], params[2], params[3]
  */
     if (likely(PyList_CheckExact(__pyx_v_memory_repetitions)) || PyTuple_CheckExact(__pyx_v_memory_repetitions)) {
-      __pyx_t_8 = __pyx_v_memory_repetitions; __Pyx_INCREF(__pyx_t_8); __pyx_t_9 = 0;
-      __pyx_t_10 = NULL;
+      __pyx_t_8 = __pyx_v_memory_repetitions; __Pyx_INCREF(__pyx_t_8); __pyx_t_10 = 0;
+      __pyx_t_11 = NULL;
     } else {
-      __pyx_t_9 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_v_memory_repetitions); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_10 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_v_memory_repetitions); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 64, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_10 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 64, __pyx_L1_error)
+      __pyx_t_11 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 64, __pyx_L1_error)
     }
     for (;;) {
-      if (likely(!__pyx_t_10)) {
+      if (likely(!__pyx_t_11)) {
         if (likely(PyList_CheckExact(__pyx_t_8))) {
-          if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_8)) break;
+          if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_8)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_3); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_3); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
           #else
-          __pyx_t_3 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           #endif
         } else {
-          if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
+          if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_3); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_10); __Pyx_INCREF(__pyx_t_3); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
           #else
-          __pyx_t_3 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_8, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 64, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           #endif
         }
       } else {
-        __pyx_t_3 = __pyx_t_10(__pyx_t_8);
+        __pyx_t_3 = __pyx_t_11(__pyx_t_8);
         if (unlikely(!__pyx_t_3)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
@@ -2367,34 +2368,34 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
  * 
  */
       if (likely(PyList_CheckExact(__pyx_v_range_params)) || PyTuple_CheckExact(__pyx_v_range_params)) {
-        __pyx_t_3 = __pyx_v_range_params; __Pyx_INCREF(__pyx_t_3); __pyx_t_11 = 0;
-        __pyx_t_12 = NULL;
+        __pyx_t_3 = __pyx_v_range_params; __Pyx_INCREF(__pyx_t_3); __pyx_t_12 = 0;
+        __pyx_t_13 = NULL;
       } else {
-        __pyx_t_11 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_range_params); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
+        __pyx_t_12 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_range_params); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 65, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_12 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 65, __pyx_L1_error)
+        __pyx_t_13 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 65, __pyx_L1_error)
       }
       for (;;) {
-        if (likely(!__pyx_t_12)) {
+        if (likely(!__pyx_t_13)) {
           if (likely(PyList_CheckExact(__pyx_t_3))) {
-            if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_3)) break;
+            if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_3)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_11); __Pyx_INCREF(__pyx_t_1); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
+            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_12); __Pyx_INCREF(__pyx_t_1); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           } else {
-            if (__pyx_t_11 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
+            if (__pyx_t_12 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_11); __Pyx_INCREF(__pyx_t_1); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
+            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_12); __Pyx_INCREF(__pyx_t_1); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           }
         } else {
-          __pyx_t_1 = __pyx_t_12(__pyx_t_3);
+          __pyx_t_1 = __pyx_t_13(__pyx_t_3);
           if (unlikely(!__pyx_t_1)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
@@ -2417,7 +2418,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
  */
         __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_params, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_13 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_13 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
+        __pyx_t_9 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_9 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_params, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
@@ -2431,7 +2432,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_16 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_16 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_v_f = __pyx_t_13;
+        __pyx_v_f = __pyx_t_9;
         __pyx_v_decay = __pyx_t_14;
         __pyx_v_thresh = __pyx_t_15;
         __pyx_v_noise = __pyx_t_16;
@@ -3234,7 +3235,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
     /* "cimulate_batch.pyx":62
- *     cdef float cumul_time
+ *     cdef float cumul_time, cond_start
  * 
  *     for encoding_scheme in encoding_schemes:             # <<<<<<<<<<<<<<
  *         cond_start = time.time()
@@ -3749,7 +3750,6 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __Pyx_XDECREF(__pyx_v_memory_repetitions);
   __Pyx_XDECREF(__pyx_v_range_params);
   __Pyx_XDECREF(__pyx_v_encoding_scheme);
-  __Pyx_XDECREF(__pyx_v_cond_start);
   __Pyx_XDECREF(__pyx_v_repetition_range);
   __Pyx_XDECREF(__pyx_v_params);
   __Pyx_XDECREF(__pyx_v_condition_number);
