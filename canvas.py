@@ -430,32 +430,33 @@ class Canvas(QWidget):
             self.currentTrial = 1
         
         self.spacePushed = False
+        delayParticipantAction = False
 
         self.writeEvent('In starting screen')
         
         if self.currentTrial == 1:
             if self.conditionOrderIndex == 0:
-                self.label = QLabel(\
-"Welcome to the experiment.\n \
-Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n \
-by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly \
-and as accurately as possible.\n \
-If you make a mistake, you can right-click the image to remove it from that location. \n \
-Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n \
-performing the task as quickly and as accurately as possible.\n \n \
-If you have any questions now or anytime during the experiment, please ask them straightaway.\n \
-If you need to take a break, please tell the experimenter so.\n \n \
-When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n \
-Good luck!")
+                self.label = QLabel(
+                "Welcome to the experiment.\n",
+                "Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n",
+                "by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly",
+                "and as accurately as possible.\n",
+                "If you make a mistake, you can right-click the image to remove it from that location. \n",
+                "Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n",
+                "performing the task as quickly and as accurately as possible.\n \n",
+                "If you have any questions now or anytime during the experiment, please ask them straightaway.\n",
+                "If you need to take a break, please tell the experimenter so.\n \n",
+                "When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n",
+                "Good luck!")
 
             elif self.conditionOrderIndex > 0:
-                self.label = QLabel(\
-f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n \
-If you wish to carry on immediately, let the experimenter know.\n \
-If you have taken a break, please wait for the experimenter to start the calibration procedure.")
+                delayParticipantAction = True
+                self.label = QLabel(
+                f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n",
+                "If you wish to carry on immediately, let the experimenter know.\n",
+                "If you have taken a break, please wait for the experimenter to start the calibration procedure.")
 
         elif self.currentTrial > 1:
-            
             addText = '\nNow may be a good time to re-calibrate.' if self.currentTrial % 10 == 0 else ''
             
             if timeOut:
@@ -463,8 +464,13 @@ If you have taken a break, please wait for the experimenter to start the calibra
             else:
                 self.label = QLabel(f"End of trial. Press space to continue to the next trial. {addText}")            
 
-        self.label.setFont(QFont("Times", 12))
+        self.label.setFont(QFont("Times", 14))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
+
+        # Needs to be tested
+        if delayParticipantAction:
+            time.sleep(5)
+
         self.installEventFilter(self)
         
         self.layout.addWidget(self.label)
@@ -480,7 +486,7 @@ If you have taken a break, please wait for the experimenter to start the calibra
                                                self.nrow, self.ncol)
         self.setConditionTiming() # Set slightly different timing for each trial
 
-        # Create the example grid
+        # Create the actual task layout
         self.createMasterGrid()
         
         self.layout.addWidget(self.masterGrid)
