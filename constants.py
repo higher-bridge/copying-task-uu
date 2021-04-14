@@ -15,3 +15,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 DISPSIZE = (2560, 1440)
 SCREENSIZE = (59.8, 33.6)
+DUMMYMODE = False
