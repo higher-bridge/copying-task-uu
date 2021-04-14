@@ -463,19 +463,20 @@ class Canvas(QWidget):
             else:
                 self.label = QLabel(f"End of trial. Press space to continue to the next trial. {addText}")            
 
-        self.label.setFont(QFont("Times", 14))
+        self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
 
-        # Needs to be tested
-        if delayParticipantAction:
-            time.sleep(5)
-
-        self.installEventFilter(self)
         
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         
         self.show()
+
+        # Needs to be tested
+        #if delayParticipantAction:
+        #    time.sleep(5)
+
+        self.installEventFilter(self)
 
     def initTask(self):
         self.removeEventFilter(self)

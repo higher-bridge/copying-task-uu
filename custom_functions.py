@@ -96,15 +96,18 @@ class DraggableLabel(QLabel):
         drag.exec_(Qt.CopyAction | Qt.MoveAction)
 
     def dragEnterEvent(self, e):
-        e.rejectProposedAction()
+        #e.rejectProposedAction()
+        e.ignore()
 
     def dropEvent(self, e):
-        e.rejectProposedAction()
+        e.ignore()
+        #e.rejectProposedAction()
         e.mimeData().clear()
 
     def mouseReleaseEvent(self, e):
         self.dragStartP = None
-        e.rejectProposedAction()
+        e.ignore()
+        #e.rejectProposedAction()
         e.mimeData().clear()
 
 
