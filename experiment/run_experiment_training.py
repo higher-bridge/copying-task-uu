@@ -39,7 +39,8 @@ shuffle(CONDITION_ORDER)
 print(CONDITION_ORDER)
 
 if __name__ == '__main__':
-    path = Path(f'{os.getcwd()}/stimuli/')
+    project_folder = Path(__file__).parent.parent
+    path = project_folder/'stimuli'
     images = load_stimuli(path, IMAGE_WIDTH, extension='.png')
         
     app = QApplication(sys.argv)    
