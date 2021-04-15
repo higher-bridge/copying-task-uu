@@ -27,8 +27,8 @@ from PyQt5.QtGui import QPixmap, QCursor, QFont
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
-from pygaze import libscreen
-from pygaze.eyetracker import EyeTracker
+from PyGaze.pygaze import libscreen
+from PyGaze.pygaze.eyetracker import EyeTracker
 
 import example_grid
 from stimulus import pick_stimuli
@@ -306,7 +306,7 @@ class Canvas(QWidget):
                 # Try to close the eyetracker
                 try:
                     self.tracker.stop_recording()
-                    self.tracker.close()
+                    self.tracker.close(full_close=False)
                     self.moveAndRenameTrackerFile()
                     self.disp = None
                     self.tracker = None
