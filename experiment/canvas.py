@@ -32,7 +32,7 @@ from PyGaze.pygaze.eyetracker import EyeTracker
 
 import example_grid
 from stimulus import pick_stimuli
-from custom_functions import customTimer, CustomLabel, DraggableLabel
+from custom_functions import customTimer, CustomLabel, DraggableLabel, custom_calibration
 
 
 class Canvas(QWidget):
@@ -320,6 +320,7 @@ class Canvas(QWidget):
                     
                     self.disp = libscreen.Display()
                     self.tracker = EyeTracker(self.disp)
+                    # self.tracker.set_draw_calibration_target_func(custom_calibration)
     
                     self.tracker.calibrate()
                     self.disp.close()

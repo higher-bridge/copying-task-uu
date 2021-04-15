@@ -23,6 +23,26 @@ from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 
 
+def custom_calibration(self, x, y):
+    """
+    desc:
+        A hook to prepare the canvas with the clibration target.
+
+    arguments:
+        x:
+            desc:	The X coordinate.
+            type:	int
+        y:
+            desc:	The Y coordinate.
+            type:	int
+    """
+    self.screen.clear()
+    self.screen.draw_circle(colour='white', pos=(x, y), r=20, fill=True)
+    self.disp.fill(self.screen)
+
+    self.disp.show()
+
+
 def customTimer(parent, now):
     """Implement your own custom timer. Integrate with eyetracker if necessary.
 
