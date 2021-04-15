@@ -74,7 +74,6 @@ class DraggableLabel(QLabel):
 
     def mouseMoveEvent(self, e):
         if not (e.buttons() & Qt.LeftButton):
-            e.mimeData().clear()
             return
         if (e.pos() - self.dragStartP).manhattanLength() < QApplication.startDragDistance():
             return
@@ -96,19 +95,13 @@ class DraggableLabel(QLabel):
         drag.exec_(Qt.CopyAction | Qt.MoveAction)
 
     def dragEnterEvent(self, e):
-        #e.rejectProposedAction()
         e.ignore()
 
     def dropEvent(self, e):
         e.ignore()
-        #e.rejectProposedAction()
-        e.mimeData().clear()
 
     def mouseReleaseEvent(self, e):
-        self.dragStartP = None
         e.ignore()
-        #e.rejectProposedAction()
-        e.mimeData().clear()
 
 
 class CustomLabel(QLabel):
