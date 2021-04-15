@@ -20,7 +20,7 @@ from pathlib import Path
 from PyQt5.QtGui import QImage
 
 
-class Stimulus():
+class Stimulus:
     """Represents a stimulus"""
     
     def __init__(self, image:QImage, path:str):
@@ -45,7 +45,7 @@ def load_stimulus(path, image_width:int):
     return Stimulus(image, path)
 
 
-def load_stimuli(path:str, image_width:int=100, extension:str='.png'):
+def load_stimuli(path, image_width:int=100, extension:str='.png'):
     """Loads all images with the specified extension from the specified path.
     Returns a list of n randomly picked Stimulus objects
 
@@ -67,6 +67,7 @@ def load_stimuli(path:str, image_width:int=100, extension:str='.png'):
         stimuli.append(load_stimulus(str(p), image_width))
     
     return stimuli
+
 
 def pick_stimuli(stimuli:list, n:int=6):
     return sample(stimuli, k=n)

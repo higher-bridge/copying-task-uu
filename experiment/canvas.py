@@ -87,9 +87,9 @@ class Canvas(QWidget):
         
         # Track correct placements
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
-                                                  'Correct', 'Time', 
-                                                  'dragDuration', 'dragDistance', 
-                                                  'Trial', 'Condition', 'visibleTime'])
+                                                       'Correct', 'Time',
+                                                       'dragDuration', 'dragDistance',
+                                                       'Trial', 'Condition', 'visibleTime'])
         
         # Track placements including mistakes
         self.allPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
@@ -109,8 +109,8 @@ class Canvas(QWidget):
         self.tracker = None
         self.recordingSession = 0
 
-        ### TEMP
-        self.mouseUpdates = 0
+        # TEMP
+        # self.mouseUpdates = 0
 
         self.inOpeningScreen = True
         self.initUI()
@@ -123,7 +123,7 @@ class Canvas(QWidget):
         number = input('Enter participant number or name:\n')
         
         # If input is none, try again (recursively)
-        if len(number) < 1 or number == None:
+        if len(number) < 1 or number is None:
             print('Invalid input, try again')
             self.setParticipantNumber()
         
@@ -153,7 +153,7 @@ class Canvas(QWidget):
     def writeCursorPosition(self):
         e = self.mouse.pos()
 
-        self.mouseUpdates += 1
+        # self.mouseUpdates += 1
 
         self.mouseTrackerDict['x'].append(e.x())
         self.mouseTrackerDict['y'].append(e.y())
@@ -161,11 +161,10 @@ class Canvas(QWidget):
         self.mouseTrackerDict['TrackerTime'].append(self.getTrackerClock())
         self.mouseTrackerDict['Trial'].append(self.currentTrial)
         self.mouseTrackerDict['Condition'].append(self.currentConditionIndex)
-        
-    
+
     def updateTimer(self):
         if self.inOpeningScreen:
-          return
+            return
         
         self.writeCursorPosition()
 
@@ -251,7 +250,6 @@ class Canvas(QWidget):
         
         allCorrect = np.all(copiedTemp['Correct'].values)
 
-
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             print(f'All correct: {allCorrect}')
             
@@ -315,9 +313,8 @@ class Canvas(QWidget):
                     # There is no recording to stop
                     print(e)
 
-
                 # Go into calibration
-                if self.disp == None:                    
+                if self.disp is None:
                     # Program crashes if both pygaze and this want to use fullscreen, so maximize instead of FS
                     self.showMaximized()
                     
@@ -431,7 +428,7 @@ class Canvas(QWidget):
             self.currentTrial = 1
         
         self.spacePushed = False
-        delayParticipantAction = False
+        # delayParticipantAction = False
 
         self.writeEvent('In starting screen')
         
@@ -450,7 +447,7 @@ class Canvas(QWidget):
                 "Good luck!")
 
             elif self.conditionOrderIndex > 0:
-                delayParticipantAction = True
+                # delayParticipantAction = True
                 self.label = QLabel(
                 f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n" +
                 "If you wish to carry on immediately, let the experimenter know.\n" +
@@ -467,15 +464,14 @@ class Canvas(QWidget):
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
 
-        
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         
         self.show()
 
         # Needs to be tested
-        #if delayParticipantAction:
-        #    time.sleep(5)
+        # if delayParticipantAction:
+        #     time.sleep(5)
 
         self.installEventFilter(self)
 
