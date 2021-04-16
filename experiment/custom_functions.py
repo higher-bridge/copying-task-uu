@@ -126,7 +126,7 @@ class DraggableLabel(QLabel):
 
 class CustomLabel(QLabel):
 
-    def __init__(self, title, parent, x, y, trial, condition):
+    def __init__(self, title, parent, x, y, trial, condition, shouldBe=''):
         super().__init__(title, parent)
 
         self.x, self.y = x, y
@@ -134,6 +134,8 @@ class CustomLabel(QLabel):
         self.parent = parent
         self.trial = trial
         self.condition = condition
+
+        self.shouldBe = shouldBe
 
         self.setAcceptDrops(True)
 
@@ -149,60 +151,65 @@ class CustomLabel(QLabel):
             e.ignore()
 
     def dropEvent(self, e):
-        e.acceptProposedAction()
+        # Check if item was dropped in the correct location
+        if e.mimeData().text() != self.shouldBe:
+            # TODO: Figure out a way to make the rejection visually clear
+            e.ignore()
+        else:
+            e.acceptProposedAction()
 
-        # Set new pixmap in this position if position is valid
-        self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
+            # Set new pixmap in this position if position is valid
+            self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
 
-        # Retrieve the image name
-        self.containedImage = e.mimeData().text()
+            # Retrieve the image name
+            self.containedImage = e.mimeData().text()
 
-        # Clear mimedata
-        e.mimeData().clear()
+            # Clear mimedata
+            e.mimeData().clear()
 
-        try:
-            # Find in which row of the df x/y == self.x/y and trial == self.trial
-            rowIndex = np.where((self.parent.correctPlacements['x'] == self.x) & \
-                                (self.parent.correctPlacements['y'] == self.y) & \
-                                (self.parent.correctPlacements['Trial'] == self.trial) & \
-                                (self.parent.correctPlacements['Condition'] == self.condition))
-            rowIndex = rowIndex[0][-1]
+            try:
+                # Find in which row of the df x/y == self.x/y and trial == self.trial
+                rowIndex = np.where((self.parent.correctPlacements['x'] == self.x) & \
+                                    (self.parent.correctPlacements['y'] == self.y) & \
+                                    (self.parent.correctPlacements['Trial'] == self.trial) & \
+                                    (self.parent.correctPlacements['Condition'] == self.condition))
+                rowIndex = rowIndex[0][-1]
 
-            # Retrieve drag characteristics
-            dragDuration = round(time.time() * 1000) - self.parent.dragStartTime
-            dragDistance = (e.pos() - self.parent.dragStartPosition).manhattanLength()
-            # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
+                # Retrieve drag characteristics
+                dragDuration = round(time.time() * 1000) - self.parent.dragStartTime
+                dragDistance = (e.pos() - self.parent.dragStartPosition).manhattanLength()
+                # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
-            # Fill correctPlacements dataframe
-            self.parent.correctPlacements['Name'][rowIndex] = self.containedImage
-            self.parent.correctPlacements['Time'][rowIndex] = round(time.time() * 1000)
-            self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
-            self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
+                # Fill correctPlacements dataframe
+                self.parent.correctPlacements['Name'][rowIndex] = self.containedImage
+                self.parent.correctPlacements['Time'][rowIndex] = round(time.time() * 1000)
+                self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
+                self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
 
-            # If image matches 'shouldBe', set 'Correct' to True
-            shouldBe = self.parent.correctPlacements['shouldBe'][rowIndex]
-            if shouldBe == self.containedImage:
+                # If image matches 'shouldBe', set 'Correct' to True
+                # shouldBe = self.parent.correctPlacements['shouldBe'][rowIndex]
+                # if shouldBe == self.containedImage:
                 self.parent.correctPlacements['Correct'][rowIndex] = True
 
-        except:
-            print(f'Item incorrectly placed in ({self.x}, {self.y})')
+            except:
+                print(f'Item incorrectly placed in ({self.x}, {self.y})')
 
-        # Now write regardless of correctness to a different df. Exception occurs if
-        # shouldBe == None, which occurs if the previous try-block goes to exception
-        try:
-            correct = shouldBe == self.containedImage
-        except:
-            shouldBe = 'Empty'
-            correct = False
-
-        allPlacementsDict = pd.DataFrame({'x': self.x,
-                                          'y': self.y,
-                                          'Name': self.containedImage,
-                                          'shouldBe': shouldBe,
-                                          'Correct': correct,
-                                          'Time': round(time.time() * 1000),
-                                          'Trial': self.trial,
-                                          'Condition': self.condition,
-                                          'visibleTime': self.parent.visibleTime
-                                          }, index=[0])
-        self.parent.allPlacements = self.parent.allPlacements.append(allPlacementsDict, ignore_index=True)
+            # Now write regardless of correctness to a different df. Exception occurs if
+            # shouldBe == None, which occurs if the previous try-block goes to exception
+            # try:
+            #     correct = shouldBe == self.containedImage
+            # except:
+            #     shouldBe = 'Empty'
+            #     correct = False
+            #
+            # allPlacementsDict = pd.DataFrame({'x': self.x,
+            #                                   'y': self.y,
+            #                                   'Name': self.containedImage,
+            #                                   'shouldBe': shouldBe,
+            #                                   'Correct': correct,
+            #                                   'Time': round(time.time() * 1000),
+            #                                   'Trial': self.trial,
+            #                                   'Condition': self.condition,
+            #                                   'visibleTime': self.parent.visibleTime
+            #                                   }, index=[0])
+            # self.parent.allPlacements = self.parent.allPlacements.append(allPlacementsDict, ignore_index=True)

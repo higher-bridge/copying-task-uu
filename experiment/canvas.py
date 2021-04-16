@@ -15,7 +15,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
 import time
-from random import shuffle, gauss
+from random import shuffle, gauss, sample
 import os
 
 import numpy as np
@@ -56,7 +56,10 @@ class Canvas(QWidget):
         
         # Set stimuli params
         self.nStimuli = nStimuli
-        self.allImages = images        
+        self.allImages = images
+        self.images = None
+        self.shuffledImages = None
+
         self.imageWidth = imageWidth
         self.nrow = nrow
         self.ncol = ncol
@@ -92,9 +95,9 @@ class Canvas(QWidget):
                                                        'Trial', 'Condition', 'visibleTime'])
         
         # Track placements including mistakes
-        self.allPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
-                                                   'Correct', 'Time',  
-                                                   'Trial', 'Condition', 'visibleTime'])
+        # self.allPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
+        #                                            'Correct', 'Time',
+        #                                            'Trial', 'Condition', 'visibleTime'])
         
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 
@@ -234,7 +237,7 @@ class Canvas(QWidget):
 
     def writeFiles(self):
         self.correctPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-correctPlacements.csv')
-        self.allPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-allPlacements.csv')
+        # self.allPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-allPlacements.csv')
         
         self.eventTracker.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv')
 
@@ -482,6 +485,8 @@ class Canvas(QWidget):
         self.images = pick_stimuli(self.allImages, self.nStimuli)
         self.grid = example_grid.generate_grid(self.images,
                                                self.nrow, self.ncol)
+        self.shuffledImages = sample(self.images, len(self.images))
+
         self.setConditionTiming() # Set slightly different timing for each trial
 
         # Create the actual task layout
@@ -579,10 +584,19 @@ class Canvas(QWidget):
     def copyGridLayout(self):
         self.copyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
-        
+
+        i = 0
         for x in range(self.nrow):
             for y in range(self.ncol):
-                label = CustomLabel('', self, x, y, self.currentTrial, self.currentConditionIndex)
+
+                # Pass along the name of the intended images for this location
+                if self.grid[x, y]:
+                    shouldBe = self.images[i].name
+                    i += 1
+                else:
+                    shouldBe = ''
+
+                label = CustomLabel('', self, x, y, self.currentTrial, self.currentConditionIndex, shouldBe)
                 label.setFrameStyle(QFrame.Panel)
                 label.resize(self.imageWidth, self.imageWidth)
                 label.setAlignment(QtCore.Qt.AlignCenter)
@@ -596,9 +610,6 @@ class Canvas(QWidget):
     def resourceGridLayout(self):
         self.resourceGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
-        
-        shuffledImages = self.images
-        shuffle(shuffledImages)
 
         i = 0
         row = 0
@@ -606,7 +617,7 @@ class Canvas(QWidget):
         for x in range(self.nrow):
             for y in range(self.ncol):
                 if self.grid[x, y]:
-                    image = shuffledImages[i]
+                    image = self.shuffledImages[i]
                     label = DraggableLabel(self, image)
                     label.setFrameStyle(QFrame.Panel)  # temp
                     label.setAlignment(QtCore.Qt.AlignCenter)
