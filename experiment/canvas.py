@@ -619,7 +619,7 @@ class Canvas(QWidget):
                 if self.grid[x, y]:
                     image = self.shuffledImages[i]
                     label = DraggableLabel(self, image)
-                    label.setFrameStyle(QFrame.Panel)  # temp
+                    # label.setFrameStyle(QFrame.Panel)  # temp
                     label.setAlignment(QtCore.Qt.AlignCenter)
                     label.setSizePolicy(self.sizePolicy)
                     

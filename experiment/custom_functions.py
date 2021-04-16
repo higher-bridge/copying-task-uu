@@ -18,7 +18,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from PyQt5.QtCore import QMimeData, Qt
+from PyQt5.QtCore import QMimeData, Qt, QTimer
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 
@@ -136,13 +136,15 @@ class CustomLabel(QLabel):
         self.condition = condition
 
         self.shouldBe = shouldBe
+        self.timer = QTimer(self)
 
         self.setAcceptDrops(True)
 
     def mousePressEvent(self, e):
-        if e.button() == Qt.RightButton:
-            self.setPixmap(QPixmap())
-            self.containedImage = None
+        e.ignore()
+        # if e.button() == Qt.RightButton:
+        #     self.setPixmap(QPixmap())
+        #     self.containedImage = None
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasImage():
@@ -151,12 +153,19 @@ class CustomLabel(QLabel):
             e.ignore()
 
     def dropEvent(self, e):
-        # Check if item was dropped in the correct location
-        if e.mimeData().text() != self.shouldBe:
-            # TODO: Figure out a way to make the rejection visually clear
+        if self.containedImage is not None:
             e.ignore()
+
+        # Check if item was dropped in the correct location
+        elif e.mimeData().text() != self.shouldBe:
+            e.ignore()
+            self.setStyleSheet("background-color:rgba(255, 51, 0, 200)")
+            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
+
         else:
             e.acceptProposedAction()
+            self.setStyleSheet("background-color:rgba(51, 204, 51, 100)")
+            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
 
             # Set new pixmap in this position if position is valid
             self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))
@@ -178,7 +187,6 @@ class CustomLabel(QLabel):
                 # Retrieve drag characteristics
                 dragDuration = round(time.time() * 1000) - self.parent.dragStartTime
                 dragDistance = (e.pos() - self.parent.dragStartPosition).manhattanLength()
-                # print(f'Moved image {self.containedImage} {dragDistance}px (to ({self.x}, {self.y})) in {dragDuration}s')
 
                 # Fill correctPlacements dataframe
                 self.parent.correctPlacements['Name'][rowIndex] = self.containedImage
