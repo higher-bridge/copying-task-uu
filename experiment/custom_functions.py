@@ -54,6 +54,8 @@ def customTimer(parent, now):
         bool: Return whether to update. Returning True inverts the current occlusion settings
     """
 
+    eyeLoc = parent.tracker.sample()
+
     shouldUpdate = False
 
     # If example grid is visible and visible time expires, update

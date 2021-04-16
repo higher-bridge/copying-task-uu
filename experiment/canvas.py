@@ -15,7 +15,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
 import time
-from random import shuffle, gauss, sample
+from random import gauss, sample
 import os
 
 import numpy as np
@@ -94,11 +94,6 @@ class Canvas(QWidget):
                                                        'dragDuration', 'dragDistance',
                                                        'Trial', 'Condition', 'visibleTime'])
         
-        # Track placements including mistakes
-        # self.allPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
-        #                                            'Correct', 'Time',
-        #                                            'Trial', 'Condition', 'visibleTime'])
-        
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 
         self.eventTracker = pd.DataFrame(columns=['Time', 'TrackerTime', 'TimeDiff', 'Event', 'Condition', 'Trial'])
@@ -111,9 +106,6 @@ class Canvas(QWidget):
         self.disp = None
         self.tracker = None
         self.recordingSession = 0
-
-        # TEMP
-        # self.mouseUpdates = 0
 
         self.inOpeningScreen = True
         self.initUI()
@@ -156,8 +148,6 @@ class Canvas(QWidget):
     def writeCursorPosition(self):
         e = self.mouse.pos()
 
-        # self.mouseUpdates += 1
-
         self.mouseTrackerDict['x'].append(e.x())
         self.mouseTrackerDict['y'].append(e.y())
         self.mouseTrackerDict['Time'].append(round(time.time() * 1000))
@@ -172,37 +162,39 @@ class Canvas(QWidget):
         self.writeCursorPosition()
 
         now = round(time.time() * 1000)
-        shouldUpdate = False
 
         # Check for timeout
         if now - self.globalTrialStart >= self.trialTimeOut:
             self.checkIfFinished(timeOut=True)
             return
 
-        # Check if update necessary
+        # Check if update necessary with custom timer
         if self.useCustomTimer:
-            shouldUpdate = customTimer(self, now)
-        else:            
+            updateInstruction = customTimer(self, now)
+
+        # Use default. None means no update, otherwise flip
+        else:
+            updateInstruction = None
             if self.exampleGridBox.isVisible():
                 if now - self.start >= self.visibleTime:
-                    shouldUpdate = True
+                    updateInstruction = 'flip'
+                    self.start = now
             else:
                 if now - self.start >= self.occludedTime:
-                    shouldUpdate = True
-        
-        if shouldUpdate:
-            self.showHideExampleGrid()
-            self.start = now
+                    updateInstruction = 'flip'
+                    self.start = now
+
+        self.showHideExampleGrid(updateInstruction)
 
         # Check if result needs checking, every 500ms to avoid too much processing
-        if now - self.checkIfFinishedStart >= 500:
+        if now - self.checkIfFinishedStart >= 200:
             self.checkIfFinished()
             self.checkIfFinishedStart = now
                     
     def runTimer(self):
         self.timer.setInterval(2) # 1 ms
         self.timer.timeout.connect(self.updateTimer)
-        
+
         # Unfortunately we need three tracking vars to keep updates not too time-consuming
         self.start = round(time.time() * 1000)
         self.globalTrialStart = self.start
@@ -237,8 +229,6 @@ class Canvas(QWidget):
 
     def writeFiles(self):
         self.correctPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-correctPlacements.csv')
-        # self.allPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-allPlacements.csv')
-        
         self.eventTracker.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv')
 
     def writeMouseTracker(self):
@@ -254,24 +244,38 @@ class Canvas(QWidget):
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
-            print(f'All correct: {allCorrect}')
-            
             self.writeEvent('Finished trial')
 
             self.clearScreen()
             
             self.writeFiles()
             self.currentTrial += 1
-            
+
             self.initOpeningScreen(timeOut)
-    
-    def showHideExampleGrid(self):
-        if self.exampleGridBox.isVisible():
-            text = 'Showing'
-            self.exampleGridBox.setVisible(False)
-        else:
-            text = 'Hiding'
+
+    def showHideExampleGrid(self, speficic=None):
+        if speficic is None:
+            return
+
+        elif speficic == 'show':
             self.exampleGridBox.setVisible(True)
+            text = 'Showing'
+
+        elif speficic == 'hide':
+            self.exampleGridBox.setVisible(False)
+            text = 'Hiding'
+
+        elif speficic == 'flip':
+            if self.exampleGridBox.isVisible():
+                self.exampleGridBox.setVisible(False)
+                text = 'Showing'
+            else:
+                self.exampleGridBox.setVisible(True)
+                text = 'Hiding'
+
+        else:
+            raise ValueError(f"{speficic} is not an accepted keyword for 'showHideExamplegrid'." +
+                             "Choose from None, 'show', 'hide', or 'flip'.")
 
         self.writeEvent(f'{text} grid')
     
@@ -289,6 +293,7 @@ class Canvas(QWidget):
     def eventFilter(self, widget, e):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
+
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
                 
                 # Set spacePushed to true and remove all widgets
@@ -392,7 +397,7 @@ class Canvas(QWidget):
             self.visibleTime = visibleTime
             self.occludedTime = occludedTime 
         
-        print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
+        # print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
     
     def getConditionTiming(self):
         # conditionOrderIndex to retrieve a condition number from conditionOrder
@@ -426,13 +431,13 @@ class Canvas(QWidget):
         self.inOpeningScreen = True
         
         # If all trials are done, increment condition counter and 
-        # reset trial counter to 0. Also reset the mouseTracker df
+        # reset trial counter to 1.
         if self.currentTrial > self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 1
+        print(f'Trial {self.currentTrial}, Block {self.conditionOrderIndex}, Condition {self.currentConditionIndex}')
         
         self.spacePushed = False
-        # delayParticipantAction = False
 
         self.writeEvent('In starting screen')
         
@@ -442,7 +447,7 @@ class Canvas(QWidget):
                 "Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n" +
                 "by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly" +
                 "and as accurately as possible.\n" +
-                "If you make a mistake, you can right-click the image to remove it from that location. \n" +
+                "If you make a mistake, the location will briefly turn red. \n" +
                 "Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n" +
                 "performing the task as quickly and as accurately as possible.\n \n" +
                 "If you have any questions now or anytime during the experiment, please ask them straightaway.\n" +
@@ -451,11 +456,11 @@ class Canvas(QWidget):
                 "Good luck!")
 
             elif self.conditionOrderIndex > 0:
-                # delayParticipantAction = True
                 self.label = QLabel(
                 f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n" +
                 "If you wish to carry on immediately, let the experimenter know.\n" +
                 "If you have taken a break, please wait for the experimenter to start the calibration procedure.")
+                self.label.setStyleSheet("color:rgba(255, 0, 0, 200)")
 
         elif self.currentTrial > 1:
             addText = '\nNow may be a good time to re-calibrate.' if self.currentTrial % 10 == 0 else ''
@@ -468,16 +473,12 @@ class Canvas(QWidget):
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
 
+        self.installEventFilter(self)
+
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         
         self.show()
-
-        # Needs to be tested
-        # if delayParticipantAction:
-        #     time.sleep(5)
-
-        self.installEventFilter(self)
 
     def initTask(self):
         self.removeEventFilter(self)
