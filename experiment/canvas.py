@@ -155,6 +155,19 @@ class Canvas(QWidget):
         self.mouseTrackerDict['Trial'].append(self.currentTrial)
         self.mouseTrackerDict['Condition'].append(self.currentConditionIndex)
 
+    def defaultTimer(self, now):
+        # Use default. None means no update, otherwise flip
+        if self.exampleGridBox.isVisible():
+            if now - self.start >= self.visibleTime:
+                self.start = now
+                return 'flip'
+        else:
+            if now - self.start >= self.occludedTime:
+                self.start = now
+                return 'flip'
+
+        return None
+
     def updateTimer(self):
         if self.inOpeningScreen:
             return
@@ -171,18 +184,8 @@ class Canvas(QWidget):
         # Check if update necessary with custom timer
         if self.useCustomTimer:
             updateInstruction = customTimer(self, now)
-
-        # Use default. None means no update, otherwise flip
         else:
-            updateInstruction = None
-            if self.exampleGridBox.isVisible():
-                if now - self.start >= self.visibleTime:
-                    updateInstruction = 'flip'
-                    self.start = now
-            else:
-                if now - self.start >= self.occludedTime:
-                    updateInstruction = 'flip'
-                    self.start = now
+            updateInstruction = self.defaultTimer(now)
 
         self.showHideExampleGrid(updateInstruction)
 
@@ -199,6 +202,8 @@ class Canvas(QWidget):
         self.start = round(time.time() * 1000)
         self.globalTrialStart = self.start
         self.checkIfFinishedStart = self.start
+
+        self.crossingStart = None
         
         self.timer.start()
         
@@ -275,7 +280,7 @@ class Canvas(QWidget):
 
         else:
             raise ValueError(f"{speficic} is not an accepted keyword for 'showHideExamplegrid'." +
-                             "Choose from None, 'show', 'hide', or 'flip'.")
+                             "Choose from: None, 'show', 'hide', 'flip'.")
 
         self.writeEvent(f'{text} grid')
     
@@ -385,7 +390,7 @@ class Canvas(QWidget):
             print('\nNo more conditions, the experiment is finished!')
             raise SystemExit(0)
         
-        if occludedTime != 0 and self.addNoise:
+        if self.addNoise and occludedTime != 0:
             sumDuration = visibleTime + occludedTime
 
             # Generating a noise and its invert keeps the sum duration the same as without permutation

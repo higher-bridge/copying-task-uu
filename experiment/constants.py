@@ -16,3 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DISPSIZE = (2560, 1440)
 SCREENSIZE = (59.8, 33.6)
 DUMMYMODE = False
+
+NUM_STIMULI = 6
+IMAGE_WIDTH = 100
+ROW_COL_NUM = 3
+TIME_OUT_MS = 42000
+
+MIDLINE = 1000  # 1280 default, set slightly further left to avoid unnecessary triggering

@@ -22,6 +22,8 @@ from PyQt5.QtCore import QMimeData, Qt, QTimer
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 
+from constants import MIDLINE
+
 
 def custom_calibration(self, x, y):
     """
@@ -51,24 +53,29 @@ def customTimer(parent, now):
         now (int): Receives the current time in milliseconds
 
     Returns:
-        bool: Return whether to update. Returning True inverts the current occlusion settings
+        str or None: Return how to update. Returning None retains current visibility state.
+                     Alternatives: 'hide', 'show', 'flip'.
     """
 
     eyeLoc = parent.tracker.sample()
+    currentlyVisible = parent.exampleGridBox.isVisible()
 
-    shouldUpdate = False
+    if eyeLoc[0] > MIDLINE:
+        parent.crossingStart = None
+        return None if currentlyVisible else 'show'
 
-    # If example grid is visible and visible time expires, update
-    if parent.exampleGridBox.isVisible():
-        if now - parent.start >= parent.visibleTime:
-            shouldUpdate = True
+    elif eyeLoc[0] < MIDLINE:
+        if parent.crossingStart is not None:
+            parent.crossingStart = now
+            return 'hide' if currentlyVisible else None
 
-    # If example grid is occluded and occlusion time expires, update
-    else:
-        if now - parent.start >= parent.occludedTime:
-            shouldUpdate = True
+        elif (now - parent.crossingStart) < parent.occludedTime:
+            return 'hide' if currentlyVisible else None
 
-    return shouldUpdate
+        elif (now - parent.crossingStart) > parent.occludedtime:
+            return 'show' if not currentlyVisible else None
+
+    return None
 
 
 class DraggableLabel(QLabel):
@@ -144,9 +151,6 @@ class CustomLabel(QLabel):
 
     def mousePressEvent(self, e):
         e.ignore()
-        # if e.button() == Qt.RightButton:
-        #     self.setPixmap(QPixmap())
-        #     self.containedImage = None
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasImage():
@@ -195,31 +199,7 @@ class CustomLabel(QLabel):
                 self.parent.correctPlacements['Time'][rowIndex] = round(time.time() * 1000)
                 self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
                 self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
-
-                # If image matches 'shouldBe', set 'Correct' to True
-                # shouldBe = self.parent.correctPlacements['shouldBe'][rowIndex]
-                # if shouldBe == self.containedImage:
                 self.parent.correctPlacements['Correct'][rowIndex] = True
 
             except:
                 print(f'Item incorrectly placed in ({self.x}, {self.y})')
-
-            # Now write regardless of correctness to a different df. Exception occurs if
-            # shouldBe == None, which occurs if the previous try-block goes to exception
-            # try:
-            #     correct = shouldBe == self.containedImage
-            # except:
-            #     shouldBe = 'Empty'
-            #     correct = False
-            #
-            # allPlacementsDict = pd.DataFrame({'x': self.x,
-            #                                   'y': self.y,
-            #                                   'Name': self.containedImage,
-            #                                   'shouldBe': shouldBe,
-            #                                   'Correct': correct,
-            #                                   'Time': round(time.time() * 1000),
-            #                                   'Trial': self.trial,
-            #                                   'Condition': self.condition,
-            #                                   'visibleTime': self.parent.visibleTime
-            #                                   }, index=[0])
-            # self.parent.allPlacements = self.parent.allPlacements.append(allPlacementsDict, ignore_index=True)
