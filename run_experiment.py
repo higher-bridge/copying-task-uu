@@ -26,13 +26,18 @@ from constants import (NUM_STIMULI,
                        ROW_COL_NUM,
                        TIME_OUT_MS)
 
-NUM_TRIALS = 5
-CONDITIONS = [(6000, 0)]
+NUM_TRIALS = 35
+CONDITIONS = [(6000, 0),
+              (4000, 2000),
+              (3000, 3000),
+              (2000, 4000)]
 
-CONDITION_ORDER = [0]  # The lowest number should be 0
+CONDITION_ORDER = [0, 1, 2, 3] # The lowest number should be 0
+shuffle(CONDITION_ORDER)
+print(CONDITION_ORDER)
 
 if __name__ == '__main__':
-    project_folder = Path(__file__).parent.parent
+    project_folder = Path(__file__).parent
     path = project_folder/'stimuli'
     images = load_stimuli(path, IMAGE_WIDTH, extension='.png')
         

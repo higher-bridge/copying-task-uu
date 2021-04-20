@@ -98,7 +98,7 @@ class Canvas(QWidget):
 
         self.eventTracker = pd.DataFrame(columns=['Time', 'TrackerTime', 'TimeDiff', 'Event', 'Condition', 'Trial'])
 
-        self.projectFolder = Path(__file__).parent.parent
+        self.projectFolder = Path(__file__).parent
 
         self.ppNumber = None
         self.setParticipantNumber()        

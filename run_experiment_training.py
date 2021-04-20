@@ -26,31 +26,23 @@ from constants import (NUM_STIMULI,
                        ROW_COL_NUM,
                        TIME_OUT_MS)
 
-NUM_TRIALS = 35
+NUM_TRIALS = 5
+CONDITIONS = [(6000, 0)]
 
-# Define as (0, GAZE_CONTINGENT_DELAY_IN_MS)
-CONDITIONS = [(0, 0),     # No occlusion delay
-              (0, 500),   # 500ms occlusion delay
-              (0, 1000),  # 100ms
-              (0, 1500)]  # etc.
-
-CONDITION_ORDER = [0, 1, 2, 3]  # The lowest number should be 0
-shuffle(CONDITION_ORDER)
-print(CONDITION_ORDER)
+CONDITION_ORDER = [0]  # The lowest number should be 0
 
 if __name__ == '__main__':
-    project_folder = Path(__file__).parent.parent
-    path = project_folder / 'stimuli'
+    project_folder = Path(__file__).parent
+    path = project_folder/'stimuli'
     images = load_stimuli(path, IMAGE_WIDTH, extension='.png')
+        
+    app = QApplication(sys.argv)    
 
-    app = QApplication(sys.argv)
-
-    ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH,
+    ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
-                conditions=CONDITIONS, conditionOrder=CONDITION_ORDER,
-                nTrials=NUM_TRIALS, useCustomTimer=True, addNoise=False,
-                trialTimeOut=TIME_OUT_MS)
-
+                conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
+                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=TIME_OUT_MS)
+    
     ex.showFullScreen()
-
+    
     sys.exit(app.exec_())
