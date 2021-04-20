@@ -22,4 +22,4 @@ IMAGE_WIDTH = 100
 ROW_COL_NUM = 3
 TIME_OUT_MS = 42000
 
-MIDLINE = 1000  # 1280 default, set slightly further left to avoid unnecessary triggering
+MIDLINE = 1100  # 1280 default, set slightly further left to avoid unnecessary triggering

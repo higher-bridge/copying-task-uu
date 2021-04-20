@@ -32,13 +32,14 @@ from PyGaze.pygaze.eyetracker import EyeTracker
 
 import example_grid
 from stimulus import pick_stimuli
-from custom_functions import customTimer, CustomLabel, DraggableLabel, custom_calibration
+from custom_functions import customTimer, CustomLabel, DraggableLabel #, custom_calibration
 
 
 class Canvas(QWidget):
     def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
+                 customCalibration:bool=False, customCalibrationSize:int=20,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -79,6 +80,9 @@ class Canvas(QWidget):
         self.occludedTime = 0
         self.addNoise = addNoise
         self.trialTimeOut = trialTimeOut
+
+        self.customCalibration = customCalibration
+        self.customCalibrationSize = customCalibrationSize
 
         self.spacePushed = False
 
@@ -295,6 +299,14 @@ class Canvas(QWidget):
 
         print(f'Saved session {self.recordingSession} to {toLocation}')        
 
+    def custom_calibration(self, x, y):
+        self.screen = libscreen.Screen()
+        
+        self.screen.draw_circle(colour='black', pos=(x, y), r=self.customCalibrationSize, fill=True)
+        self.disp.fill(self.screen)
+
+        self.disp.show()
+
     def eventFilter(self, widget, e):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
@@ -333,7 +345,9 @@ class Canvas(QWidget):
                     
                     self.disp = libscreen.Display()
                     self.tracker = EyeTracker(self.disp)
-                    # self.tracker.set_draw_calibration_target_func(custom_calibration)
+
+                    if self.customCalibration:
+                        self.tracker.set_draw_calibration_target_func(self.custom_calibration)
     
                     self.tracker.calibrate()
                     self.disp.close()

@@ -25,27 +25,48 @@ from PyQt5.QtWidgets import QApplication, QLabel
 from constants import MIDLINE
 
 
-def custom_calibration(self, x, y):
-    """
-    desc:
-        A hook to prepare the canvas with the clibration target.
-
-    arguments:
-        x:
-            desc:	The X coordinate.
-            type:	int
-        y:
-            desc:	The Y coordinate.
-            type:	int
-    """
-    self.screen.clear()
-    self.screen.draw_circle(colour='white', pos=(x, y), r=20, fill=True)
-    self.disp.fill(self.screen)
-
-    self.disp.show()
-
-
 def customTimer(parent, now):
+    """Implement your own custom timer. Integrate with eyetracker if necessary.
+
+    Args:
+        parent: Receives all class variables from Canvas
+        now (int): Receives the current time in milliseconds
+
+    Returns:
+        str or None: Return how to update. Returning None retains current visibility state.
+                     Alternatives: 'hide', 'show', 'flip'.
+    """
+
+    eyeLoc = parent.tracker.sample()
+    currentlyVisible = parent.exampleGridBox.isVisible()
+
+    if parent.crossingStart is None:
+    # If midline is crossed to the left, start a counter (crossingStart)
+    # and hide the example
+        if eyeLoc[0] < MIDLINE:
+            parent.crossingStart = now
+            return 'hide' if currentlyVisible else None
+
+    # If gaze is on the right and no counter is running, show example grid
+        elif eyeLoc[0] > MIDLINE:
+            return None if currentlyVisible else 'show'        
+
+    # If a counter is running, hide the grid until time is reached. This is
+    # regardless of where gaze position is
+    else:                           # elif parent.crossingStart is not None
+        if (now - parent.crossingStart) < parent.occludedTime:
+            return 'hide' if currentlyVisible else None
+
+        elif (now - parent.crossingStart) > parent.occludedTime:
+            if eyeLoc[0] > MIDLINE:
+                parent.crossingStart = None
+                
+            return 'show' if not currentlyVisible else None
+    
+
+    return None
+
+def customTimerWithReturn(parent, now):
     """Implement your own custom timer. Integrate with eyetracker if necessary.
 
     Args:
@@ -65,14 +86,14 @@ def customTimer(parent, now):
         return None if currentlyVisible else 'show'
 
     elif eyeLoc[0] < MIDLINE:
-        if parent.crossingStart is not None:
+        if parent.crossingStart is None:
             parent.crossingStart = now
             return 'hide' if currentlyVisible else None
 
         elif (now - parent.crossingStart) < parent.occludedTime:
             return 'hide' if currentlyVisible else None
 
-        elif (now - parent.crossingStart) > parent.occludedtime:
+        elif (now - parent.crossingStart) > parent.occludedTime:
             return 'show' if not currentlyVisible else None
 
     return None

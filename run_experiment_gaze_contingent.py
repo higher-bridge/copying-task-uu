@@ -26,7 +26,7 @@ from constants import (NUM_STIMULI,
                        ROW_COL_NUM,
                        TIME_OUT_MS)
 
-NUM_TRIALS = 35
+NUM_TRIALS = 15
 
 # Define as (0, GAZE_CONTINGENT_DELAY_IN_MS)
 CONDITIONS = [(0, 0),     # No occlusion delay
@@ -49,6 +49,7 @@ if __name__ == '__main__':
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER,
                 nTrials=NUM_TRIALS, useCustomTimer=True, addNoise=False,
+                customCalibration=True,
                 trialTimeOut=TIME_OUT_MS)
 
     ex.showFullScreen()
