@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 import random
 
-import constants
+import constants_analysis as constants
 import cimulation_helper as sh
 
 def simulate_trial(dict tracking_dict, int k_items, 
@@ -154,63 +154,63 @@ def simulate_trial(dict tracking_dict, int k_items,
                     
                     
                     # DETERMINE WHETHER MISTAKE WAS MADE
-                    if random.uniform(0, 1) > error_probability:
-                        # Succesfully placed
-                        remaining_items -= 1
-                        placed_locs.append(k)
-                        locations_memorized.remove(k)
-                    else:
-                        # =====================================================
-                        # FIX MISTAKE                                            
-                        # =====================================================
-                        # Item placed incorrectly, right-click item to remove
-                        cumul_time += 150 
-                        
-                        # Shift eyes to the item on the example grid
-                        new_location = example_locs[k]
-                        cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
-                        eye_location = new_location
-                        num_fixations += 1
-                        num_crossings +=1
-                        
-                        # Sample item again
-                        cumul_time += 50 * random.gauss(1., .1)
-                        activated_at[k].append(cumul_time / 1000)
-
-                        # Move eyes to item in resource grid
-                        new_location = r_loc
-                        cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)                                
-                        eye_location = new_location
-                        num_fixations += 1
-                        
-                        # Move mouse to resource grid
-                        new_mouse_location = resource_locs[k]
-                        cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
-                                                          a=intercept_mouse, b=coefficient_mouse)
-                        mouse_location = new_mouse_location
-                        
-                        # Click on item
-                        cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000
-                        
-                        # Move eyes to workspace
-                        new_location = workspace_locs[k]
-                        cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)                               
-                        eye_location = new_location
-                        num_fixations += 1
-                        
-                        # Drag item to workspace
-                        new_mouse_location = workspace_locs[k]
-                        cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location, 
-                                                          a=intercept_mouse, b=coefficient_mouse)
-                        mouse_location = new_mouse_location
-                        
-                        # Release click
-                        cumul_time += 150 * random.gauss(1, .1)                                            
-
-                        # Succesfully placed
-                        remaining_items -= 1
-                        placed_locs.append(k)
-                        locations_memorized.remove(k)
+                    # if random.uniform(0, 1) > error_probability:
+                    #     # Succesfully placed
+                    #     remaining_items -= 1
+                    #     placed_locs.append(k)
+                    #     locations_memorized.remove(k)
+                    # else:
+                    #     # =====================================================
+                    #     # FIX MISTAKE
+                    #     # =====================================================
+                    #     # Item placed incorrectly, right-click item to remove
+                    #     cumul_time += 150
+                    #
+                    #     # Shift eyes to the item on the example grid
+                    #     new_location = example_locs[k]
+                    #     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
+                    #     eye_location = new_location
+                    #     num_fixations += 1
+                    #     num_crossings +=1
+                    #
+                    #     # Sample item again
+                    #     cumul_time += 50 * random.gauss(1., .1)
+                    #     activated_at[k].append(cumul_time / 1000)
+                    #
+                    #     # Move eyes to item in resource grid
+                    #     new_location = r_loc
+                    #     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
+                    #     eye_location = new_location
+                    #     num_fixations += 1
+                    #
+                    #     # Move mouse to resource grid
+                    #     new_mouse_location = resource_locs[k]
+                    #     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
+                    #                                       a=intercept_mouse, b=coefficient_mouse)
+                    #     mouse_location = new_mouse_location
+                    #
+                    #     # Click on item
+                    #     cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000
+                    #
+                    #     # Move eyes to workspace
+                    #     new_location = workspace_locs[k]
+                    #     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
+                    #     eye_location = new_location
+                    #     num_fixations += 1
+                    #
+                    #     # Drag item to workspace
+                    #     new_mouse_location = workspace_locs[k]
+                    #     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
+                    #                                       a=intercept_mouse, b=coefficient_mouse)
+                    #     mouse_location = new_mouse_location
+                    #
+                    #     # Release click
+                    #     cumul_time += 150 * random.gauss(1, .1)
+                    #
+                    #     # Succesfully placed
+                    #     remaining_items -= 1
+                    #     placed_locs.append(k)
+                    #     locations_memorized.remove(k)
 
                     
         else:

@@ -22,7 +22,7 @@ import os
 import pingouin as pg
 
 from sklearn.preprocessing import MinMaxScaler
-import constants
+import constants_analysis as constants
 
 
 def getListOfFiles(dirName):

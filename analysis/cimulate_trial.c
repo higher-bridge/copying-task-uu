@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "cimulate_trial",
+        "name": "analysis.cimulate_trial",
         "sources": [
             "cimulate_trial.pyx"
         ]
     },
-    "module_name": "cimulate_trial"
+    "module_name": "analysis.cimulate_trial"
 }
 END: Cython Metadata */
 
@@ -614,8 +614,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__cimulate_trial
-#define __PYX_HAVE_API__cimulate_trial
+#define __PYX_HAVE__analysis__cimulate_trial
+#define __PYX_HAVE_API__analysis__cimulate_trial
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -1118,31 +1118,6 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, 
     (inplace ? PyNumber_InPlaceAdd(op1, op2) : PyNumber_Add(op1, op2))
 #endif
 
-/* PyIntBinop.proto */
-#if !CYTHON_COMPILING_IN_PYPY
-static PyObject* __Pyx_PyInt_SubtractObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
-#else
-#define __Pyx_PyInt_SubtractObjC(op1, op2, intval, inplace, zerodivision_check)\
-    (inplace ? PyNumber_InPlaceSubtract(op1, op2) : PyNumber_Subtract(op1, op2))
-#endif
-
-/* UnpackUnboundCMethod.proto */
-typedef struct {
-    PyObject *type;
-    PyObject **method_name;
-    PyCFunction func;
-    PyObject *method;
-    int flag;
-} __Pyx_CachedCFunction;
-
-/* CallUnboundCMethod1.proto */
-static PyObject* __Pyx__CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg);
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg);
-#else
-#define __Pyx_CallUnboundCMethod1(cfunc, self, arg)  __Pyx__CallUnboundCMethod1(cfunc, self, arg)
-#endif
-
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -1245,12 +1220,12 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'cimulate_trial' */
-#define __Pyx_MODULE_NAME "cimulate_trial"
-extern int __pyx_module_is_main_cimulate_trial;
-int __pyx_module_is_main_cimulate_trial = 0;
+/* Module declarations from 'analysis.cimulate_trial' */
+#define __Pyx_MODULE_NAME "analysis.cimulate_trial"
+extern int __pyx_module_is_main_analysis__cimulate_trial;
+int __pyx_module_is_main_analysis__cimulate_trial = 0;
 
-/* Implementation of 'cimulate_trial' */
+/* Implementation of 'analysis.cimulate_trial' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_round;
@@ -1277,7 +1252,6 @@ static const char __pyx_k_append[] = "append";
 static const char __pyx_k_choice[] = "choice";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_random[] = "random";
-static const char __pyx_k_remove[] = "remove";
 static const char __pyx_k_thresh[] = "thresh";
 static const char __pyx_k_TIMEOUT[] = "TIMEOUT";
 static const char __pyx_k_k_items[] = "k_items";
@@ -1305,7 +1279,6 @@ static const char __pyx_k_num_crossings[] = "num_crossings";
 static const char __pyx_k_num_fixations[] = "num_fixations";
 static const char __pyx_k_resource_locs[] = "resource_locs";
 static const char __pyx_k_tracking_dict[] = "tracking_dict";
-static const char __pyx_k_cimulate_trial[] = "cimulate_trial";
 static const char __pyx_k_mouse_location[] = "mouse_location";
 static const char __pyx_k_simulate_trial[] = "simulate_trial";
 static const char __pyx_k_workspace_locs[] = "workspace_locs";
@@ -1319,21 +1292,23 @@ static const char __pyx_k_error_probability[] = "error_probability";
 static const char __pyx_k_stimuli_per_trial[] = "stimuli_per_trial";
 static const char __pyx_k_cimulate_trial_pyx[] = "cimulate_trial.pyx";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_constants_analysis[] = "constants_analysis";
 static const char __pyx_k_estim_saccade_time[] = "estim_saccade_time";
 static const char __pyx_k_generate_locations[] = "generate_locations";
 static const char __pyx_k_new_mouse_location[] = "new_mouse_location";
 static const char __pyx_k_locations_memorized[] = "locations_memorized";
 static const char __pyx_k_example_grid_visible[] = "example_grid_visible";
 static const char __pyx_k_compute_dme_retrieval[] = "compute_dme_retrieval";
+static const char __pyx_k_analysis_cimulate_trial[] = "analysis.cimulate_trial";
 static const char __pyx_k_This_program_is_free_software_y[] = "\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.\n";
 static PyObject *__pyx_n_s_STIMULI_PER_TRIAL;
 static PyObject *__pyx_n_s_TIMEOUT;
 static PyObject *__pyx_n_s_a;
 static PyObject *__pyx_n_s_activated_at;
+static PyObject *__pyx_n_s_analysis_cimulate_trial;
 static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_choice;
-static PyObject *__pyx_n_s_cimulate_trial;
 static PyObject *__pyx_kp_s_cimulate_trial_pyx;
 static PyObject *__pyx_n_s_cimulation_helper;
 static PyObject *__pyx_n_s_cline_in_traceback;
@@ -1341,6 +1316,7 @@ static PyObject *__pyx_n_s_coefficient;
 static PyObject *__pyx_n_s_coefficient_mouse;
 static PyObject *__pyx_n_s_compute_dme_retrieval;
 static PyObject *__pyx_n_s_constants;
+static PyObject *__pyx_n_s_constants_analysis;
 static PyObject *__pyx_n_s_cumul_time;
 static PyObject *__pyx_n_s_decay;
 static PyObject *__pyx_n_s_enumerate;
@@ -1380,7 +1356,6 @@ static PyObject *__pyx_n_s_r_loc;
 static PyObject *__pyx_n_s_random;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_remaining_items;
-static PyObject *__pyx_n_s_remove;
 static PyObject *__pyx_n_s_rep;
 static PyObject *__pyx_n_s_resource_locs;
 static PyObject *__pyx_n_s_retrieval;
@@ -1397,10 +1372,8 @@ static PyObject *__pyx_n_s_tracking_dict;
 static PyObject *__pyx_n_s_uniform;
 static PyObject *__pyx_n_s_visible_time;
 static PyObject *__pyx_n_s_workspace_locs;
-static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_tracking_dict, int __pyx_v_k_items, int __pyx_v_visible_time, int __pyx_v_occlude_time, float __pyx_v_intercept, float __pyx_v_coefficient, float __pyx_v_intercept_mouse, float __pyx_v_coefficient_mouse, int __pyx_v_n_repetitions, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay, float __pyx_v_error_probability); /* proto */
-static __Pyx_CachedCFunction __pyx_umethod_PyList_Type_remove = {0, &__pyx_n_s_remove, 0, 0, 0};
+static PyObject *__pyx_pf_8analysis_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_tracking_dict, int __pyx_v_k_items, int __pyx_v_visible_time, int __pyx_v_occlude_time, float __pyx_v_intercept, float __pyx_v_coefficient, float __pyx_v_intercept_mouse, float __pyx_v_coefficient_mouse, int __pyx_v_n_repetitions, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay, CYTHON_UNUSED float __pyx_v_error_probability); /* proto */
 static PyObject *__pyx_float__1;
-static PyObject *__pyx_float_1_;
 static PyObject *__pyx_float__01;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
@@ -1420,12 +1393,10 @@ static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_tuple__5;
 static PyObject *__pyx_tuple__6;
 static PyObject *__pyx_tuple__7;
-static PyObject *__pyx_tuple__8;
-static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_codeobj__10;
+static PyObject *__pyx_codeobj__8;
 /* Late includes */
 
-/* "cimulate_trial.pyx":22
+/* "analysis/cimulate_trial.pyx":22
  * import cimulation_helper as sh
  * 
  * def simulate_trial(dict tracking_dict, int k_items,             # <<<<<<<<<<<<<<
@@ -1434,9 +1405,9 @@ static PyObject *__pyx_codeobj__10;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cimulate_trial_1simulate_trial(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_14cimulate_trial_1simulate_trial = {"simulate_trial", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14cimulate_trial_1simulate_trial, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_14cimulate_trial_1simulate_trial(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8analysis_14cimulate_trial_1simulate_trial(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8analysis_14cimulate_trial_1simulate_trial = {"simulate_trial", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_14cimulate_trial_1simulate_trial, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8analysis_14cimulate_trial_1simulate_trial(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   CYTHON_UNUSED PyObject *__pyx_v_tracking_dict = 0;
   int __pyx_v_k_items;
   int __pyx_v_visible_time;
@@ -1450,7 +1421,7 @@ static PyObject *__pyx_pw_14cimulate_trial_1simulate_trial(PyObject *__pyx_self,
   float __pyx_v_thresh;
   float __pyx_v_noise;
   float __pyx_v_decay;
-  float __pyx_v_error_probability;
+  CYTHON_UNUSED float __pyx_v_error_probability;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1619,12 +1590,12 @@ static PyObject *__pyx_pw_14cimulate_trial_1simulate_trial(PyObject *__pyx_self,
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("simulate_trial", 1, 14, 14, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 22, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cimulate_trial.simulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("analysis.cimulate_trial.simulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tracking_dict), (&PyDict_Type), 1, "tracking_dict", 1))) __PYX_ERR(0, 22, __pyx_L1_error)
-  __pyx_r = __pyx_pf_14cimulate_trial_simulate_trial(__pyx_self, __pyx_v_tracking_dict, __pyx_v_k_items, __pyx_v_visible_time, __pyx_v_occlude_time, __pyx_v_intercept, __pyx_v_coefficient, __pyx_v_intercept_mouse, __pyx_v_coefficient_mouse, __pyx_v_n_repetitions, __pyx_v_f, __pyx_v_thresh, __pyx_v_noise, __pyx_v_decay, __pyx_v_error_probability);
+  __pyx_r = __pyx_pf_8analysis_14cimulate_trial_simulate_trial(__pyx_self, __pyx_v_tracking_dict, __pyx_v_k_items, __pyx_v_visible_time, __pyx_v_occlude_time, __pyx_v_intercept, __pyx_v_coefficient, __pyx_v_intercept_mouse, __pyx_v_coefficient_mouse, __pyx_v_n_repetitions, __pyx_v_f, __pyx_v_thresh, __pyx_v_noise, __pyx_v_decay, __pyx_v_error_probability);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1635,7 +1606,7 @@ static PyObject *__pyx_pw_14cimulate_trial_1simulate_trial(PyObject *__pyx_self,
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_tracking_dict, int __pyx_v_k_items, int __pyx_v_visible_time, int __pyx_v_occlude_time, float __pyx_v_intercept, float __pyx_v_coefficient, float __pyx_v_intercept_mouse, float __pyx_v_coefficient_mouse, int __pyx_v_n_repetitions, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay, float __pyx_v_error_probability) {
+static PyObject *__pyx_pf_8analysis_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_tracking_dict, int __pyx_v_k_items, int __pyx_v_visible_time, int __pyx_v_occlude_time, float __pyx_v_intercept, float __pyx_v_coefficient, float __pyx_v_intercept_mouse, float __pyx_v_coefficient_mouse, int __pyx_v_n_repetitions, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay, CYTHON_UNUSED float __pyx_v_error_probability) {
   float __pyx_v_cumul_time;
   int __pyx_v_num_crossings;
   int __pyx_v_num_fixations;
@@ -1693,7 +1664,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("simulate_trial", 0);
 
-  /* "cimulate_trial.pyx":34
+  /* "analysis/cimulate_trial.pyx":34
  *     cdef int num_crossings, num_fixations
  * 
  *     timeout = constants.TIMEOUT             # <<<<<<<<<<<<<<
@@ -1708,7 +1679,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_timeout = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cimulate_trial.pyx":35
+  /* "analysis/cimulate_trial.pyx":35
  * 
  *     timeout = constants.TIMEOUT
  *     stimuli_per_trial = constants.STIMULI_PER_TRIAL             # <<<<<<<<<<<<<<
@@ -1723,7 +1694,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_stimuli_per_trial = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":37
+  /* "analysis/cimulate_trial.pyx":37
  *     stimuli_per_trial = constants.STIMULI_PER_TRIAL
  * 
  *     cumul_time = 0             # <<<<<<<<<<<<<<
@@ -1732,7 +1703,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
   __pyx_v_cumul_time = 0.0;
 
-  /* "cimulate_trial.pyx":38
+  /* "analysis/cimulate_trial.pyx":38
  * 
  *     cumul_time = 0
  *     remaining_items = constants.STIMULI_PER_TRIAL             # <<<<<<<<<<<<<<
@@ -1747,7 +1718,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_remaining_items = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cimulate_trial.pyx":39
+  /* "analysis/cimulate_trial.pyx":39
  *     cumul_time = 0
  *     remaining_items = constants.STIMULI_PER_TRIAL
  *     num_crossings = 0             # <<<<<<<<<<<<<<
@@ -1756,7 +1727,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
   __pyx_v_num_crossings = 0;
 
-  /* "cimulate_trial.pyx":40
+  /* "analysis/cimulate_trial.pyx":40
  *     remaining_items = constants.STIMULI_PER_TRIAL
  *     num_crossings = 0
  *     num_fixations = 0             # <<<<<<<<<<<<<<
@@ -1765,7 +1736,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
   __pyx_v_num_fixations = 0;
 
-  /* "cimulate_trial.pyx":43
+  /* "analysis/cimulate_trial.pyx":43
  * 
  *     # Generate lists of stimulus locations
  *     example_locs, workspace_locs, resource_locs = sh.generate_locations(n_items=remaining_items)             # <<<<<<<<<<<<<<
@@ -1844,7 +1815,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_resource_locs = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "cimulate_trial.pyx":44
+  /* "analysis/cimulate_trial.pyx":44
  *     # Generate lists of stimulus locations
  *     example_locs, workspace_locs, resource_locs = sh.generate_locations(n_items=remaining_items)
  *     placed_locs = []             # <<<<<<<<<<<<<<
@@ -1856,7 +1827,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_placed_locs = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "cimulate_trial.pyx":46
+  /* "analysis/cimulate_trial.pyx":46
  *     placed_locs = []
  * 
  *     cdef activated_at = {i: [] for i in range(len(example_locs))}             # <<<<<<<<<<<<<<
@@ -1882,7 +1853,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __pyx_v_activated_at = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "cimulate_trial.pyx":49
+  /* "analysis/cimulate_trial.pyx":49
  * 
  *     # Init eye location in center of screen
  *     eye_location = (1280, 720)             # <<<<<<<<<<<<<<
@@ -1892,7 +1863,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __Pyx_INCREF(__pyx_tuple_);
   __pyx_v_eye_location = __pyx_tuple_;
 
-  /* "cimulate_trial.pyx":50
+  /* "analysis/cimulate_trial.pyx":50
  *     # Init eye location in center of screen
  *     eye_location = (1280, 720)
  *     mouse_location = (1280, 720)             # <<<<<<<<<<<<<<
@@ -1902,7 +1873,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __Pyx_INCREF(__pyx_tuple_);
   __pyx_v_mouse_location = __pyx_tuple_;
 
-  /* "cimulate_trial.pyx":53
+  /* "analysis/cimulate_trial.pyx":53
  * 
  * 
  *     while cumul_time < timeout and len(placed_locs) < stimuli_per_trial:             # <<<<<<<<<<<<<<
@@ -1932,7 +1903,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
     __pyx_L9_bool_binop_done:;
     if (!__pyx_t_10) break;
 
-    /* "cimulate_trial.pyx":56
+    /* "analysis/cimulate_trial.pyx":56
  * 
  *         # If there are fewer items than in the encoding scheme
  *         if k_items > remaining_items:             # <<<<<<<<<<<<<<
@@ -1947,7 +1918,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_10) {
 
-      /* "cimulate_trial.pyx":57
+      /* "analysis/cimulate_trial.pyx":57
  *         # If there are fewer items than in the encoding scheme
  *         if k_items > remaining_items:
  *             k_items = remaining_items             # <<<<<<<<<<<<<<
@@ -1957,7 +1928,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __pyx_t_12 = __Pyx_PyInt_As_int(__pyx_v_remaining_items); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 57, __pyx_L1_error)
       __pyx_v_k_items = __pyx_t_12;
 
-      /* "cimulate_trial.pyx":56
+      /* "analysis/cimulate_trial.pyx":56
  * 
  *         # If there are fewer items than in the encoding scheme
  *         if k_items > remaining_items:             # <<<<<<<<<<<<<<
@@ -1966,7 +1937,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
     }
 
-    /* "cimulate_trial.pyx":60
+    /* "analysis/cimulate_trial.pyx":60
  * 
  * 
  *         if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2042,7 +2013,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_10) {
 
-      /* "cimulate_trial.pyx":62
+      /* "analysis/cimulate_trial.pyx":62
  *         if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
  *             # Shift eyes to center of example grid
  *             new_location = (640, 720)             # <<<<<<<<<<<<<<
@@ -2052,7 +2023,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_INCREF(__pyx_tuple__2);
       __Pyx_XDECREF_SET(__pyx_v_new_location, __pyx_tuple__2);
 
-      /* "cimulate_trial.pyx":63
+      /* "analysis/cimulate_trial.pyx":63
  *             # Shift eyes to center of example grid
  *             new_location = (640, 720)
  *             cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
@@ -2097,7 +2068,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_v_cumul_time = __pyx_t_15;
 
-      /* "cimulate_trial.pyx":64
+      /* "analysis/cimulate_trial.pyx":64
  *             new_location = (640, 720)
  *             cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *             eye_location = new_location             # <<<<<<<<<<<<<<
@@ -2107,7 +2078,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_INCREF(__pyx_v_new_location);
       __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
 
-      /* "cimulate_trial.pyx":66
+      /* "analysis/cimulate_trial.pyx":66
  *             eye_location = new_location
  * 
  *             num_fixations += 1             # <<<<<<<<<<<<<<
@@ -2116,7 +2087,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
       __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
 
-      /* "cimulate_trial.pyx":67
+      /* "analysis/cimulate_trial.pyx":67
  * 
  *             num_fixations += 1
  *             num_crossings += 1             # <<<<<<<<<<<<<<
@@ -2125,7 +2096,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
       __pyx_v_num_crossings = (__pyx_v_num_crossings + 1);
 
-      /* "cimulate_trial.pyx":69
+      /* "analysis/cimulate_trial.pyx":69
  *             num_crossings += 1
  * 
  *             locations_memorized = []             # <<<<<<<<<<<<<<
@@ -2137,7 +2108,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_XDECREF_SET(__pyx_v_locations_memorized, ((PyObject*)__pyx_t_5));
       __pyx_t_5 = 0;
 
-      /* "cimulate_trial.pyx":70
+      /* "analysis/cimulate_trial.pyx":70
  * 
  *             locations_memorized = []
  *             for ki in range(k_items):             # <<<<<<<<<<<<<<
@@ -2149,7 +2120,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
         __pyx_v_ki = __pyx_t_17;
 
-        /* "cimulate_trial.pyx":72
+        /* "analysis/cimulate_trial.pyx":72
  *             for ki in range(k_items):
  * 
  *                 if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2225,7 +2196,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         if (__pyx_t_10) {
 
-          /* "cimulate_trial.pyx":75
+          /* "analysis/cimulate_trial.pyx":75
  * 
  *                     # Pick a new item to memorize
  *                     new_item = random.choice([l for l in range(len(example_locs)) \             # <<<<<<<<<<<<<<
@@ -2288,7 +2259,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             __Pyx_XDECREF_SET(__pyx_v_l, __pyx_t_4);
             __pyx_t_4 = 0;
 
-            /* "cimulate_trial.pyx":76
+            /* "analysis/cimulate_trial.pyx":76
  *                     # Pick a new item to memorize
  *                     new_item = random.choice([l for l in range(len(example_locs)) \
  *                                               if l not in placed_locs and l not in locations_memorized])             # <<<<<<<<<<<<<<
@@ -2308,7 +2279,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             __pyx_L19_bool_binop_done:;
             if (__pyx_t_10) {
 
-              /* "cimulate_trial.pyx":75
+              /* "analysis/cimulate_trial.pyx":75
  * 
  *                     # Pick a new item to memorize
  *                     new_item = random.choice([l for l in range(len(example_locs)) \             # <<<<<<<<<<<<<<
@@ -2317,7 +2288,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
               if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_v_l))) __PYX_ERR(0, 75, __pyx_L1_error)
 
-              /* "cimulate_trial.pyx":76
+              /* "analysis/cimulate_trial.pyx":76
  *                     # Pick a new item to memorize
  *                     new_item = random.choice([l for l in range(len(example_locs)) \
  *                                               if l not in placed_locs and l not in locations_memorized])             # <<<<<<<<<<<<<<
@@ -2326,7 +2297,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
             }
 
-            /* "cimulate_trial.pyx":75
+            /* "analysis/cimulate_trial.pyx":75
  * 
  *                     # Pick a new item to memorize
  *                     new_item = random.choice([l for l in range(len(example_locs)) \             # <<<<<<<<<<<<<<
@@ -2354,7 +2325,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_XDECREF_SET(__pyx_v_new_item, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "cimulate_trial.pyx":78
+          /* "analysis/cimulate_trial.pyx":78
  *                                               if l not in placed_locs and l not in locations_memorized])
  * 
  *                     new_location = example_locs[new_item]             # <<<<<<<<<<<<<<
@@ -2366,7 +2337,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "cimulate_trial.pyx":81
+          /* "analysis/cimulate_trial.pyx":81
  * 
  *                     # Move eyes to new item
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
@@ -2411,7 +2382,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":82
+          /* "analysis/cimulate_trial.pyx":82
  *                     # Move eyes to new item
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location             # <<<<<<<<<<<<<<
@@ -2421,7 +2392,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_new_location);
           __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
 
-          /* "cimulate_trial.pyx":83
+          /* "analysis/cimulate_trial.pyx":83
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location
  *                     num_fixations += 1             # <<<<<<<<<<<<<<
@@ -2430,7 +2401,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
           __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
 
-          /* "cimulate_trial.pyx":85
+          /* "analysis/cimulate_trial.pyx":85
  *                     num_fixations += 1
  * 
  *                     if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2506,7 +2477,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           if (__pyx_t_10) {
 
-            /* "cimulate_trial.pyx":87
+            /* "analysis/cimulate_trial.pyx":87
  *                     if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
  *                         # Store item in memory
  *                         activated_at[new_item].append(cumul_time / 1000)             # <<<<<<<<<<<<<<
@@ -2521,7 +2492,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
             __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-            /* "cimulate_trial.pyx":88
+            /* "analysis/cimulate_trial.pyx":88
  *                         # Store item in memory
  *                         activated_at[new_item].append(cumul_time / 1000)
  *                         cumul_time += 50 * random.gauss(1, .01)             # <<<<<<<<<<<<<<
@@ -2549,7 +2520,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
             __pyx_v_cumul_time = __pyx_t_15;
 
-            /* "cimulate_trial.pyx":90
+            /* "analysis/cimulate_trial.pyx":90
  *                         cumul_time += 50 * random.gauss(1, .01)
  * 
  *                         for rep in range(n_repetitions):             # <<<<<<<<<<<<<<
@@ -2561,7 +2532,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
               __pyx_v_rep = __pyx_t_23;
 
-              /* "cimulate_trial.pyx":91
+              /* "analysis/cimulate_trial.pyx":91
  * 
  *                         for rep in range(n_repetitions):
  *                             retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[new_item],             # <<<<<<<<<<<<<<
@@ -2586,7 +2557,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
               __pyx_t_14 = 0;
               __pyx_t_5 = 0;
 
-              /* "cimulate_trial.pyx":92
+              /* "analysis/cimulate_trial.pyx":92
  *                         for rep in range(n_repetitions):
  *                             retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[new_item],
  *                                                                             f=f, thresh=thresh, noise=noise, decay=decay)             # <<<<<<<<<<<<<<
@@ -2612,7 +2583,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
               if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_decay, __pyx_t_14) < 0) __PYX_ERR(0, 92, __pyx_L1_error)
               __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-              /* "cimulate_trial.pyx":91
+              /* "analysis/cimulate_trial.pyx":91
  * 
  *                         for rep in range(n_repetitions):
  *                             retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[new_item],             # <<<<<<<<<<<<<<
@@ -2675,7 +2646,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
               __Pyx_XDECREF_SET(__pyx_v_succesful, __pyx_t_1);
               __pyx_t_1 = 0;
 
-              /* "cimulate_trial.pyx":94
+              /* "analysis/cimulate_trial.pyx":94
  *                                                                             f=f, thresh=thresh, noise=noise, decay=decay)
  * 
  *                             cumul_time += retrieval * 1000             # <<<<<<<<<<<<<<
@@ -2695,7 +2666,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
               __pyx_v_cumul_time = __pyx_t_15;
             }
 
-            /* "cimulate_trial.pyx":96
+            /* "analysis/cimulate_trial.pyx":96
  *                             cumul_time += retrieval * 1000
  * 
  *                         if succesful:             # <<<<<<<<<<<<<<
@@ -2706,7 +2677,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
             __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_succesful); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 96, __pyx_L1_error)
             if (__pyx_t_10) {
 
-              /* "cimulate_trial.pyx":97
+              /* "analysis/cimulate_trial.pyx":97
  * 
  *                         if succesful:
  *                             locations_memorized.append(new_item)             # <<<<<<<<<<<<<<
@@ -2715,7 +2686,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
               __pyx_t_21 = __Pyx_PyList_Append(__pyx_v_locations_memorized, __pyx_v_new_item); if (unlikely(__pyx_t_21 == ((int)-1))) __PYX_ERR(0, 97, __pyx_L1_error)
 
-              /* "cimulate_trial.pyx":96
+              /* "analysis/cimulate_trial.pyx":96
  *                             cumul_time += retrieval * 1000
  * 
  *                         if succesful:             # <<<<<<<<<<<<<<
@@ -2724,7 +2695,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
             }
 
-            /* "cimulate_trial.pyx":85
+            /* "analysis/cimulate_trial.pyx":85
  *                     num_fixations += 1
  * 
  *                     if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2733,7 +2704,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
           }
 
-          /* "cimulate_trial.pyx":72
+          /* "analysis/cimulate_trial.pyx":72
  *             for ki in range(k_items):
  * 
  *                 if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2743,7 +2714,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
         }
       }
 
-      /* "cimulate_trial.pyx":60
+      /* "analysis/cimulate_trial.pyx":60
  * 
  * 
  *         if sh.example_grid_visible(cumul_time, visible_time, occlude_time):             # <<<<<<<<<<<<<<
@@ -2752,7 +2723,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
     }
 
-    /* "cimulate_trial.pyx":100
+    /* "analysis/cimulate_trial.pyx":100
  * 
  * 
  *         if len(locations_memorized) > 0:             # <<<<<<<<<<<<<<
@@ -2764,7 +2735,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
     __pyx_t_10 = ((__pyx_t_7 > 0) != 0);
     if (__pyx_t_10) {
 
-      /* "cimulate_trial.pyx":102
+      /* "analysis/cimulate_trial.pyx":102
  *         if len(locations_memorized) > 0:
  *             # Shift eyes to resource grid
  *             new_location = (1920, 1160)             # <<<<<<<<<<<<<<
@@ -2774,7 +2745,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_INCREF(__pyx_tuple__4);
       __Pyx_XDECREF_SET(__pyx_v_new_location, __pyx_tuple__4);
 
-      /* "cimulate_trial.pyx":103
+      /* "analysis/cimulate_trial.pyx":103
  *             # Shift eyes to resource grid
  *             new_location = (1920, 1160)
  *             cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
@@ -2819,7 +2790,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_cumul_time = __pyx_t_15;
 
-      /* "cimulate_trial.pyx":104
+      /* "analysis/cimulate_trial.pyx":104
  *             new_location = (1920, 1160)
  *             cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *             eye_location = new_location             # <<<<<<<<<<<<<<
@@ -2829,7 +2800,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       __Pyx_INCREF(__pyx_v_new_location);
       __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
 
-      /* "cimulate_trial.pyx":105
+      /* "analysis/cimulate_trial.pyx":105
  *             cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *             eye_location = new_location
  *             num_fixations += 1             # <<<<<<<<<<<<<<
@@ -2838,7 +2809,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
       __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
 
-      /* "cimulate_trial.pyx":108
+      /* "analysis/cimulate_trial.pyx":108
  * 
  *             # Run through each location in memory
  *             for k in locations_memorized:             # <<<<<<<<<<<<<<
@@ -2858,7 +2829,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
         __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_13);
         __pyx_t_13 = 0;
 
-        /* "cimulate_trial.pyx":109
+        /* "analysis/cimulate_trial.pyx":109
  *             # Run through each location in memory
  *             for k in locations_memorized:
  *                 found_match = False             # <<<<<<<<<<<<<<
@@ -2867,7 +2838,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
         __pyx_v_found_match = 0;
 
-        /* "cimulate_trial.pyx":113
+        /* "analysis/cimulate_trial.pyx":113
  *                 # Run through each item in the resource grid and try
  *                 # to match it to memory
  *                 for l, r_loc in enumerate(resource_locs):             # <<<<<<<<<<<<<<
@@ -2925,7 +2896,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __pyx_t_13 = __pyx_t_1;
           __pyx_t_1 = 0;
 
-          /* "cimulate_trial.pyx":115
+          /* "analysis/cimulate_trial.pyx":115
  *                 for l, r_loc in enumerate(resource_locs):
  *                     # Move eyes to new item in resource grid
  *                     new_location = r_loc             # <<<<<<<<<<<<<<
@@ -2935,7 +2906,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_r_loc);
           __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_v_r_loc);
 
-          /* "cimulate_trial.pyx":116
+          /* "analysis/cimulate_trial.pyx":116
  *                     # Move eyes to new item in resource grid
  *                     new_location = r_loc
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
@@ -2980,7 +2951,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":117
+          /* "analysis/cimulate_trial.pyx":117
  *                     new_location = r_loc
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location             # <<<<<<<<<<<<<<
@@ -2990,7 +2961,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_new_location);
           __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
 
-          /* "cimulate_trial.pyx":118
+          /* "analysis/cimulate_trial.pyx":118
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location
  *                     num_fixations += 1             # <<<<<<<<<<<<<<
@@ -2999,7 +2970,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
           __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
 
-          /* "cimulate_trial.pyx":121
+          /* "analysis/cimulate_trial.pyx":121
  * 
  *                     # Try to match item to memory
  *                     retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[k],             # <<<<<<<<<<<<<<
@@ -3024,7 +2995,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __pyx_t_2 = 0;
           __pyx_t_1 = 0;
 
-          /* "cimulate_trial.pyx":122
+          /* "analysis/cimulate_trial.pyx":122
  *                     # Try to match item to memory
  *                     retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[k],
  *                                                                       f=f, thresh=thresh, noise=noise, decay=decay)             # <<<<<<<<<<<<<<
@@ -3050,7 +3021,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_decay, __pyx_t_2) < 0) __PYX_ERR(0, 122, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-          /* "cimulate_trial.pyx":121
+          /* "analysis/cimulate_trial.pyx":121
  * 
  *                     # Try to match item to memory
  *                     retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[k],             # <<<<<<<<<<<<<<
@@ -3113,7 +3084,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_XDECREF_SET(__pyx_v_succesful, __pyx_t_14);
           __pyx_t_14 = 0;
 
-          /* "cimulate_trial.pyx":123
+          /* "analysis/cimulate_trial.pyx":123
  *                     retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[k],
  *                                                                       f=f, thresh=thresh, noise=noise, decay=decay)
  *                     activated_at[k].append(cumul_time / 1000)             # <<<<<<<<<<<<<<
@@ -3128,7 +3099,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-          /* "cimulate_trial.pyx":124
+          /* "analysis/cimulate_trial.pyx":124
  *                                                                       f=f, thresh=thresh, noise=noise, decay=decay)
  *                     activated_at[k].append(cumul_time / 1000)
  *                     cumul_time += retrieval * 1000             # <<<<<<<<<<<<<<
@@ -3147,7 +3118,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":127
+          /* "analysis/cimulate_trial.pyx":127
  * 
  *                     # If memory matches viewed item
  *                     if l == k:             # <<<<<<<<<<<<<<
@@ -3159,7 +3130,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           if (__pyx_t_10) {
 
-            /* "cimulate_trial.pyx":128
+            /* "analysis/cimulate_trial.pyx":128
  *                     # If memory matches viewed item
  *                     if l == k:
  *                         found_match = True             # <<<<<<<<<<<<<<
@@ -3168,7 +3139,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
             __pyx_v_found_match = 1;
 
-            /* "cimulate_trial.pyx":127
+            /* "analysis/cimulate_trial.pyx":127
  * 
  *                     # If memory matches viewed item
  *                     if l == k:             # <<<<<<<<<<<<<<
@@ -3177,7 +3148,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
           }
 
-          /* "cimulate_trial.pyx":113
+          /* "analysis/cimulate_trial.pyx":113
  *                 # Run through each item in the resource grid and try
  *                 # to match it to memory
  *                 for l, r_loc in enumerate(resource_locs):             # <<<<<<<<<<<<<<
@@ -3188,7 +3159,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-        /* "cimulate_trial.pyx":130
+        /* "analysis/cimulate_trial.pyx":130
  *                         found_match = True
  * 
  *                 if succesful and found_match:             # <<<<<<<<<<<<<<
@@ -3207,7 +3178,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
         __pyx_L36_bool_binop_done:;
         if (__pyx_t_10) {
 
-          /* "cimulate_trial.pyx":132
+          /* "analysis/cimulate_trial.pyx":132
  *                 if succesful and found_match:
  *                     # Move mouse to resource grid
  *                     new_mouse_location = resource_locs[k]             # <<<<<<<<<<<<<<
@@ -3219,7 +3190,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_XDECREF_SET(__pyx_v_new_mouse_location, __pyx_t_13);
           __pyx_t_13 = 0;
 
-          /* "cimulate_trial.pyx":133
+          /* "analysis/cimulate_trial.pyx":133
  *                     # Move mouse to resource grid
  *                     new_mouse_location = resource_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
@@ -3242,7 +3213,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_GIVEREF(__pyx_v_new_mouse_location);
           PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_new_mouse_location);
 
-          /* "cimulate_trial.pyx":134
+          /* "analysis/cimulate_trial.pyx":134
  *                     new_mouse_location = resource_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
  *                                                       a=intercept_mouse, b=coefficient_mouse)             # <<<<<<<<<<<<<<
@@ -3260,7 +3231,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_b, __pyx_t_14) < 0) __PYX_ERR(0, 134, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-          /* "cimulate_trial.pyx":133
+          /* "analysis/cimulate_trial.pyx":133
  *                     # Move mouse to resource grid
  *                     new_mouse_location = resource_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
@@ -3280,7 +3251,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":135
+          /* "analysis/cimulate_trial.pyx":135
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
  *                                                       a=intercept_mouse, b=coefficient_mouse)
  *                     mouse_location = new_mouse_location             # <<<<<<<<<<<<<<
@@ -3290,7 +3261,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_new_mouse_location);
           __Pyx_DECREF_SET(__pyx_v_mouse_location, __pyx_v_new_mouse_location);
 
-          /* "cimulate_trial.pyx":138
+          /* "analysis/cimulate_trial.pyx":138
  * 
  *                     # Click on item
  *                     cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000             # <<<<<<<<<<<<<<
@@ -3318,7 +3289,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":141
+          /* "analysis/cimulate_trial.pyx":141
  * 
  *                     # Move eyes to workspace
  *                     new_location = workspace_locs[k]             # <<<<<<<<<<<<<<
@@ -3330,7 +3301,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_t_14);
           __pyx_t_14 = 0;
 
-          /* "cimulate_trial.pyx":142
+          /* "analysis/cimulate_trial.pyx":142
  *                     # Move eyes to workspace
  *                     new_location = workspace_locs[k]
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
@@ -3375,7 +3346,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":143
+          /* "analysis/cimulate_trial.pyx":143
  *                     new_location = workspace_locs[k]
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location             # <<<<<<<<<<<<<<
@@ -3385,7 +3356,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_new_location);
           __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
 
-          /* "cimulate_trial.pyx":144
+          /* "analysis/cimulate_trial.pyx":144
  *                     cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
  *                     eye_location = new_location
  *                     num_fixations += 1             # <<<<<<<<<<<<<<
@@ -3394,7 +3365,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
           __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
 
-          /* "cimulate_trial.pyx":147
+          /* "analysis/cimulate_trial.pyx":147
  * 
  *                     # Drag item to workspace
  *                     new_mouse_location = workspace_locs[k]             # <<<<<<<<<<<<<<
@@ -3406,7 +3377,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF_SET(__pyx_v_new_mouse_location, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "cimulate_trial.pyx":148
+          /* "analysis/cimulate_trial.pyx":148
  *                     # Drag item to workspace
  *                     new_mouse_location = workspace_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
@@ -3429,7 +3400,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_GIVEREF(__pyx_v_new_mouse_location);
           PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_new_mouse_location);
 
-          /* "cimulate_trial.pyx":149
+          /* "analysis/cimulate_trial.pyx":149
  *                     new_mouse_location = workspace_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
  *                                                       a=intercept_mouse, b=coefficient_mouse)             # <<<<<<<<<<<<<<
@@ -3447,7 +3418,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_b, __pyx_t_2) < 0) __PYX_ERR(0, 149, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-          /* "cimulate_trial.pyx":148
+          /* "analysis/cimulate_trial.pyx":148
  *                     # Drag item to workspace
  *                     new_mouse_location = workspace_locs[k]
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
@@ -3467,7 +3438,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":150
+          /* "analysis/cimulate_trial.pyx":150
  *                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
  *                                                       a=intercept_mouse, b=coefficient_mouse)
  *                     mouse_location = new_mouse_location             # <<<<<<<<<<<<<<
@@ -3477,7 +3448,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_INCREF(__pyx_v_new_mouse_location);
           __Pyx_DECREF_SET(__pyx_v_mouse_location, __pyx_v_new_mouse_location);
 
-          /* "cimulate_trial.pyx":153
+          /* "analysis/cimulate_trial.pyx":153
  * 
  *                     # Release click
  *                     cumul_time += 150 * random.gauss(1, .1)             # <<<<<<<<<<<<<<
@@ -3505,620 +3476,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_v_cumul_time = __pyx_t_15;
 
-          /* "cimulate_trial.pyx":157
- * 
- *                     # DETERMINE WHETHER MISTAKE WAS MADE
- *                     if random.uniform(0, 1) > error_probability:             # <<<<<<<<<<<<<<
- *                         # Succesfully placed
- *                         remaining_items -= 1
- */
-          __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_uniform); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_5);
-          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_5 = PyFloat_FromDouble(__pyx_v_error_probability); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_5);
-          __pyx_t_13 = PyObject_RichCompare(__pyx_t_2, __pyx_t_5, Py_GT); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 157, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-          if (__pyx_t_10) {
-
-            /* "cimulate_trial.pyx":159
- *                     if random.uniform(0, 1) > error_probability:
- *                         # Succesfully placed
- *                         remaining_items -= 1             # <<<<<<<<<<<<<<
- *                         placed_locs.append(k)
- *                         locations_memorized.remove(k)
- */
-            __pyx_t_13 = __Pyx_PyInt_SubtractObjC(__pyx_v_remaining_items, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 159, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF_SET(__pyx_v_remaining_items, __pyx_t_13);
-            __pyx_t_13 = 0;
-
-            /* "cimulate_trial.pyx":160
- *                         # Succesfully placed
- *                         remaining_items -= 1
- *                         placed_locs.append(k)             # <<<<<<<<<<<<<<
- *                         locations_memorized.remove(k)
- *                     else:
- */
-            __pyx_t_21 = __Pyx_PyList_Append(__pyx_v_placed_locs, __pyx_v_k); if (unlikely(__pyx_t_21 == ((int)-1))) __PYX_ERR(0, 160, __pyx_L1_error)
-
-            /* "cimulate_trial.pyx":161
- *                         remaining_items -= 1
- *                         placed_locs.append(k)
- *                         locations_memorized.remove(k)             # <<<<<<<<<<<<<<
- *                     else:
- *                         # =====================================================
- */
-            if (unlikely(!__pyx_v_locations_memorized)) { __Pyx_RaiseUnboundLocalError("locations_memorized"); __PYX_ERR(0, 161, __pyx_L1_error) }
-            __pyx_t_13 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_remove, __pyx_v_locations_memorized, __pyx_v_k); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 161, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-
-            /* "cimulate_trial.pyx":157
- * 
- *                     # DETERMINE WHETHER MISTAKE WAS MADE
- *                     if random.uniform(0, 1) > error_probability:             # <<<<<<<<<<<<<<
- *                         # Succesfully placed
- *                         remaining_items -= 1
- */
-            goto __pyx_L38;
-          }
-
-          /* "cimulate_trial.pyx":167
- *                         # =====================================================
- *                         # Item placed incorrectly, right-click item to remove
- *                         cumul_time += 150             # <<<<<<<<<<<<<<
- * 
- *                         # Shift eyes to the item on the example grid
- */
-          /*else*/ {
-            __pyx_v_cumul_time = (__pyx_v_cumul_time + 150.0);
-
-            /* "cimulate_trial.pyx":170
- * 
- *                         # Shift eyes to the item on the example grid
- *                         new_location = example_locs[k]             # <<<<<<<<<<<<<<
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- */
-            __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_example_locs, __pyx_v_k); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 170, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_t_13);
-            __pyx_t_13 = 0;
-
-            /* "cimulate_trial.pyx":171
- *                         # Shift eyes to the item on the example grid
- *                         new_location = example_locs[k]
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
- *                         eye_location = new_location
- *                         num_fixations += 1
- */
-            __pyx_t_13 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sh); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_estim_saccade_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_INCREF(__pyx_v_eye_location);
-            __Pyx_GIVEREF(__pyx_v_eye_location);
-            PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_eye_location);
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_GIVEREF(__pyx_v_new_location);
-            PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_new_location);
-            __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_intercept); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_a, __pyx_t_14) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_coefficient); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_b, __pyx_t_14) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":172
- *                         new_location = example_locs[k]
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location             # <<<<<<<<<<<<<<
- *                         num_fixations += 1
- *                         num_crossings +=1
- */
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
-
-            /* "cimulate_trial.pyx":173
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- *                         num_fixations += 1             # <<<<<<<<<<<<<<
- *                         num_crossings +=1
- * 
- */
-            __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
-
-            /* "cimulate_trial.pyx":174
- *                         eye_location = new_location
- *                         num_fixations += 1
- *                         num_crossings +=1             # <<<<<<<<<<<<<<
- * 
- *                         # Sample item again
- */
-            __pyx_v_num_crossings = (__pyx_v_num_crossings + 1);
-
-            /* "cimulate_trial.pyx":177
- * 
- *                         # Sample item again
- *                         cumul_time += 50 * random.gauss(1., .1)             # <<<<<<<<<<<<<<
- *                         activated_at[k].append(cumul_time / 1000)
- * 
- */
-            __pyx_t_1 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_random); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_gauss); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_13 = PyNumber_Multiply(__pyx_int_50, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_14); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":178
- *                         # Sample item again
- *                         cumul_time += 50 * random.gauss(1., .1)
- *                         activated_at[k].append(cumul_time / 1000)             # <<<<<<<<<<<<<<
- * 
- *                         # Move eyes to item in resource grid
- */
-            __pyx_t_14 = __Pyx_PyObject_GetItem(__pyx_v_activated_at, __pyx_v_k); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 178, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_13 = PyFloat_FromDouble((__pyx_v_cumul_time / 1000.0)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 178, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __pyx_t_21 = __Pyx_PyObject_Append(__pyx_t_14, __pyx_t_13); if (unlikely(__pyx_t_21 == ((int)-1))) __PYX_ERR(0, 178, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-
-            /* "cimulate_trial.pyx":181
- * 
- *                         # Move eyes to item in resource grid
- *                         new_location = r_loc             # <<<<<<<<<<<<<<
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- */
-            if (unlikely(!__pyx_v_r_loc)) { __Pyx_RaiseUnboundLocalError("r_loc"); __PYX_ERR(0, 181, __pyx_L1_error) }
-            __Pyx_INCREF(__pyx_v_r_loc);
-            __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_v_r_loc);
-
-            /* "cimulate_trial.pyx":182
- *                         # Move eyes to item in resource grid
- *                         new_location = r_loc
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
- *                         eye_location = new_location
- *                         num_fixations += 1
- */
-            __pyx_t_13 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_sh); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_estim_saccade_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyTuple_New(2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_INCREF(__pyx_v_eye_location);
-            __Pyx_GIVEREF(__pyx_v_eye_location);
-            PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_v_eye_location);
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_GIVEREF(__pyx_v_new_location);
-            PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_v_new_location);
-            __pyx_t_5 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __pyx_t_2 = PyFloat_FromDouble(__pyx_v_intercept); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_a, __pyx_t_2) < 0) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = PyFloat_FromDouble(__pyx_v_coefficient); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_b, __pyx_t_2) < 0) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_14, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_5); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":183
- *                         new_location = r_loc
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location             # <<<<<<<<<<<<<<
- *                         num_fixations += 1
- * 
- */
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
-
-            /* "cimulate_trial.pyx":184
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- *                         num_fixations += 1             # <<<<<<<<<<<<<<
- * 
- *                         # Move mouse to resource grid
- */
-            __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
-
-            /* "cimulate_trial.pyx":187
- * 
- *                         # Move mouse to resource grid
- *                         new_mouse_location = resource_locs[k]             # <<<<<<<<<<<<<<
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- */
-            __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_v_resource_locs, __pyx_v_k); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 187, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_DECREF_SET(__pyx_v_new_mouse_location, __pyx_t_5);
-            __pyx_t_5 = 0;
-
-            /* "cimulate_trial.pyx":188
- *                         # Move mouse to resource grid
- *                         new_mouse_location = resource_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location
- */
-            __pyx_t_5 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sh); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_estim_mouse_time); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_INCREF(__pyx_v_mouse_location);
-            __Pyx_GIVEREF(__pyx_v_mouse_location);
-            PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_mouse_location);
-            __Pyx_INCREF(__pyx_v_new_mouse_location);
-            __Pyx_GIVEREF(__pyx_v_new_mouse_location);
-            PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_new_mouse_location);
-
-            /* "cimulate_trial.pyx":189
- *                         new_mouse_location = resource_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)             # <<<<<<<<<<<<<<
- *                         mouse_location = new_mouse_location
- * 
- */
-            __pyx_t_14 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 189, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_1 = PyFloat_FromDouble(__pyx_v_intercept_mouse); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            if (PyDict_SetItem(__pyx_t_14, __pyx_n_s_a, __pyx_t_1) < 0) __PYX_ERR(0, 189, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_1 = PyFloat_FromDouble(__pyx_v_coefficient_mouse); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            if (PyDict_SetItem(__pyx_t_14, __pyx_n_s_b, __pyx_t_1) < 0) __PYX_ERR(0, 189, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-            /* "cimulate_trial.pyx":188
- *                         # Move mouse to resource grid
- *                         new_mouse_location = resource_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location
- */
-            __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_14); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":190
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location             # <<<<<<<<<<<<<<
- * 
- *                         # Click on item
- */
-            __Pyx_INCREF(__pyx_v_new_mouse_location);
-            __Pyx_DECREF_SET(__pyx_v_mouse_location, __pyx_v_new_mouse_location);
-
-            /* "cimulate_trial.pyx":193
- * 
- *                         # Click on item
- *                         cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000             # <<<<<<<<<<<<<<
- * 
- *                         # Move eyes to workspace
- */
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_random); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_gauss); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_5 = PyNumber_Multiply(__pyx_int_150, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_t_14, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":196
- * 
- *                         # Move eyes to workspace
- *                         new_location = workspace_locs[k]             # <<<<<<<<<<<<<<
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- */
-            __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_workspace_locs, __pyx_v_k); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF_SET(__pyx_v_new_location, __pyx_t_1);
-            __pyx_t_1 = 0;
-
-            /* "cimulate_trial.pyx":197
- *                         # Move eyes to workspace
- *                         new_location = workspace_locs[k]
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)             # <<<<<<<<<<<<<<
- *                         eye_location = new_location
- *                         num_fixations += 1
- */
-            __pyx_t_1 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_sh); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_estim_saccade_time); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_INCREF(__pyx_v_eye_location);
-            __Pyx_GIVEREF(__pyx_v_eye_location);
-            PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_eye_location);
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_GIVEREF(__pyx_v_new_location);
-            PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_new_location);
-            __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __pyx_t_13 = PyFloat_FromDouble(__pyx_v_intercept); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_a, __pyx_t_13) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_13 = PyFloat_FromDouble(__pyx_v_coefficient); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_b, __pyx_t_13) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 197, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":198
- *                         new_location = workspace_locs[k]
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location             # <<<<<<<<<<<<<<
- *                         num_fixations += 1
- * 
- */
-            __Pyx_INCREF(__pyx_v_new_location);
-            __Pyx_DECREF_SET(__pyx_v_eye_location, __pyx_v_new_location);
-
-            /* "cimulate_trial.pyx":199
- *                         cumul_time += sh.estim_saccade_time(eye_location, new_location, a=intercept, b=coefficient)
- *                         eye_location = new_location
- *                         num_fixations += 1             # <<<<<<<<<<<<<<
- * 
- *                         # Drag item to workspace
- */
-            __pyx_v_num_fixations = (__pyx_v_num_fixations + 1);
-
-            /* "cimulate_trial.pyx":202
- * 
- *                         # Drag item to workspace
- *                         new_mouse_location = workspace_locs[k]             # <<<<<<<<<<<<<<
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- */
-            __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_workspace_locs, __pyx_v_k); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 202, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF_SET(__pyx_v_new_mouse_location, __pyx_t_2);
-            __pyx_t_2 = 0;
-
-            /* "cimulate_trial.pyx":203
- *                         # Drag item to workspace
- *                         new_mouse_location = workspace_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location
- */
-            __pyx_t_2 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_sh); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_estim_mouse_time); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_1);
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_13);
-            __Pyx_INCREF(__pyx_v_mouse_location);
-            __Pyx_GIVEREF(__pyx_v_mouse_location);
-            PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_v_mouse_location);
-            __Pyx_INCREF(__pyx_v_new_mouse_location);
-            __Pyx_GIVEREF(__pyx_v_new_mouse_location);
-            PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_v_new_mouse_location);
-
-            /* "cimulate_trial.pyx":204
- *                         new_mouse_location = workspace_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)             # <<<<<<<<<<<<<<
- *                         mouse_location = new_mouse_location
- * 
- */
-            __pyx_t_5 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 204, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_intercept_mouse); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 204, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_a, __pyx_t_14) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyFloat_FromDouble(__pyx_v_coefficient_mouse); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 204, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_b, __pyx_t_14) < 0) __PYX_ERR(0, 204, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-
-            /* "cimulate_trial.pyx":203
- *                         # Drag item to workspace
- *                         new_mouse_location = workspace_locs[k]
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,             # <<<<<<<<<<<<<<
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location
- */
-            __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_13, __pyx_t_5); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_5); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 203, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":205
- *                         cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
- *                                                           a=intercept_mouse, b=coefficient_mouse)
- *                         mouse_location = new_mouse_location             # <<<<<<<<<<<<<<
- * 
- *                         # Release click
- */
-            __Pyx_INCREF(__pyx_v_new_mouse_location);
-            __Pyx_DECREF_SET(__pyx_v_mouse_location, __pyx_v_new_mouse_location);
-
-            /* "cimulate_trial.pyx":208
- * 
- *                         # Release click
- *                         cumul_time += 150 * random.gauss(1, .1)             # <<<<<<<<<<<<<<
- * 
- *                         # Succesfully placed
- */
-            __pyx_t_5 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_5);
-            __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_random); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_gauss); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_2 = PyNumber_Multiply(__pyx_int_150, __pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_2);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_t_14 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-            __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-            __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_14); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 208, __pyx_L1_error)
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-            __pyx_v_cumul_time = __pyx_t_15;
-
-            /* "cimulate_trial.pyx":211
- * 
- *                         # Succesfully placed
- *                         remaining_items -= 1             # <<<<<<<<<<<<<<
- *                         placed_locs.append(k)
- *                         locations_memorized.remove(k)
- */
-            __pyx_t_14 = __Pyx_PyInt_SubtractObjC(__pyx_v_remaining_items, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 211, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF_SET(__pyx_v_remaining_items, __pyx_t_14);
-            __pyx_t_14 = 0;
-
-            /* "cimulate_trial.pyx":212
- *                         # Succesfully placed
- *                         remaining_items -= 1
- *                         placed_locs.append(k)             # <<<<<<<<<<<<<<
- *                         locations_memorized.remove(k)
- * 
- */
-            __pyx_t_21 = __Pyx_PyList_Append(__pyx_v_placed_locs, __pyx_v_k); if (unlikely(__pyx_t_21 == ((int)-1))) __PYX_ERR(0, 212, __pyx_L1_error)
-
-            /* "cimulate_trial.pyx":213
- *                         remaining_items -= 1
- *                         placed_locs.append(k)
- *                         locations_memorized.remove(k)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-            if (unlikely(!__pyx_v_locations_memorized)) { __Pyx_RaiseUnboundLocalError("locations_memorized"); __PYX_ERR(0, 213, __pyx_L1_error) }
-            __pyx_t_14 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_remove, __pyx_v_locations_memorized, __pyx_v_k); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 213, __pyx_L1_error)
-            __Pyx_GOTREF(__pyx_t_14);
-            __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-          }
-          __pyx_L38:;
-
-          /* "cimulate_trial.pyx":130
+          /* "analysis/cimulate_trial.pyx":130
  *                         found_match = True
  * 
  *                 if succesful and found_match:             # <<<<<<<<<<<<<<
@@ -4127,7 +3485,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
         }
 
-        /* "cimulate_trial.pyx":108
+        /* "analysis/cimulate_trial.pyx":108
  * 
  *             # Run through each location in memory
  *             for k in locations_memorized:             # <<<<<<<<<<<<<<
@@ -4137,7 +3495,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       }
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "cimulate_trial.pyx":100
+      /* "analysis/cimulate_trial.pyx":100
  * 
  * 
  *         if len(locations_memorized) > 0:             # <<<<<<<<<<<<<<
@@ -4147,7 +3505,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
       goto __pyx_L27;
     }
 
-    /* "cimulate_trial.pyx":220
+    /* "analysis/cimulate_trial.pyx":220
  *             # In fact participants will likely be checking their work, but
  *             # not necessary to model here
  *             cumul_time += 10             # <<<<<<<<<<<<<<
@@ -4160,7 +3518,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
     __pyx_L27:;
   }
 
-  /* "cimulate_trial.pyx":224
+  /* "analysis/cimulate_trial.pyx":224
  *     # Code would check for finished trial every 500ms to conserve time,
  *     # so we add a random value between 1-500ms
  *     cumul_time += int(round(random.uniform(1, 500)))             # <<<<<<<<<<<<<<
@@ -4169,57 +3527,57 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
  */
   __pyx_t_3 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_random); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 224, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uniform); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_random); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 224, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_uniform); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_round, __pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 224, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_round, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Int(__pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 224, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_15 = __pyx_PyFloat_AsFloat(__pyx_t_5); if (unlikely((__pyx_t_15 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_cumul_time = __pyx_t_15;
 
-  /* "cimulate_trial.pyx":227
+  /* "analysis/cimulate_trial.pyx":227
  * 
  * 
  *     return num_crossings, cumul_time, num_fixations             # <<<<<<<<<<<<<<
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_num_crossings); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_num_crossings); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_14 = PyFloat_FromDouble(__pyx_v_cumul_time); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 227, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
   __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_num_fixations); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 227, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_13 = PyTuple_New(3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_5);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_14);
-  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_14);
+  PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_3);
-  PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_t_3);
-  __pyx_t_2 = 0;
-  __pyx_t_14 = 0;
-  __pyx_t_3 = 0;
-  __pyx_r = __pyx_t_5;
+  PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_3);
   __pyx_t_5 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_3 = 0;
+  __pyx_r = __pyx_t_13;
+  __pyx_t_13 = 0;
   goto __pyx_L0;
 
-  /* "cimulate_trial.pyx":22
+  /* "analysis/cimulate_trial.pyx":22
  * import cimulation_helper as sh
  * 
  * def simulate_trial(dict tracking_dict, int k_items,             # <<<<<<<<<<<<<<
@@ -4237,7 +3595,7 @@ static PyObject *__pyx_pf_14cimulate_trial_simulate_trial(CYTHON_UNUSED PyObject
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_24);
-  __Pyx_AddTraceback("cimulate_trial.simulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("analysis.cimulate_trial.simulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_timeout);
@@ -4314,10 +3672,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_TIMEOUT, __pyx_k_TIMEOUT, sizeof(__pyx_k_TIMEOUT), 0, 0, 1, 1},
   {&__pyx_n_s_a, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 1, 1},
   {&__pyx_n_s_activated_at, __pyx_k_activated_at, sizeof(__pyx_k_activated_at), 0, 0, 1, 1},
+  {&__pyx_n_s_analysis_cimulate_trial, __pyx_k_analysis_cimulate_trial, sizeof(__pyx_k_analysis_cimulate_trial), 0, 0, 1, 1},
   {&__pyx_n_s_append, __pyx_k_append, sizeof(__pyx_k_append), 0, 0, 1, 1},
   {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {&__pyx_n_s_choice, __pyx_k_choice, sizeof(__pyx_k_choice), 0, 0, 1, 1},
-  {&__pyx_n_s_cimulate_trial, __pyx_k_cimulate_trial, sizeof(__pyx_k_cimulate_trial), 0, 0, 1, 1},
   {&__pyx_kp_s_cimulate_trial_pyx, __pyx_k_cimulate_trial_pyx, sizeof(__pyx_k_cimulate_trial_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_cimulation_helper, __pyx_k_cimulation_helper, sizeof(__pyx_k_cimulation_helper), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
@@ -4325,6 +3683,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_coefficient_mouse, __pyx_k_coefficient_mouse, sizeof(__pyx_k_coefficient_mouse), 0, 0, 1, 1},
   {&__pyx_n_s_compute_dme_retrieval, __pyx_k_compute_dme_retrieval, sizeof(__pyx_k_compute_dme_retrieval), 0, 0, 1, 1},
   {&__pyx_n_s_constants, __pyx_k_constants, sizeof(__pyx_k_constants), 0, 0, 1, 1},
+  {&__pyx_n_s_constants_analysis, __pyx_k_constants_analysis, sizeof(__pyx_k_constants_analysis), 0, 0, 1, 1},
   {&__pyx_n_s_cumul_time, __pyx_k_cumul_time, sizeof(__pyx_k_cumul_time), 0, 0, 1, 1},
   {&__pyx_n_s_decay, __pyx_k_decay, sizeof(__pyx_k_decay), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
@@ -4364,7 +3723,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_random, __pyx_k_random, sizeof(__pyx_k_random), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_remaining_items, __pyx_k_remaining_items, sizeof(__pyx_k_remaining_items), 0, 0, 1, 1},
-  {&__pyx_n_s_remove, __pyx_k_remove, sizeof(__pyx_k_remove), 0, 0, 1, 1},
   {&__pyx_n_s_rep, __pyx_k_rep, sizeof(__pyx_k_rep), 0, 0, 1, 1},
   {&__pyx_n_s_resource_locs, __pyx_k_resource_locs, sizeof(__pyx_k_resource_locs), 0, 0, 1, 1},
   {&__pyx_n_s_retrieval, __pyx_k_retrieval, sizeof(__pyx_k_retrieval), 0, 0, 1, 1},
@@ -4396,7 +3754,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "cimulate_trial.pyx":49
+  /* "analysis/cimulate_trial.pyx":49
  * 
  *     # Init eye location in center of screen
  *     eye_location = (1280, 720)             # <<<<<<<<<<<<<<
@@ -4407,7 +3765,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "cimulate_trial.pyx":62
+  /* "analysis/cimulate_trial.pyx":62
  *         if sh.example_grid_visible(cumul_time, visible_time, occlude_time):
  *             # Shift eyes to center of example grid
  *             new_location = (640, 720)             # <<<<<<<<<<<<<<
@@ -4418,7 +3776,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "cimulate_trial.pyx":88
+  /* "analysis/cimulate_trial.pyx":88
  *                         # Store item in memory
  *                         activated_at[new_item].append(cumul_time / 1000)
  *                         cumul_time += 50 * random.gauss(1, .01)             # <<<<<<<<<<<<<<
@@ -4429,7 +3787,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "cimulate_trial.pyx":102
+  /* "analysis/cimulate_trial.pyx":102
  *         if len(locations_memorized) > 0:
  *             # Shift eyes to resource grid
  *             new_location = (1920, 1160)             # <<<<<<<<<<<<<<
@@ -4440,7 +3798,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "cimulate_trial.pyx":138
+  /* "analysis/cimulate_trial.pyx":138
  * 
  *                     # Click on item
  *                     cumul_time += 150 * random.gauss(1, .1) # Gray & Boehm-Davis, 2000             # <<<<<<<<<<<<<<
@@ -4451,50 +3809,28 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "cimulate_trial.pyx":157
- * 
- *                     # DETERMINE WHETHER MISTAKE WAS MADE
- *                     if random.uniform(0, 1) > error_probability:             # <<<<<<<<<<<<<<
- *                         # Succesfully placed
- *                         remaining_items -= 1
- */
-  __pyx_tuple__6 = PyTuple_Pack(2, __pyx_int_0, __pyx_int_1); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 157, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
-
-  /* "cimulate_trial.pyx":177
- * 
- *                         # Sample item again
- *                         cumul_time += 50 * random.gauss(1., .1)             # <<<<<<<<<<<<<<
- *                         activated_at[k].append(cumul_time / 1000)
- * 
- */
-  __pyx_tuple__7 = PyTuple_Pack(2, __pyx_float_1_, __pyx_float__1); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 177, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
-
-  /* "cimulate_trial.pyx":224
+  /* "analysis/cimulate_trial.pyx":224
  *     # Code would check for finished trial every 500ms to conserve time,
  *     # so we add a random value between 1-500ms
  *     cumul_time += int(round(random.uniform(1, 500)))             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_tuple__8 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_500); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 224, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_tuple__6 = PyTuple_Pack(2, __pyx_int_1, __pyx_int_500); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 224, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "cimulate_trial.pyx":22
+  /* "analysis/cimulate_trial.pyx":22
  * import cimulation_helper as sh
  * 
  * def simulate_trial(dict tracking_dict, int k_items,             # <<<<<<<<<<<<<<
  *                    int visible_time, int occlude_time,
  *                    float intercept, float coefficient,
  */
-  __pyx_tuple__9 = PyTuple_Pack(40, __pyx_n_s_tracking_dict, __pyx_n_s_k_items, __pyx_n_s_visible_time, __pyx_n_s_occlude_time, __pyx_n_s_intercept, __pyx_n_s_coefficient, __pyx_n_s_intercept_mouse, __pyx_n_s_coefficient_mouse, __pyx_n_s_n_repetitions, __pyx_n_s_f, __pyx_n_s_thresh, __pyx_n_s_noise, __pyx_n_s_decay, __pyx_n_s_error_probability, __pyx_n_s_cumul_time, __pyx_n_s_num_crossings, __pyx_n_s_num_fixations, __pyx_n_s_timeout, __pyx_n_s_stimuli_per_trial, __pyx_n_s_remaining_items, __pyx_n_s_example_locs, __pyx_n_s_workspace_locs, __pyx_n_s_resource_locs, __pyx_n_s_placed_locs, __pyx_n_s_activated_at, __pyx_n_s_eye_location, __pyx_n_s_mouse_location, __pyx_n_s_new_location, __pyx_n_s_locations_memorized, __pyx_n_s_ki, __pyx_n_s_new_item, __pyx_n_s_rep, __pyx_n_s_retrieval, __pyx_n_s_succesful, __pyx_n_s_k, __pyx_n_s_found_match, __pyx_n_s_l, __pyx_n_s_r_loc, __pyx_n_s_new_mouse_location, __pyx_n_s_i); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 22, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(14, 0, 40, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cimulate_trial_pyx, __pyx_n_s_simulate_trial, 22, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(40, __pyx_n_s_tracking_dict, __pyx_n_s_k_items, __pyx_n_s_visible_time, __pyx_n_s_occlude_time, __pyx_n_s_intercept, __pyx_n_s_coefficient, __pyx_n_s_intercept_mouse, __pyx_n_s_coefficient_mouse, __pyx_n_s_n_repetitions, __pyx_n_s_f, __pyx_n_s_thresh, __pyx_n_s_noise, __pyx_n_s_decay, __pyx_n_s_error_probability, __pyx_n_s_cumul_time, __pyx_n_s_num_crossings, __pyx_n_s_num_fixations, __pyx_n_s_timeout, __pyx_n_s_stimuli_per_trial, __pyx_n_s_remaining_items, __pyx_n_s_example_locs, __pyx_n_s_workspace_locs, __pyx_n_s_resource_locs, __pyx_n_s_placed_locs, __pyx_n_s_activated_at, __pyx_n_s_eye_location, __pyx_n_s_mouse_location, __pyx_n_s_new_location, __pyx_n_s_locations_memorized, __pyx_n_s_ki, __pyx_n_s_new_item, __pyx_n_s_rep, __pyx_n_s_retrieval, __pyx_n_s_succesful, __pyx_n_s_k, __pyx_n_s_found_match, __pyx_n_s_l, __pyx_n_s_r_loc, __pyx_n_s_new_mouse_location, __pyx_n_s_i); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__7);
+  __Pyx_GIVEREF(__pyx_tuple__7);
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(14, 0, 40, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cimulate_trial_pyx, __pyx_n_s_simulate_trial, 22, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -4503,10 +3839,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
-  __pyx_umethod_PyList_Type_remove.type = (PyObject*)&PyList_Type;
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_float__1 = PyFloat_FromDouble(.1); if (unlikely(!__pyx_float__1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_float_1_ = PyFloat_FromDouble(1.); if (unlikely(!__pyx_float_1_)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_float__01 = PyFloat_FromDouble(.01); if (unlikely(!__pyx_float__01)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -4762,14 +4096,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_cimulate_trial) {
+  if (__pyx_module_is_main_analysis__cimulate_trial) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "cimulate_trial")) {
-      if (unlikely(PyDict_SetItemString(modules, "cimulate_trial", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "analysis.cimulate_trial")) {
+      if (unlikely(PyDict_SetItemString(modules, "analysis.cimulate_trial", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4790,7 +4124,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "cimulate_trial.pyx":16
+  /* "analysis/cimulate_trial.pyx":16
  * """
  * 
  * import time             # <<<<<<<<<<<<<<
@@ -4802,33 +4136,33 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":17
+  /* "analysis/cimulate_trial.pyx":17
  * 
  * import time
  * import random             # <<<<<<<<<<<<<<
  * 
- * import constants
+ * import constants_analysis as constants
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_random, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_random, __pyx_t_1) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":19
+  /* "analysis/cimulate_trial.pyx":19
  * import random
  * 
- * import constants             # <<<<<<<<<<<<<<
+ * import constants_analysis as constants             # <<<<<<<<<<<<<<
  * import cimulation_helper as sh
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_constants, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_constants_analysis, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_constants, __pyx_t_1) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":20
+  /* "analysis/cimulate_trial.pyx":20
  * 
- * import constants
+ * import constants_analysis as constants
  * import cimulation_helper as sh             # <<<<<<<<<<<<<<
  * 
  * def simulate_trial(dict tracking_dict, int k_items,
@@ -4838,19 +4172,19 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_sh, __pyx_t_1) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":22
+  /* "analysis/cimulate_trial.pyx":22
  * import cimulation_helper as sh
  * 
  * def simulate_trial(dict tracking_dict, int k_items,             # <<<<<<<<<<<<<<
  *                    int visible_time, int occlude_time,
  *                    float intercept, float coefficient,
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_14cimulate_trial_1simulate_trial, NULL, __pyx_n_s_cimulate_trial); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8analysis_14cimulate_trial_1simulate_trial, NULL, __pyx_n_s_analysis_cimulate_trial); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_simulate_trial, __pyx_t_1) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_trial.pyx":1
+  /* "analysis/cimulate_trial.pyx":1
  * """             # <<<<<<<<<<<<<<
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4867,11 +4201,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init cimulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init analysis.cimulate_trial", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init cimulate_trial");
+    PyErr_SetString(PyExc_ImportError, "init analysis.cimulate_trial");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -5836,202 +5170,6 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED
     return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
 }
 #endif
-
-/* PyIntBinop */
-#if !CYTHON_COMPILING_IN_PYPY
-static PyObject* __Pyx_PyInt_SubtractObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, int inplace, int zerodivision_check) {
-    (void)inplace;
-    (void)zerodivision_check;
-    #if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_CheckExact(op1))) {
-        const long b = intval;
-        long x;
-        long a = PyInt_AS_LONG(op1);
-            x = (long)((unsigned long)a - b);
-            if (likely((x^a) >= 0 || (x^~b) >= 0))
-                return PyInt_FromLong(x);
-            return PyLong_Type.tp_as_number->nb_subtract(op1, op2);
-    }
-    #endif
-    #if CYTHON_USE_PYLONG_INTERNALS
-    if (likely(PyLong_CheckExact(op1))) {
-        const long b = intval;
-        long a, x;
-#ifdef HAVE_LONG_LONG
-        const PY_LONG_LONG llb = intval;
-        PY_LONG_LONG lla, llx;
-#endif
-        const digit* digits = ((PyLongObject*)op1)->ob_digit;
-        const Py_ssize_t size = Py_SIZE(op1);
-        if (likely(__Pyx_sst_abs(size) <= 1)) {
-            a = likely(size) ? digits[0] : 0;
-            if (size == -1) a = -a;
-        } else {
-            switch (size) {
-                case -2:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        a = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                case 2:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                case -3:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        a = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                case 3:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                case -4:
-                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                        a = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                case 4:
-                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                        a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                    CYTHON_FALLTHROUGH;
-                default: return PyLong_Type.tp_as_number->nb_subtract(op1, op2);
-            }
-        }
-                x = a - b;
-            return PyLong_FromLong(x);
-#ifdef HAVE_LONG_LONG
-        long_long:
-                llx = lla - llb;
-            return PyLong_FromLongLong(llx);
-#endif
-        
-        
-    }
-    #endif
-    if (PyFloat_CheckExact(op1)) {
-        const long b = intval;
-        double a = PyFloat_AS_DOUBLE(op1);
-            double result;
-            PyFPE_START_PROTECT("subtract", return NULL)
-            result = ((double)a) - (double)b;
-            PyFPE_END_PROTECT(result)
-            return PyFloat_FromDouble(result);
-    }
-    return (inplace ? PyNumber_InPlaceSubtract : PyNumber_Subtract)(op1, op2);
-}
-#endif
-
-/* UnpackUnboundCMethod */
-static int __Pyx_TryUnpackUnboundCMethod(__Pyx_CachedCFunction* target) {
-    PyObject *method;
-    method = __Pyx_PyObject_GetAttrStr(target->type, *target->method_name);
-    if (unlikely(!method))
-        return -1;
-    target->method = method;
-#if CYTHON_COMPILING_IN_CPYTHON
-    #if PY_MAJOR_VERSION >= 3
-    if (likely(__Pyx_TypeCheck(method, &PyMethodDescr_Type)))
-    #endif
-    {
-        PyMethodDescrObject *descr = (PyMethodDescrObject*) method;
-        target->func = descr->d_method->ml_meth;
-        target->flag = descr->d_method->ml_flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_STACKLESS);
-    }
-#endif
-    return 0;
-}
-
-/* CallUnboundCMethod1 */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg) {
-    if (likely(cfunc->func)) {
-        int flag = cfunc->flag;
-        if (flag == METH_O) {
-            return (*(cfunc->func))(self, arg);
-        } else if (PY_VERSION_HEX >= 0x030600B1 && flag == METH_FASTCALL) {
-            if (PY_VERSION_HEX >= 0x030700A0) {
-                return (*(__Pyx_PyCFunctionFast)(void*)(PyCFunction)cfunc->func)(self, &arg, 1);
-            } else {
-                return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, &arg, 1, NULL);
-            }
-        } else if (PY_VERSION_HEX >= 0x030700A0 && flag == (METH_FASTCALL | METH_KEYWORDS)) {
-            return (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)cfunc->func)(self, &arg, 1, NULL);
-        }
-    }
-    return __Pyx__CallUnboundCMethod1(cfunc, self, arg);
-}
-#endif
-static PyObject* __Pyx__CallUnboundCMethod1(__Pyx_CachedCFunction* cfunc, PyObject* self, PyObject* arg){
-    PyObject *args, *result = NULL;
-    if (unlikely(!cfunc->func && !cfunc->method) && unlikely(__Pyx_TryUnpackUnboundCMethod(cfunc) < 0)) return NULL;
-#if CYTHON_COMPILING_IN_CPYTHON
-    if (cfunc->func && (cfunc->flag & METH_VARARGS)) {
-        args = PyTuple_New(1);
-        if (unlikely(!args)) goto bad;
-        Py_INCREF(arg);
-        PyTuple_SET_ITEM(args, 0, arg);
-        if (cfunc->flag & METH_KEYWORDS)
-            result = (*(PyCFunctionWithKeywords)(void*)(PyCFunction)cfunc->func)(self, args, NULL);
-        else
-            result = (*cfunc->func)(self, args);
-    } else {
-        args = PyTuple_New(2);
-        if (unlikely(!args)) goto bad;
-        Py_INCREF(self);
-        PyTuple_SET_ITEM(args, 0, self);
-        Py_INCREF(arg);
-        PyTuple_SET_ITEM(args, 1, arg);
-        result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
-    }
-#else
-    args = PyTuple_Pack(2, self, arg);
-    if (unlikely(!args)) goto bad;
-    result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
-#endif
-bad:
-    Py_XDECREF(args);
-    return result;
-}
 
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {

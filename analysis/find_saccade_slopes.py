@@ -23,7 +23,7 @@ from pingouin import linear_regression
 from math import atan2
 
 import helperfunctions as hf
-import constants
+import constants_analysis as constants
 from simulation_helper import euclidean_distance, fitts_id
 
 def get_angle(x=None, y=None):

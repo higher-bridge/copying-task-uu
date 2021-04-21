@@ -10,7 +10,7 @@ from setuptools import setup
 from Cython.Build import cythonize
 
 setup(
-    name='poepie',
+    name='cimulation',
     ext_modules=cythonize(['cimulation_helper.pyx', 
                            'cimulate_trial.pyx',
                            'cimulate_batch.pyx',

@@ -27,7 +27,7 @@ from joblib import Parallel, delayed
 from sklearn.preprocessing import MinMaxScaler
 
 import helperfunctions as hf
-import constants
+import constants_analysis as constants
 
 
 

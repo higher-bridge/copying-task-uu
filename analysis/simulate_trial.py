@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 import random
 
-import constants
+import constants_analysis as constants
 import simulation_helper as sh
 
 def simulate_trial(tracking_dict:dict, k_items:int, 

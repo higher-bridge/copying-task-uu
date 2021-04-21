@@ -20,7 +20,7 @@ from joblib import Parallel, delayed
 
 import helperfunctions as hf
 import mouse_analysis
-from constants import base_location
+from constants_analysis import base_location
 
 
 def load_and_merge(ID, ID_dict, pp_info, base_location): 

@@ -19,7 +19,7 @@ import time
 
 from joblib import Parallel, delayed
 
-import constants
+import constants_analysis as constants
 
 from cimulate_batch import simulate_batch
 

@@ -20,7 +20,7 @@ import time
 
 from sklearn.preprocessing import MinMaxScaler
 
-import constants
+import constants_analysis as constants
 from typing import List, Any
 
 

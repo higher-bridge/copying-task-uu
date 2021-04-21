@@ -74,7 +74,7 @@ if __name__ == '__main__':
         features_rep = [features] * len(all_schemes)
         exp_datas = [exp_data] * len(all_schemes)
         
-        r = Parallel(n_jobs=7, backend='loky', verbose=True)(delayed(parse_results)(df, ep, scheme, f) \
+        r = Parallel(n_jobs=4, backend='loky', verbose=True)(delayed(parse_results)(df, ep, scheme, f) \
                                                               for df, ep, scheme, f \
                                                               in zip(scheme_dfs, exp_datas, all_schemes, features_rep))
 

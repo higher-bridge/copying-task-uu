@@ -17,10 +17,8 @@ import numpy as np
 from libc.math cimport sqrt, exp, log, log2
 import random
 
-import constants
+import constants_analysis as constants
 
-from typing import Tuple
-# Tuple[float, float]
 
 cdef float euclidean_distance(tuple loc1, tuple loc2):
     cdef list dist

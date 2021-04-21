@@ -17,7 +17,7 @@ import numpy as np
 import math
 import random
 
-import constants
+import constants_analysis as constants
 
 def euclidean_distance(loc1:tuple, loc2:tuple):
     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]

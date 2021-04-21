@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "cimulate_batch",
+        "name": "analysis.cimulate_batch",
         "sources": [
             "cimulate_batch.pyx"
         ]
     },
-    "module_name": "cimulate_batch"
+    "module_name": "analysis.cimulate_batch"
 }
 END: Cython Metadata */
 
@@ -614,8 +614,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__cimulate_batch
-#define __PYX_HAVE_API__cimulate_batch
+#define __PYX_HAVE__analysis__cimulate_batch
+#define __PYX_HAVE_API__analysis__cimulate_batch
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -1297,13 +1297,13 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'cimulate_batch' */
-static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-#define __Pyx_MODULE_NAME "cimulate_batch"
-extern int __pyx_module_is_main_cimulate_batch;
-int __pyx_module_is_main_cimulate_batch = 0;
+/* Module declarations from 'analysis.cimulate_batch' */
+static PyObject *__pyx_f_8analysis_14cimulate_batch_simulate_batch(PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+#define __Pyx_MODULE_NAME "analysis.cimulate_batch"
+extern int __pyx_module_is_main_analysis__cimulate_batch;
+int __pyx_module_is_main_analysis__cimulate_batch = 0;
 
-/* Implementation of 'cimulate_batch' */
+/* Implementation of 'analysis.cimulate_batch' */
 static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_open;
@@ -1358,6 +1358,7 @@ static const char __pyx_k_Completion_time_s[] = "Completion time (s)";
 static const char __pyx_k_STIMULI_PER_TRIAL[] = "STIMULI_PER_TRIAL";
 static const char __pyx_k_simulation_helper[] = "simulation_helper";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_constants_analysis[] = "constants_analysis";
 static const char __pyx_k_linear_mouse_model[] = "linear_mouse_model";
 static const char __pyx_k_Number_of_crossings[] = "Number of crossings";
 static const char __pyx_k_Fixations_per_second[] = "Fixations per second";
@@ -1396,6 +1397,7 @@ static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_cimulate_trial;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_constants;
+static PyObject *__pyx_n_s_constants_analysis;
 static PyObject *__pyx_n_s_create_all_encoding_schemes;
 static PyObject *__pyx_n_s_delayed;
 static PyObject *__pyx_n_s_dump;
@@ -1430,13 +1432,13 @@ static PyObject *__pyx_n_s_time;
 static PyObject *__pyx_n_s_to_csv;
 static PyObject *__pyx_n_s_wb;
 static PyObject *__pyx_n_s_zfill;
-static PyObject *__pyx_pf_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model); /* proto */
+static PyObject *__pyx_pf_8analysis_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_3;
 /* Late includes */
 
-/* "cimulate_batch.pyx":27
+/* "analysis/cimulate_batch.pyx":27
  * from cimulate_trial import simulate_trial
  * 
  * cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):             # <<<<<<<<<<<<<<
@@ -1444,8 +1446,8 @@ static PyObject *__pyx_int_3;
  * 
  */
 
-static PyObject *__pyx_pw_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_8analysis_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_8analysis_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model, CYTHON_UNUSED int __pyx_skip_dispatch) {
   PyObject *__pyx_v_features = NULL;
   PyObject *__pyx_v_cols = NULL;
   PyObject *__pyx_v_tracking_dict = 0;
@@ -1539,7 +1541,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __Pyx_RefNannySetupContext("simulate_batch", 0);
   __Pyx_INCREF(__pyx_v_ID);
 
-  /* "cimulate_batch.pyx":28
+  /* "analysis/cimulate_batch.pyx":28
  * 
  * cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):
  *     ID = str(ID).zfill(3)             # <<<<<<<<<<<<<<
@@ -1569,7 +1571,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __Pyx_DECREF_SET(__pyx_v_ID, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":30
+  /* "analysis/cimulate_batch.pyx":30
  *     ID = str(ID).zfill(3)
  * 
  *     features = ['Number of crossings',             # <<<<<<<<<<<<<<
@@ -1590,7 +1592,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_features = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":33
+  /* "analysis/cimulate_batch.pyx":33
  *                 'Completion time (s)',
  *                 'Fixations per second']
  *     cols = ['ID', 'Encoding scheme', 'Repetitions', 'Parameters', 'Condition', 'Trial', 'Processing Time']             # <<<<<<<<<<<<<<
@@ -1623,7 +1625,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_cols = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":34
+  /* "analysis/cimulate_batch.pyx":34
  *                 'Fixations per second']
  *     cols = ['ID', 'Encoding scheme', 'Repetitions', 'Parameters', 'Condition', 'Trial', 'Processing Time']
  *     [cols.append(i) for i in features]             # <<<<<<<<<<<<<<
@@ -1652,7 +1654,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":36
+  /* "analysis/cimulate_batch.pyx":36
  *     [cols.append(i) for i in features]
  * 
  *     cdef tracking_dict = {key: [] for key in cols}             # <<<<<<<<<<<<<<
@@ -1689,7 +1691,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_tracking_dict = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":39
+  /* "analysis/cimulate_batch.pyx":39
  * 
  *     # Load (linear) saccade models
  *     cdef saccade_models = [linear_saccade_model.loc[linear_saccade_model['Condition'] == condition] \             # <<<<<<<<<<<<<<
@@ -1699,7 +1701,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "cimulate_batch.pyx":40
+  /* "analysis/cimulate_batch.pyx":40
  *     # Load (linear) saccade models
  *     cdef saccade_models = [linear_saccade_model.loc[linear_saccade_model['Condition'] == condition] \
  *                            for condition in constants.CONDITIONS]             # <<<<<<<<<<<<<<
@@ -1754,7 +1756,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XDECREF_SET(__pyx_v_condition, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "cimulate_batch.pyx":39
+    /* "analysis/cimulate_batch.pyx":39
  * 
  *     # Load (linear) saccade models
  *     cdef saccade_models = [linear_saccade_model.loc[linear_saccade_model['Condition'] == condition] \             # <<<<<<<<<<<<<<
@@ -1774,7 +1776,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_7))) __PYX_ERR(0, 39, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "cimulate_batch.pyx":40
+    /* "analysis/cimulate_batch.pyx":40
  *     # Load (linear) saccade models
  *     cdef saccade_models = [linear_saccade_model.loc[linear_saccade_model['Condition'] == condition] \
  *                            for condition in constants.CONDITIONS]             # <<<<<<<<<<<<<<
@@ -1786,7 +1788,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_saccade_models = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":41
+  /* "analysis/cimulate_batch.pyx":41
  *     cdef saccade_models = [linear_saccade_model.loc[linear_saccade_model['Condition'] == condition] \
  *                            for condition in constants.CONDITIONS]
  *     cdef intercepts = [list(i['Intercept'])[0] for i in saccade_models]             # <<<<<<<<<<<<<<
@@ -1851,7 +1853,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_intercepts = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":42
+  /* "analysis/cimulate_batch.pyx":42
  *                            for condition in constants.CONDITIONS]
  *     cdef intercepts = [list(i['Intercept'])[0] for i in saccade_models]
  *     cdef coefs =   [list(i['Coefficient'])[0] for i in saccade_models]             # <<<<<<<<<<<<<<
@@ -1916,7 +1918,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_coefs = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":44
+  /* "analysis/cimulate_batch.pyx":44
  *     cdef coefs =   [list(i['Coefficient'])[0] for i in saccade_models]
  * 
  *     cdef mouse_models = [linear_mouse_model.loc[linear_saccade_model['Condition'] == condition] \             # <<<<<<<<<<<<<<
@@ -1926,7 +1928,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "cimulate_batch.pyx":45
+  /* "analysis/cimulate_batch.pyx":45
  * 
  *     cdef mouse_models = [linear_mouse_model.loc[linear_saccade_model['Condition'] == condition] \
  *                          for condition in constants.CONDITIONS]             # <<<<<<<<<<<<<<
@@ -1981,7 +1983,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XDECREF_SET(__pyx_v_condition, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "cimulate_batch.pyx":44
+    /* "analysis/cimulate_batch.pyx":44
  *     cdef coefs =   [list(i['Coefficient'])[0] for i in saccade_models]
  * 
  *     cdef mouse_models = [linear_mouse_model.loc[linear_saccade_model['Condition'] == condition] \             # <<<<<<<<<<<<<<
@@ -2001,7 +2003,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 44, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-    /* "cimulate_batch.pyx":45
+    /* "analysis/cimulate_batch.pyx":45
  * 
  *     cdef mouse_models = [linear_mouse_model.loc[linear_saccade_model['Condition'] == condition] \
  *                          for condition in constants.CONDITIONS]             # <<<<<<<<<<<<<<
@@ -2013,7 +2015,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_mouse_models = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":46
+  /* "analysis/cimulate_batch.pyx":46
  *     cdef mouse_models = [linear_mouse_model.loc[linear_saccade_model['Condition'] == condition] \
  *                          for condition in constants.CONDITIONS]
  *     cdef intercepts_m = [list(i['Intercept'])[0] for i in mouse_models]             # <<<<<<<<<<<<<<
@@ -2078,7 +2080,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_intercepts_m = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":47
+  /* "analysis/cimulate_batch.pyx":47
  *                          for condition in constants.CONDITIONS]
  *     cdef intercepts_m = [list(i['Intercept'])[0] for i in mouse_models]
  *     cdef coefs_m =   [list(i['Coefficient'])[0] for i in mouse_models]             # <<<<<<<<<<<<<<
@@ -2143,7 +2145,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_coefs_m = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":50
+  /* "analysis/cimulate_batch.pyx":50
  * 
  *     # Load parameter set
  *     cdef encoding_schemes = sh.create_all_encoding_schemes()             # <<<<<<<<<<<<<<
@@ -2173,7 +2175,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_encoding_schemes = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":51
+  /* "analysis/cimulate_batch.pyx":51
  *     # Load parameter set
  *     cdef encoding_schemes = sh.create_all_encoding_schemes()
  *     cdef memory_repetitions = sh.create_all_encoding_schemes(max_k=constants.MAX_MEMORY_REPETITIONS)             # <<<<<<<<<<<<<<
@@ -2201,7 +2203,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_memory_repetitions = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":52
+  /* "analysis/cimulate_batch.pyx":52
  *     cdef encoding_schemes = sh.create_all_encoding_schemes()
  *     cdef memory_repetitions = sh.create_all_encoding_schemes(max_k=constants.MAX_MEMORY_REPETITIONS)
  *     cdef range_params = sh.get_param_combinations()             # <<<<<<<<<<<<<<
@@ -2231,7 +2233,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_v_range_params = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":62
+  /* "analysis/cimulate_batch.pyx":62
  *     cdef float cumul_time, cond_start
  * 
  *     for encoding_scheme in encoding_schemes:             # <<<<<<<<<<<<<<
@@ -2280,7 +2282,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XDECREF_SET(__pyx_v_encoding_scheme, __pyx_t_8);
     __pyx_t_8 = 0;
 
-    /* "cimulate_batch.pyx":63
+    /* "analysis/cimulate_batch.pyx":63
  * 
  *     for encoding_scheme in encoding_schemes:
  *         cond_start = time.time()             # <<<<<<<<<<<<<<
@@ -2311,7 +2313,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_v_cond_start = __pyx_t_9;
 
-    /* "cimulate_batch.pyx":64
+    /* "analysis/cimulate_batch.pyx":64
  *     for encoding_scheme in encoding_schemes:
  *         cond_start = time.time()
  *         for repetition_range in memory_repetitions:             # <<<<<<<<<<<<<<
@@ -2360,7 +2362,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __Pyx_XDECREF_SET(__pyx_v_repetition_range, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "cimulate_batch.pyx":65
+      /* "analysis/cimulate_batch.pyx":65
  *         cond_start = time.time()
  *         for repetition_range in memory_repetitions:
  *             for params in range_params:             # <<<<<<<<<<<<<<
@@ -2409,7 +2411,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
         __Pyx_XDECREF_SET(__pyx_v_params, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "cimulate_batch.pyx":66
+        /* "analysis/cimulate_batch.pyx":66
  *         for repetition_range in memory_repetitions:
  *             for params in range_params:
  *                 f, decay, thresh, noise = params[0], params[1], params[2], params[3]             # <<<<<<<<<<<<<<
@@ -2437,7 +2439,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
         __pyx_v_thresh = __pyx_t_15;
         __pyx_v_noise = __pyx_t_16;
 
-        /* "cimulate_batch.pyx":70
+        /* "analysis/cimulate_batch.pyx":70
  * 
  *                 # Start the simulation of a condition
  *                 for condition_number, condition in enumerate(constants.CONDITIONS):             # <<<<<<<<<<<<<<
@@ -2501,7 +2503,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __pyx_t_1 = __pyx_t_17;
           __pyx_t_17 = 0;
 
-          /* "cimulate_batch.pyx":74
+          /* "analysis/cimulate_batch.pyx":74
  * 
  *                     # Get coefficients for saccade speed in this condition. Convert from ms to s by /1000
  *                     intercept = intercepts[condition_number]             # <<<<<<<<<<<<<<
@@ -2514,7 +2516,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_v_intercept = __pyx_t_16;
 
-          /* "cimulate_batch.pyx":75
+          /* "analysis/cimulate_batch.pyx":75
  *                     # Get coefficients for saccade speed in this condition. Convert from ms to s by /1000
  *                     intercept = intercepts[condition_number]
  *                     coefficient = coefs[condition_number]             # <<<<<<<<<<<<<<
@@ -2527,7 +2529,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_v_coefficient = __pyx_t_16;
 
-          /* "cimulate_batch.pyx":77
+          /* "analysis/cimulate_batch.pyx":77
  *                     coefficient = coefs[condition_number]
  * 
  *                     intercept_mouse = intercepts_m[condition_number]             # <<<<<<<<<<<<<<
@@ -2540,7 +2542,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_v_intercept_mouse = __pyx_t_16;
 
-          /* "cimulate_batch.pyx":78
+          /* "analysis/cimulate_batch.pyx":78
  * 
  *                     intercept_mouse = intercepts_m[condition_number]
  *                     coefficient_mouse = coefs_m[condition_number]             # <<<<<<<<<<<<<<
@@ -2553,7 +2555,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
           __pyx_v_coefficient_mouse = __pyx_t_16;
 
-          /* "cimulate_batch.pyx":81
+          /* "analysis/cimulate_batch.pyx":81
  * 
  *                     # Set probability of incorrect placement
  *                     error_probability = constants.ERROR_RATES[condition_number] / constants.STIMULI_PER_TRIAL             # <<<<<<<<<<<<<<
@@ -2581,7 +2583,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
           __pyx_v_error_probability = __pyx_t_16;
 
-          /* "cimulate_batch.pyx":84
+          /* "analysis/cimulate_batch.pyx":84
  * 
  *                     # Retrieve condition timings
  *                     visible_time = constants.CONDITION_TIMES[condition_number][0]             # <<<<<<<<<<<<<<
@@ -2603,7 +2605,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
           __pyx_v_visible_time = __pyx_t_22;
 
-          /* "cimulate_batch.pyx":85
+          /* "analysis/cimulate_batch.pyx":85
  *                     # Retrieve condition timings
  *                     visible_time = constants.CONDITION_TIMES[condition_number][0]
  *                     occlude_time = constants.CONDITION_TIMES[condition_number][1]             # <<<<<<<<<<<<<<
@@ -2625,7 +2627,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
           __pyx_v_occlude_time = __pyx_t_22;
 
-          /* "cimulate_batch.pyx":93
+          /* "analysis/cimulate_batch.pyx":93
  * 
  *                     # Retrieve the number of items to encode
  *                     k_items = encoding_scheme[condition_number]             # <<<<<<<<<<<<<<
@@ -2638,7 +2640,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
           __pyx_v_k_items = __pyx_t_22;
 
-          /* "cimulate_batch.pyx":96
+          /* "analysis/cimulate_batch.pyx":96
  * 
  *                     # Retrieve the amount of repetitions to perform when encoding
  *                     n_repetitions = repetition_range[condition_number]             # <<<<<<<<<<<<<<
@@ -2651,7 +2653,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
           __pyx_v_n_repetitions = __pyx_t_22;
 
-          /* "cimulate_batch.pyx":98
+          /* "analysis/cimulate_batch.pyx":98
  *                     n_repetitions = repetition_range[condition_number]
  * 
  *                     for trial in range(1, constants.NUM_TRIALS + 1):             # <<<<<<<<<<<<<<
@@ -2720,7 +2722,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_XDECREF_SET(__pyx_v_trial, __pyx_t_20);
             __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":99
+            /* "analysis/cimulate_batch.pyx":99
  * 
  *                     for trial in range(1, constants.NUM_TRIALS + 1):
  *                         start = time.time()             # <<<<<<<<<<<<<<
@@ -2750,7 +2752,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_20);
             __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":100
+            /* "analysis/cimulate_batch.pyx":100
  *                     for trial in range(1, constants.NUM_TRIALS + 1):
  *                         start = time.time()
  *                         num_crossings, cumul_time, num_fixations = simulate_trial(tracking_dict, k_items,             # <<<<<<<<<<<<<<
@@ -2762,7 +2764,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_17 = __Pyx_PyInt_From_int(__pyx_v_k_items); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 100, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_17);
 
-            /* "cimulate_batch.pyx":101
+            /* "analysis/cimulate_batch.pyx":101
  *                         start = time.time()
  *                         num_crossings, cumul_time, num_fixations = simulate_trial(tracking_dict, k_items,
  *                                                                                   visible_time, occlude_time,             # <<<<<<<<<<<<<<
@@ -2774,7 +2776,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_27 = __Pyx_PyInt_From_int(__pyx_v_occlude_time); if (unlikely(!__pyx_t_27)) __PYX_ERR(0, 101, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_27);
 
-            /* "cimulate_batch.pyx":102
+            /* "analysis/cimulate_batch.pyx":102
  *                         num_crossings, cumul_time, num_fixations = simulate_trial(tracking_dict, k_items,
  *                                                                                   visible_time, occlude_time,
  *                                                                                   intercept, coefficient,             # <<<<<<<<<<<<<<
@@ -2786,7 +2788,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_29 = PyFloat_FromDouble(__pyx_v_coefficient); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 102, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_29);
 
-            /* "cimulate_batch.pyx":103
+            /* "analysis/cimulate_batch.pyx":103
  *                                                                                   visible_time, occlude_time,
  *                                                                                   intercept, coefficient,
  *                                                                                   intercept_mouse, coefficient_mouse,             # <<<<<<<<<<<<<<
@@ -2798,7 +2800,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_31 = PyFloat_FromDouble(__pyx_v_coefficient_mouse); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 103, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_31);
 
-            /* "cimulate_batch.pyx":104
+            /* "analysis/cimulate_batch.pyx":104
  *                                                                                   intercept, coefficient,
  *                                                                                   intercept_mouse, coefficient_mouse,
  *                                                                                   n_repetitions,             # <<<<<<<<<<<<<<
@@ -2808,7 +2810,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_32 = __Pyx_PyInt_From_int(__pyx_v_n_repetitions); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 104, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_32);
 
-            /* "cimulate_batch.pyx":105
+            /* "analysis/cimulate_batch.pyx":105
  *                                                                                   intercept_mouse, coefficient_mouse,
  *                                                                                   n_repetitions,
  *                                                                                   f, thresh, noise, decay,             # <<<<<<<<<<<<<<
@@ -2824,7 +2826,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_t_36 = PyFloat_FromDouble(__pyx_v_decay); if (unlikely(!__pyx_t_36)) __PYX_ERR(0, 105, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_36);
 
-            /* "cimulate_batch.pyx":106
+            /* "analysis/cimulate_batch.pyx":106
  *                                                                                   n_repetitions,
  *                                                                                   f, thresh, noise, decay,
  *                                                                                   error_probability)             # <<<<<<<<<<<<<<
@@ -2994,7 +2996,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
               __pyx_L34_unpacking_done:;
             }
 
-            /* "cimulate_batch.pyx":100
+            /* "analysis/cimulate_batch.pyx":100
  *                     for trial in range(1, constants.NUM_TRIALS + 1):
  *                         start = time.time()
  *                         num_crossings, cumul_time, num_fixations = simulate_trial(tracking_dict, k_items,             # <<<<<<<<<<<<<<
@@ -3011,7 +3013,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __pyx_v_cumul_time = __pyx_t_16;
             __pyx_v_num_fixations = __pyx_t_41;
 
-            /* "cimulate_batch.pyx":108
+            /* "analysis/cimulate_batch.pyx":108
  *                                                                                   error_probability)
  * 
  *                         tracking_dict['ID'].append(int(ID))             # <<<<<<<<<<<<<<
@@ -3026,7 +3028,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
 
-            /* "cimulate_batch.pyx":109
+            /* "analysis/cimulate_batch.pyx":109
  * 
  *                         tracking_dict['ID'].append(int(ID))
  *                         tracking_dict['Encoding scheme'].append(str(encoding_scheme))             # <<<<<<<<<<<<<<
@@ -3041,7 +3043,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":110
+            /* "analysis/cimulate_batch.pyx":110
  *                         tracking_dict['ID'].append(int(ID))
  *                         tracking_dict['Encoding scheme'].append(str(encoding_scheme))
  *                         tracking_dict['Repetitions'].append(str(repetition_range))             # <<<<<<<<<<<<<<
@@ -3056,7 +3058,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
 
-            /* "cimulate_batch.pyx":111
+            /* "analysis/cimulate_batch.pyx":111
  *                         tracking_dict['Encoding scheme'].append(str(encoding_scheme))
  *                         tracking_dict['Repetitions'].append(str(repetition_range))
  *                         tracking_dict['Parameters'].append((str(params)))             # <<<<<<<<<<<<<<
@@ -3071,7 +3073,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":112
+            /* "analysis/cimulate_batch.pyx":112
  *                         tracking_dict['Repetitions'].append(str(repetition_range))
  *                         tracking_dict['Parameters'].append((str(params)))
  *                         tracking_dict['Condition'].append(int(condition))             # <<<<<<<<<<<<<<
@@ -3086,7 +3088,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
 
-            /* "cimulate_batch.pyx":113
+            /* "analysis/cimulate_batch.pyx":113
  *                         tracking_dict['Parameters'].append((str(params)))
  *                         tracking_dict['Condition'].append(int(condition))
  *                         tracking_dict['Trial'].append(int(trial))             # <<<<<<<<<<<<<<
@@ -3101,7 +3103,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_37); __pyx_t_37 = 0;
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":114
+            /* "analysis/cimulate_batch.pyx":114
  *                         tracking_dict['Condition'].append(int(condition))
  *                         tracking_dict['Trial'].append(int(trial))
  *                         tracking_dict['Number of crossings'].append(int(num_crossings))             # <<<<<<<<<<<<<<
@@ -3119,7 +3121,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
             __Pyx_DECREF(__pyx_t_39); __pyx_t_39 = 0;
 
-            /* "cimulate_batch.pyx":115
+            /* "analysis/cimulate_batch.pyx":115
  *                         tracking_dict['Trial'].append(int(trial))
  *                         tracking_dict['Number of crossings'].append(int(num_crossings))
  *                         tracking_dict['Completion time (s)'].append(cumul_time / 1000)             # <<<<<<<<<<<<<<
@@ -3134,7 +3136,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_39); __pyx_t_39 = 0;
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":116
+            /* "analysis/cimulate_batch.pyx":116
  *                         tracking_dict['Number of crossings'].append(int(num_crossings))
  *                         tracking_dict['Completion time (s)'].append(cumul_time / 1000)
  *                         tracking_dict['Fixations per second'].append(num_fixations / (cumul_time / 1000))             # <<<<<<<<<<<<<<
@@ -3154,7 +3156,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
             __Pyx_DECREF(__pyx_t_39); __pyx_t_39 = 0;
 
-            /* "cimulate_batch.pyx":117
+            /* "analysis/cimulate_batch.pyx":117
  *                         tracking_dict['Completion time (s)'].append(cumul_time / 1000)
  *                         tracking_dict['Fixations per second'].append(num_fixations / (cumul_time / 1000))
  *                         tracking_dict['Processing Time'].append(float(time.time() - start))             # <<<<<<<<<<<<<<
@@ -3193,7 +3195,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
             __Pyx_DECREF(__pyx_t_39); __pyx_t_39 = 0;
             __Pyx_DECREF(__pyx_t_20); __pyx_t_20 = 0;
 
-            /* "cimulate_batch.pyx":98
+            /* "analysis/cimulate_batch.pyx":98
  *                     n_repetitions = repetition_range[condition_number]
  * 
  *                     for trial in range(1, constants.NUM_TRIALS + 1):             # <<<<<<<<<<<<<<
@@ -3203,7 +3205,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
           }
           __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
 
-          /* "cimulate_batch.pyx":70
+          /* "analysis/cimulate_batch.pyx":70
  * 
  *                 # Start the simulation of a condition
  *                 for condition_number, condition in enumerate(constants.CONDITIONS):             # <<<<<<<<<<<<<<
@@ -3214,7 +3216,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "cimulate_batch.pyx":65
+        /* "analysis/cimulate_batch.pyx":65
  *         cond_start = time.time()
  *         for repetition_range in memory_repetitions:
  *             for params in range_params:             # <<<<<<<<<<<<<<
@@ -3224,7 +3226,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       }
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "cimulate_batch.pyx":64
+      /* "analysis/cimulate_batch.pyx":64
  *     for encoding_scheme in encoding_schemes:
  *         cond_start = time.time()
  *         for repetition_range in memory_repetitions:             # <<<<<<<<<<<<<<
@@ -3234,7 +3236,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     }
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-    /* "cimulate_batch.pyx":62
+    /* "analysis/cimulate_batch.pyx":62
  *     cdef float cumul_time, cond_start
  * 
  *     for encoding_scheme in encoding_schemes:             # <<<<<<<<<<<<<<
@@ -3244,7 +3246,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":121
+  /* "analysis/cimulate_batch.pyx":121
  *         # print(f'Scheme loop took {round((time.time() - cond_start) * 1000, 1)}ms')
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3260,7 +3262,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XGOTREF(__pyx_t_44);
     /*try:*/ {
 
-      /* "cimulate_batch.pyx":122
+      /* "analysis/cimulate_batch.pyx":122
  * 
  *     try:
  *         pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))             # <<<<<<<<<<<<<<
@@ -3354,7 +3356,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "cimulate_batch.pyx":121
+      /* "analysis/cimulate_batch.pyx":121
  *         # print(f'Scheme loop took {round((time.time() - cond_start) * 1000, 1)}ms')
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3391,7 +3393,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-    /* "cimulate_batch.pyx":123
+    /* "analysis/cimulate_batch.pyx":123
  *     try:
  *         pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))
  *     except Exception as e:             # <<<<<<<<<<<<<<
@@ -3400,7 +3402,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
  */
     __pyx_t_41 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_41) {
-      __Pyx_AddTraceback("cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("analysis.cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
       if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_3, &__pyx_t_7) < 0) __PYX_ERR(0, 123, __pyx_L37_except_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_3);
@@ -3408,7 +3410,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __Pyx_INCREF(__pyx_t_3);
       __pyx_v_e = __pyx_t_3;
 
-      /* "cimulate_batch.pyx":124
+      /* "analysis/cimulate_batch.pyx":124
  *         pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))
  *     except Exception as e:
  *         print(f'Could not save pickle {ID}:', e)             # <<<<<<<<<<<<<<
@@ -3455,7 +3457,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     goto __pyx_L37_except_error;
     __pyx_L37_except_error:;
 
-    /* "cimulate_batch.pyx":121
+    /* "analysis/cimulate_batch.pyx":121
  *         # print(f'Scheme loop took {round((time.time() - cond_start) * 1000, 1)}ms')
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3475,7 +3477,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __pyx_L40_try_end:;
   }
 
-  /* "cimulate_batch.pyx":126
+  /* "analysis/cimulate_batch.pyx":126
  *         print(f'Could not save pickle {ID}:', e)
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3491,7 +3493,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XGOTREF(__pyx_t_42);
     /*try:*/ {
 
-      /* "cimulate_batch.pyx":127
+      /* "analysis/cimulate_batch.pyx":127
  * 
  *     try:
  *         df = pd.DataFrame(tracking_dict)             # <<<<<<<<<<<<<<
@@ -3521,7 +3523,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __pyx_v_df = __pyx_t_7;
       __pyx_t_7 = 0;
 
-      /* "cimulate_batch.pyx":128
+      /* "analysis/cimulate_batch.pyx":128
  *     try:
  *         df = pd.DataFrame(tracking_dict)
  *         df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')             # <<<<<<<<<<<<<<
@@ -3570,7 +3572,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "cimulate_batch.pyx":126
+      /* "analysis/cimulate_batch.pyx":126
  *         print(f'Could not save pickle {ID}:', e)
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3607,7 +3609,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-    /* "cimulate_batch.pyx":129
+    /* "analysis/cimulate_batch.pyx":129
  *         df = pd.DataFrame(tracking_dict)
  *         df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
  *     except Exception as e:             # <<<<<<<<<<<<<<
@@ -3616,7 +3618,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
  */
     __pyx_t_41 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_41) {
-      __Pyx_AddTraceback("cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("analysis.cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
       if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_2, &__pyx_t_1) < 0) __PYX_ERR(0, 129, __pyx_L45_except_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_GOTREF(__pyx_t_2);
@@ -3624,7 +3626,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
       __Pyx_INCREF(__pyx_t_2);
       __Pyx_XDECREF_SET(__pyx_v_e, __pyx_t_2);
 
-      /* "cimulate_batch.pyx":130
+      /* "analysis/cimulate_batch.pyx":130
  *         df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
  *     except Exception as e:
  *         print(f'Could not save dataframe {ID}:', e)             # <<<<<<<<<<<<<<
@@ -3671,7 +3673,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     goto __pyx_L45_except_error;
     __pyx_L45_except_error:;
 
-    /* "cimulate_batch.pyx":126
+    /* "analysis/cimulate_batch.pyx":126
  *         print(f'Could not save pickle {ID}:', e)
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -3691,7 +3693,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
     __pyx_L48_try_end:;
   }
 
-  /* "cimulate_batch.pyx":133
+  /* "analysis/cimulate_batch.pyx":133
  * 
  * 
  *     return True             # <<<<<<<<<<<<<<
@@ -3701,7 +3703,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __pyx_r = Py_True;
   goto __pyx_L0;
 
-  /* "cimulate_batch.pyx":27
+  /* "analysis/cimulate_batch.pyx":27
  * from cimulate_trial import simulate_trial
  * 
  * cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):             # <<<<<<<<<<<<<<
@@ -3734,7 +3736,7 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
   __Pyx_XDECREF(__pyx_t_37);
   __Pyx_XDECREF(__pyx_t_38);
   __Pyx_XDECREF(__pyx_t_39);
-  __Pyx_AddTraceback("cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("analysis.cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_features);
@@ -3767,8 +3769,8 @@ static PyObject *__pyx_f_14cimulate_batch_simulate_batch(PyObject *__pyx_v_ID, P
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8analysis_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8analysis_14cimulate_batch_1simulate_batch(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_ID = 0;
   PyObject *__pyx_v_linear_saccade_model = 0;
   PyObject *__pyx_v_linear_mouse_model = 0;
@@ -3830,18 +3832,18 @@ static PyObject *__pyx_pw_14cimulate_batch_1simulate_batch(PyObject *__pyx_self,
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("simulate_batch", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 27, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("analysis.cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cimulate_batch_simulate_batch(__pyx_self, __pyx_v_ID, __pyx_v_linear_saccade_model, __pyx_v_linear_mouse_model);
+  __pyx_r = __pyx_pf_8analysis_14cimulate_batch_simulate_batch(__pyx_self, __pyx_v_ID, __pyx_v_linear_saccade_model, __pyx_v_linear_mouse_model);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model) {
+static PyObject *__pyx_pf_8analysis_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_ID, PyObject *__pyx_v_linear_saccade_model, PyObject *__pyx_v_linear_mouse_model) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3850,7 +3852,7 @@ static PyObject *__pyx_pf_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("simulate_batch", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_14cimulate_batch_simulate_batch(__pyx_v_ID, __pyx_v_linear_saccade_model, __pyx_v_linear_mouse_model, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8analysis_14cimulate_batch_simulate_batch(__pyx_v_ID, __pyx_v_linear_saccade_model, __pyx_v_linear_mouse_model, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3859,7 +3861,7 @@ static PyObject *__pyx_pf_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("analysis.cimulate_batch.simulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3868,7 +3870,7 @@ static PyObject *__pyx_pf_14cimulate_batch_simulate_batch(CYTHON_UNUSED PyObject
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"simulate_batch", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_14cimulate_batch_1simulate_batch, METH_VARARGS|METH_KEYWORDS, 0},
+  {"simulate_batch", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_14cimulate_batch_1simulate_batch, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -3941,6 +3943,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cimulate_trial, __pyx_k_cimulate_trial, sizeof(__pyx_k_cimulate_trial), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_constants, __pyx_k_constants, sizeof(__pyx_k_constants), 0, 0, 1, 1},
+  {&__pyx_n_s_constants_analysis, __pyx_k_constants_analysis, sizeof(__pyx_k_constants_analysis), 0, 0, 1, 1},
   {&__pyx_n_s_create_all_encoding_schemes, __pyx_k_create_all_encoding_schemes, sizeof(__pyx_k_create_all_encoding_schemes), 0, 0, 1, 1},
   {&__pyx_n_s_delayed, __pyx_k_delayed, sizeof(__pyx_k_delayed), 0, 0, 1, 1},
   {&__pyx_n_s_dump, __pyx_k_dump, sizeof(__pyx_k_dump), 0, 0, 1, 1},
@@ -4242,14 +4245,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_cimulate_batch) {
+  if (__pyx_module_is_main_analysis__cimulate_batch) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "cimulate_batch")) {
-      if (unlikely(PyDict_SetItemString(modules, "cimulate_batch", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "analysis.cimulate_batch")) {
+      if (unlikely(PyDict_SetItemString(modules, "analysis.cimulate_batch", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4270,7 +4273,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "cimulate_batch.pyx":16
+  /* "analysis/cimulate_batch.pyx":16
  * """
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -4282,7 +4285,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":17
+  /* "analysis/cimulate_batch.pyx":17
  * 
  * import numpy as np
  * import pandas as pd             # <<<<<<<<<<<<<<
@@ -4294,7 +4297,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pd, __pyx_t_1) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":18
+  /* "analysis/cimulate_batch.pyx":18
  * import numpy as np
  * import pandas as pd
  * import time             # <<<<<<<<<<<<<<
@@ -4306,7 +4309,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":20
+  /* "analysis/cimulate_batch.pyx":20
  * import time
  * 
  * from joblib import Parallel, delayed             # <<<<<<<<<<<<<<
@@ -4334,7 +4337,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":21
+  /* "analysis/cimulate_batch.pyx":21
  * 
  * from joblib import Parallel, delayed
  * import pickle             # <<<<<<<<<<<<<<
@@ -4346,11 +4349,11 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pickle, __pyx_t_2) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":23
+  /* "analysis/cimulate_batch.pyx":23
  * import pickle
  * 
  * import simulation_helper as sh             # <<<<<<<<<<<<<<
- * import constants
+ * import constants_analysis as constants
  * from cimulate_trial import simulate_trial
  */
   __pyx_t_2 = __Pyx_Import(__pyx_n_s_simulation_helper, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
@@ -4358,21 +4361,21 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_sh, __pyx_t_2) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":24
+  /* "analysis/cimulate_batch.pyx":24
  * 
  * import simulation_helper as sh
- * import constants             # <<<<<<<<<<<<<<
+ * import constants_analysis as constants             # <<<<<<<<<<<<<<
  * from cimulate_trial import simulate_trial
  * 
  */
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_constants, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_constants_analysis, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_constants, __pyx_t_2) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "cimulate_batch.pyx":25
+  /* "analysis/cimulate_batch.pyx":25
  * import simulation_helper as sh
- * import constants
+ * import constants_analysis as constants
  * from cimulate_trial import simulate_trial             # <<<<<<<<<<<<<<
  * 
  * cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):
@@ -4391,7 +4394,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cimulate_batch.pyx":1
+  /* "analysis/cimulate_batch.pyx":1
  * """             # <<<<<<<<<<<<<<
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4409,11 +4412,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init cimulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init analysis.cimulate_batch", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init cimulate_batch");
+    PyErr_SetString(PyExc_ImportError, "init analysis.cimulate_batch");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

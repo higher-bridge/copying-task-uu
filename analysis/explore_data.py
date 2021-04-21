@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import helperfunctions as hf
-from constants import EXCLUDE_TRIALS, MIDLINE, base_location
+from constants_analysis import EXCLUDE_TRIALS, MIDLINE, base_location
 
 PLOT = True
 

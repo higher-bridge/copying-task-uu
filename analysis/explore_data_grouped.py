@@ -20,7 +20,7 @@ from matplotlib import rcParams
 import seaborn as sns
 
 import helperfunctions as hf
-import constants
+import constants_analysis as constants
 
 
 pp_info = pd.read_excel('../results/participant_info.xlsx')

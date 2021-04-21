@@ -22,7 +22,7 @@ from joblib import Parallel, delayed
 import pickle
 
 import simulation_helper as sh
-import constants
+import constants_analysis as constants
 
 def simulate_participant(ID, linear_saccade_model, linear_mouse_model):    
     ID = str(ID).zfill(3)
