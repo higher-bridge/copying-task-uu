@@ -175,10 +175,12 @@ class Canvas(QWidget):
     def updateTimer(self):
         if self.inOpeningScreen:
             return
-        
-        self.writeCursorPosition()
 
         now = round(time.time() * 1000)
+
+        # Only write cursor every 2 ms
+        if (now % 2) == 0:
+            self.writeCursorPosition()
 
         # Check for timeout
         if now - self.globalTrialStart >= self.trialTimeOut:
@@ -193,13 +195,13 @@ class Canvas(QWidget):
 
         self.showHideExampleGrid(updateInstruction)
 
-        # Check if result needs checking, every 500ms to avoid too much processing
+        # Check if result needs checking, every 200ms to avoid too much processing
         if now - self.checkIfFinishedStart >= 200:
             self.checkIfFinished()
             self.checkIfFinishedStart = now
                     
     def runTimer(self):
-        self.timer.setInterval(2) # 1 ms
+        self.timer.setInterval(1)  # 1 ms
         self.timer.timeout.connect(self.updateTimer)
 
         # Unfortunately we need three tracking vars to keep updates not too time-consuming

@@ -88,12 +88,12 @@ def simulate_trial(dict tracking_dict, int k_items,
                         cumul_time += 50 * random.gauss(1, .01)
                         
                         for rep in range(n_repetitions):
-                            retrieval, succesful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[new_item],
+                            retrieval, successful = sh.compute_dme_retrieval(cumul_time / 1000, activated_at[new_item],
                                                                             f=f, thresh=thresh, noise=noise, decay=decay)
                             
                             cumul_time += retrieval * 1000                                             
                         
-                        if succesful:
+                        if successful:
                             locations_memorized.append(new_item)
         
         
@@ -123,11 +123,12 @@ def simulate_trial(dict tracking_dict, int k_items,
                     activated_at[k].append(cumul_time / 1000)
                     cumul_time += retrieval * 1000
                     
-                    # If memory matches viewed item
-                    if l == k:
+                    # If memory matches viewed item, stop searching
+                    if (l == k) and succesful:
                         found_match = True
+                        break
                 
-                if succesful and found_match:
+                if found_match:
                     # Move mouse to resource grid
                     new_mouse_location = resource_locs[k]
                     cumul_time += sh.estim_mouse_time(mouse_location, new_mouse_location,
@@ -219,9 +220,9 @@ def simulate_trial(dict tracking_dict, int k_items,
             # not necessary to model here
             cumul_time += 10   
 
-    # Code would check for finished trial every 500ms to conserve time, 
-    # so we add a random value between 1-500ms
-    cumul_time += int(round(random.uniform(1, 500)))
+    # Code would check for finished trial every 200ms to conserve time,
+    # so we add a random value between 1-200ms
+    cumul_time += int(round(random.uniform(1, 200)))
     
 
     return num_crossings, cumul_time, num_fixations
