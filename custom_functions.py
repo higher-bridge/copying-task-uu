@@ -37,34 +37,35 @@ def customTimer(parent, now):
                      Alternatives: 'hide', 'show', 'flip'.
     """
 
-    eyeLoc = parent.tracker.sample()
-    currentlyVisible = parent.exampleGridBox.isVisible()
+    # eyeLoc = parent.tracker.sample()[0]
+    eyeLoc = parent.mouse.pos().x()
+    # gridVisible = parent.exampleGridBox.isVisible()
+    # hourglassVisible = parent.hourGlass.isVisible()
 
     if parent.crossingStart is None:
-    # If midline is crossed to the left, start a counter (crossingStart)
-    # and hide the example
-        if eyeLoc[0] < MIDLINE:
+        # If midline is crossed to the left, start a counter (crossingStart)
+        # and hide the example
+        if eyeLoc < MIDLINE:
             parent.crossingStart = now
-            return 'hide' if currentlyVisible else None
+            return 'hide', 'show'
 
-    # If gaze is on the right and no counter is running, show example grid
-        elif eyeLoc[0] > MIDLINE:
-            return None if currentlyVisible else 'show'        
+    # If gaze is on the right and no counter is running, hide example grid and show no hourglass
+        elif eyeLoc > MIDLINE:
+            return 'hide', 'hide'
 
     # If a counter is running, hide the grid until time is reached. This is
     # regardless of where gaze position is
-    else:                           # elif parent.crossingStart is not None
+    else:
         if (now - parent.crossingStart) < parent.occludedTime:
-            return 'hide' if currentlyVisible else None
+            return 'hide', 'show'
 
         elif (now - parent.crossingStart) > parent.occludedTime:
-            if eyeLoc[0] > MIDLINE:
+            if eyeLoc > MIDLINE:
                 parent.crossingStart = None
                 
-            return 'show' if not currentlyVisible else None
-    
+            return 'show', 'hide'
 
-    return None
+    return None, None
 
 def customTimerWithReturn(parent, now):
     """Implement your own custom timer. Integrate with eyetracker if necessary.

@@ -23,7 +23,7 @@ import pandas as pd
 from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QCursor, QFont
+from PyQt5.QtGui import QPixmap, QCursor, QFont, QImage
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
@@ -164,13 +164,13 @@ class Canvas(QWidget):
         if self.exampleGridBox.isVisible():
             if now - self.start >= self.visibleTime:
                 self.start = now
-                return 'flip'
+                return 'hide', 'show'
         else:
             if now - self.start >= self.occludedTime:
                 self.start = now
-                return 'flip'
+                return 'show', 'hide'
 
-        return None
+        return None, None
 
     def updateTimer(self):
         if self.inOpeningScreen:
@@ -189,11 +189,12 @@ class Canvas(QWidget):
 
         # Check if update necessary with custom timer
         if self.useCustomTimer:
-            updateInstruction = customTimer(self, now)
+            gridInstruction, hourglassInstruction = customTimer(self, now)
         else:
-            updateInstruction = self.defaultTimer(now)
+            gridInstruction, hourglassInstruction = self.defaultTimer(now)
 
-        self.showHideExampleGrid(updateInstruction)
+        self.showHideExampleGrid(gridInstruction)
+        self.showHideHourGlass(hourglassInstruction)
 
         # Check if result needs checking, every 200ms to avoid too much processing
         if now - self.checkIfFinishedStart >= 200:
@@ -264,28 +265,58 @@ class Canvas(QWidget):
 
             self.initOpeningScreen(timeOut)
 
-    def showHideExampleGrid(self, speficic=None):
-        if speficic is None:
+    def showHideHourGlass(self, specific=None):
+        if specific is None:
             return
 
-        elif speficic == 'show':
-            self.exampleGridBox.setVisible(True)
+        elif specific == 'show':
+            self.hourGlass.setVisible(True)
             text = 'Showing'
 
-        elif speficic == 'hide':
-            self.exampleGridBox.setVisible(False)
+        elif specific == 'hide':
+            self.hourGlass.setVisible(False)
             text = 'Hiding'
 
-        elif speficic == 'flip':
-            if self.exampleGridBox.isVisible():
-                self.exampleGridBox.setVisible(False)
-                text = 'Showing'
-            else:
-                self.exampleGridBox.setVisible(True)
+        elif specific == 'flip':
+            if self.hourGlass.isVisible():
+                self.hourGlass.setVisible(False)
                 text = 'Hiding'
+            else:
+                self.hourGlass.setVisible(True)
+                text = 'Showing'
 
         else:
-            raise ValueError(f"{speficic} is not an accepted keyword for 'showHideExamplegrid'." +
+            raise ValueError(f"{specific} is not an accepted keyword for 'showHideHourGlass'." +
+                             "Choose from: None, 'show', 'hide', 'flip'.")
+
+        self.writeEvent(f'{text} hourglass')
+
+    def showHideExampleGrid(self, specific=None):
+        if specific is None:
+            return
+
+        elif specific == 'show':
+            self.exampleGridBox.setVisible(True)
+            # self.hourGlass.setVisible(False)
+            text = 'Showing'
+
+        elif specific == 'hide':
+            self.exampleGridBox.setVisible(False)
+            # self.hourGlass.setVisible(True)
+            text = 'Hiding'
+
+        elif specific == 'flip':
+            if self.exampleGridBox.isVisible():
+                self.exampleGridBox.setVisible(False)
+                # self.hourGlass.setVisible(True)
+                text = 'Hiding'
+            else:
+                self.exampleGridBox.setVisible(True)
+                # self.hourGlass.setVisible(False)
+                text = 'Showing'
+
+        else:
+            raise ValueError(f"{specific} is not an accepted keyword for 'showHideExamplegrid'." +
                              "Choose from: None, 'show', 'hide', 'flip'.")
 
         self.writeEvent(f'{text} grid')
@@ -520,7 +551,8 @@ class Canvas(QWidget):
         self.writeEvent('Task init')
 
         self.show()
-        
+
+        self.hourGlass.setVisible(False)
         self.inOpeningScreen = False
         self.runTimer()
         
@@ -549,11 +581,41 @@ class Canvas(QWidget):
         
         self.resourceGridLayout()
         layout.addWidget(self.resourceGridBox, gridLocs[2][0], gridLocs[2][1])
+
+        self.emptyOutlineLayout()
+        layout.addWidget(self.emptyOutline, gridLocs[0][0], gridLocs[0][1])
+
+        self.hourGlassLayout()
+        layout.addWidget(self.hourGlass, gridLocs[0][0], gridLocs[0][1])
         
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
         self.masterGrid.setStyleSheet(self.styleStr)
-            
+
+    def hourGlassLayout(self):
+        path = Path(__file__).parent/'pictograms'/'hourglass.png'
+        with open(path, 'rb') as f:
+            im = f.read()
+
+        image = QImage()
+        image.loadFromData(im)
+        image = image.scaledToWidth(75)
+
+        self.hourGlass = QLabel()
+        pixmap = QPixmap.fromImage(image)
+
+        self.hourGlass.setPixmap(pixmap)
+        self.hourGlass.setAlignment(QtCore.Qt.AlignCenter)
+        self.hourGlass.setSizePolicy(self.sizePolicy)
+
+    def emptyOutlineLayout(self):
+        self.emptyOutline = QGroupBox("Grid", self)
+        layout = QGridLayout()
+
+        self.emptyOutline.setLayout(layout)
+        self.emptyOutline.setTitle('')
+        self.emptyOutline.setStyleSheet(self.styleStr)
+
     def emptyGridLayout(self):
         self.emptyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
