@@ -37,8 +37,8 @@ def customTimer(parent, now):
                      Alternatives: 'hide', 'show', 'flip'.
     """
 
-    # eyeLoc = parent.tracker.sample()[0]
-    eyeLoc = parent.mouse.pos().x()
+    eyeLoc = parent.tracker.sample()[0]
+    # eyeLoc = parent.mouse.pos().x()
     # gridVisible = parent.exampleGridBox.isVisible()
     # hourglassVisible = parent.hourGlass.isVisible()
 
