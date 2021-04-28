@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "analysis.cimulation_analysis_helper",
+        "name": "cimulation_analysis_helper",
         "sources": [
             "cimulation_analysis_helper.pyx"
         ]
     },
-    "module_name": "analysis.cimulation_analysis_helper"
+    "module_name": "cimulation_analysis_helper"
 }
 END: Cython Metadata */
 
@@ -614,8 +614,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__analysis__cimulation_analysis_helper
-#define __PYX_HAVE_API__analysis__cimulation_analysis_helper
+#define __PYX_HAVE__cimulation_analysis_helper
+#define __PYX_HAVE_API__cimulation_analysis_helper
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -1271,13 +1271,13 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'analysis.cimulation_analysis_helper' */
-static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObject *, PyObject *); /*proto*/
-#define __Pyx_MODULE_NAME "analysis.cimulation_analysis_helper"
-extern int __pyx_module_is_main_analysis__cimulation_analysis_helper;
-int __pyx_module_is_main_analysis__cimulation_analysis_helper = 0;
+/* Module declarations from 'cimulation_analysis_helper' */
+static PyObject *__pyx_f_26cimulation_analysis_helper_compute_se(PyObject *, PyObject *); /*proto*/
+#define __Pyx_MODULE_NAME "cimulation_analysis_helper"
+extern int __pyx_module_is_main_cimulation_analysis_helper;
+int __pyx_module_is_main_cimulation_analysis_helper = 0;
 
-/* Implementation of 'analysis.cimulation_analysis_helper' */
+/* Implementation of 'cimulation_analysis_helper' */
 static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_round;
 static const char __pyx_k_c[] = "c";
@@ -1360,9 +1360,9 @@ static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_constants_analysis[] = "constants_analysis";
 static const char __pyx_k_scaled_squared_errors[] = "scaled_squared_errors";
 static const char __pyx_k_sklearn_preprocessing[] = "sklearn.preprocessing";
+static const char __pyx_k_cimulation_analysis_helper[] = "cimulation_analysis_helper";
 static const char __pyx_k_cimulation_analysis_helper_pyx[] = "cimulation_analysis_helper.pyx";
 static const char __pyx_k_This_program_is_free_software_y[] = "\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.\n";
-static const char __pyx_k_analysis_cimulation_analysis_hel[] = "analysis.cimulation_analysis_helper";
 static PyObject *__pyx_n_s_Any;
 static PyObject *__pyx_n_s_CONDITIONS;
 static PyObject *__pyx_n_s_Condition;
@@ -1383,10 +1383,10 @@ static PyObject *__pyx_n_s_agg;
 static PyObject *__pyx_n_s_all_params;
 static PyObject *__pyx_n_s_all_repetitions;
 static PyObject *__pyx_n_s_all_scaled_rmse;
-static PyObject *__pyx_n_s_analysis_cimulation_analysis_hel;
 static PyObject *__pyx_n_s_append;
 static PyObject *__pyx_n_s_array;
 static PyObject *__pyx_n_s_c;
+static PyObject *__pyx_n_s_cimulation_analysis_helper;
 static PyObject *__pyx_kp_s_cimulation_analysis_helper_pyx;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_columns;
@@ -1445,7 +1445,7 @@ static PyObject *__pyx_n_s_typing;
 static PyObject *__pyx_n_s_unique;
 static PyObject *__pyx_n_s_x;
 static PyObject *__pyx_n_s_y;
-static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sim_data_s, PyObject *__pyx_v_exp_data, PyObject *__pyx_v_scheme, PyObject *__pyx_v_features); /* proto */
+static PyObject *__pyx_pf_26cimulation_analysis_helper_parse_results(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sim_data_s, PyObject *__pyx_v_exp_data, PyObject *__pyx_v_scheme, PyObject *__pyx_v_features); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
@@ -1457,7 +1457,7 @@ static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_codeobj__4;
 /* Late includes */
 
-/* "analysis/cimulation_analysis_helper.pyx":29
+/* "cimulation_analysis_helper.pyx":29
  * PARSE_RESULTS = False
  * 
  * cdef compute_se(x : np.array, y : np.array):             # <<<<<<<<<<<<<<
@@ -1465,7 +1465,7 @@ static PyObject *__pyx_codeobj__4;
  * 
  */
 
-static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObject *__pyx_v_x, PyObject *__pyx_v_y) {
+static PyObject *__pyx_f_26cimulation_analysis_helper_compute_se(PyObject *__pyx_v_x, PyObject *__pyx_v_y) {
   PyObject *__pyx_v_squared_error = NULL;
   PyObject *__pyx_v_mms = NULL;
   PyObject *__pyx_v_norm_squared_error = NULL;
@@ -1483,7 +1483,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __Pyx_INCREF(__pyx_v_x);
   __Pyx_INCREF(__pyx_v_y);
 
-  /* "analysis/cimulation_analysis_helper.pyx":30
+  /* "cimulation_analysis_helper.pyx":30
  * 
  * cdef compute_se(x : np.array, y : np.array):
  *     squared_error = (np.mean(x) - np.mean(y)) ** 2             # <<<<<<<<<<<<<<
@@ -1540,7 +1540,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __pyx_v_squared_error = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":32
+  /* "cimulation_analysis_helper.pyx":32
  *     squared_error = (np.mean(x) - np.mean(y)) ** 2
  * 
  *     mms = MinMaxScaler()             # <<<<<<<<<<<<<<
@@ -1567,7 +1567,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __pyx_v_mms = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":33
+  /* "cimulation_analysis_helper.pyx":33
  * 
  *     mms = MinMaxScaler()
  *     x = mms.fit_transform(np.array(x).reshape(-1, 1))             # <<<<<<<<<<<<<<
@@ -1621,7 +1621,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __Pyx_DECREF_SET(__pyx_v_x, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":34
+  /* "cimulation_analysis_helper.pyx":34
  *     mms = MinMaxScaler()
  *     x = mms.fit_transform(np.array(x).reshape(-1, 1))
  *     y = mms.transform(np.array(y).reshape(-1, 1))             # <<<<<<<<<<<<<<
@@ -1675,7 +1675,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __Pyx_DECREF_SET(__pyx_v_y, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":36
+  /* "cimulation_analysis_helper.pyx":36
  *     y = mms.transform(np.array(y).reshape(-1, 1))
  * 
  *     norm_squared_error = (np.mean(x) - np.mean(y)) ** 2             # <<<<<<<<<<<<<<
@@ -1732,7 +1732,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __pyx_v_norm_squared_error = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":38
+  /* "cimulation_analysis_helper.pyx":38
  *     norm_squared_error = (np.mean(x) - np.mean(y)) ** 2
  * 
  *     return (squared_error, norm_squared_error)             # <<<<<<<<<<<<<<
@@ -1752,7 +1752,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":29
+  /* "cimulation_analysis_helper.pyx":29
  * PARSE_RESULTS = False
  * 
  * cdef compute_se(x : np.array, y : np.array):             # <<<<<<<<<<<<<<
@@ -1767,7 +1767,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("analysis.cimulation_analysis_helper.compute_se", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_analysis_helper.compute_se", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_squared_error);
@@ -1780,7 +1780,7 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
   return __pyx_r;
 }
 
-/* "analysis/cimulation_analysis_helper.pyx":40
+/* "cimulation_analysis_helper.pyx":40
  *     return (squared_error, norm_squared_error)
  * 
  * def parse_results(sim_data_s : pd.DataFrame,             # <<<<<<<<<<<<<<
@@ -1789,9 +1789,9 @@ static PyObject *__pyx_f_8analysis_26cimulation_analysis_helper_compute_se(PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_26cimulation_analysis_helper_1parse_results(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8analysis_26cimulation_analysis_helper_1parse_results = {"parse_results", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_26cimulation_analysis_helper_1parse_results, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8analysis_26cimulation_analysis_helper_1parse_results(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_26cimulation_analysis_helper_1parse_results(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_26cimulation_analysis_helper_1parse_results = {"parse_results", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_26cimulation_analysis_helper_1parse_results, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_26cimulation_analysis_helper_1parse_results(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_sim_data_s = 0;
   PyObject *__pyx_v_exp_data = 0;
   PyObject *__pyx_v_scheme = 0;
@@ -1864,18 +1864,18 @@ static PyObject *__pyx_pw_8analysis_26cimulation_analysis_helper_1parse_results(
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("parse_results", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 40, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_analysis_helper.parse_results", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_analysis_helper.parse_results", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(__pyx_self, __pyx_v_sim_data_s, __pyx_v_exp_data, __pyx_v_scheme, __pyx_v_features);
+  __pyx_r = __pyx_pf_26cimulation_analysis_helper_parse_results(__pyx_self, __pyx_v_sim_data_s, __pyx_v_exp_data, __pyx_v_scheme, __pyx_v_features);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sim_data_s, PyObject *__pyx_v_exp_data, PyObject *__pyx_v_scheme, PyObject *__pyx_v_features) {
+static PyObject *__pyx_pf_26cimulation_analysis_helper_parse_results(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_sim_data_s, PyObject *__pyx_v_exp_data, PyObject *__pyx_v_scheme, PyObject *__pyx_v_features) {
   PyObject *__pyx_v_start = NULL;
   PyObject *__pyx_v_results_dict = 0;
   PyObject *__pyx_v_scaled_squared_errors = 0;
@@ -1930,7 +1930,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("parse_results", 0);
 
-  /* "analysis/cimulation_analysis_helper.pyx":44
+  /* "cimulation_analysis_helper.pyx":44
  *                   scheme : List[Any],
  *                   features : List[str]):
  *     start = time.time()             # <<<<<<<<<<<<<<
@@ -1960,7 +1960,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_v_start = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":48
+  /* "cimulation_analysis_helper.pyx":48
  *     cdef dict results_dict, scaled_squared_errors
  * 
  *     cdef exp_datas =  [exp_data.loc[exp_data['Condition'] == c] for c in constants.CONDITIONS]             # <<<<<<<<<<<<<<
@@ -2033,7 +2033,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_v_exp_datas = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":50
+  /* "cimulation_analysis_helper.pyx":50
  *     cdef exp_datas =  [exp_data.loc[exp_data['Condition'] == c] for c in constants.CONDITIONS]
  * 
  *     results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 'Parameters',             # <<<<<<<<<<<<<<
@@ -2070,7 +2070,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_v_results_dict = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":55
+  /* "cimulation_analysis_helper.pyx":55
  * 
  *     # Loop through params and repetition strategies
  *     cdef all_repetitions = np.array(sim_data_s['Repetitions'].unique())             # <<<<<<<<<<<<<<
@@ -2121,7 +2121,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_v_all_repetitions = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":56
+  /* "cimulation_analysis_helper.pyx":56
  *     # Loop through params and repetition strategies
  *     cdef all_repetitions = np.array(sim_data_s['Repetitions'].unique())
  *     cdef all_params = np.array(sim_data_s['Parameters'].unique())             # <<<<<<<<<<<<<<
@@ -2172,7 +2172,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_v_all_params = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":58
+  /* "cimulation_analysis_helper.pyx":58
  *     cdef all_params = np.array(sim_data_s['Parameters'].unique())
  * 
  *     for repetitions in all_repetitions:             # <<<<<<<<<<<<<<
@@ -2221,7 +2221,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
     __Pyx_XDECREF_SET(__pyx_v_repetitions, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "analysis/cimulation_analysis_helper.pyx":59
+    /* "cimulation_analysis_helper.pyx":59
  * 
  *     for repetitions in all_repetitions:
  *         start1 = time.time()             # <<<<<<<<<<<<<<
@@ -2251,7 +2251,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
     __Pyx_XDECREF_SET(__pyx_v_start1, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "analysis/cimulation_analysis_helper.pyx":60
+    /* "cimulation_analysis_helper.pyx":60
  *     for repetitions in all_repetitions:
  *         start1 = time.time()
  *         sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]             # <<<<<<<<<<<<<<
@@ -2271,7 +2271,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
     __Pyx_XDECREF_SET(__pyx_v_sim_data_r, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "analysis/cimulation_analysis_helper.pyx":62
+    /* "cimulation_analysis_helper.pyx":62
  *         sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]
  * 
  *         for params in all_params:             # <<<<<<<<<<<<<<
@@ -2320,7 +2320,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_XDECREF_SET(__pyx_v_params, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":63
+      /* "cimulation_analysis_helper.pyx":63
  * 
  *         for params in all_params:
  *             sim_data_p = sim_data_r.loc[sim_data_r['Parameters'] == params]             # <<<<<<<<<<<<<<
@@ -2340,7 +2340,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_XDECREF_SET(__pyx_v_sim_data_p, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":65
+      /* "cimulation_analysis_helper.pyx":65
  *             sim_data_p = sim_data_r.loc[sim_data_r['Parameters'] == params]
  * 
  *             scaled_squared_errors = {key: [] for key in features}             # <<<<<<<<<<<<<<
@@ -2407,7 +2407,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_XDECREF_SET(__pyx_v_scaled_squared_errors, ((PyObject*)__pyx_t_3));
       __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":67
+      /* "cimulation_analysis_helper.pyx":67
  *             scaled_squared_errors = {key: [] for key in features}
  * 
  *             for condition_number, condition in enumerate(constants.CONDITIONS):             # <<<<<<<<<<<<<<
@@ -2471,7 +2471,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         __pyx_t_3 = __pyx_t_6;
         __pyx_t_6 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":68
+        /* "cimulation_analysis_helper.pyx":68
  * 
  *             for condition_number, condition in enumerate(constants.CONDITIONS):
  *                 exp_data_c = exp_datas[condition_number]             # <<<<<<<<<<<<<<
@@ -2483,7 +2483,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         __Pyx_XDECREF_SET(__pyx_v_exp_data_c, __pyx_t_6);
         __pyx_t_6 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":69
+        /* "cimulation_analysis_helper.pyx":69
  *             for condition_number, condition in enumerate(constants.CONDITIONS):
  *                 exp_data_c = exp_datas[condition_number]
  *                 sim_data_c = sim_data_p.loc[sim_data_p['Condition'] == condition]             # <<<<<<<<<<<<<<
@@ -2503,7 +2503,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         __Pyx_XDECREF_SET(__pyx_v_sim_data_c, __pyx_t_12);
         __pyx_t_12 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":71
+        /* "cimulation_analysis_helper.pyx":71
  *                 sim_data_c = sim_data_p.loc[sim_data_p['Condition'] == condition]
  * 
  *                 sim_grouped = sim_data_c.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()             # <<<<<<<<<<<<<<
@@ -2636,7 +2636,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         __Pyx_XDECREF_SET(__pyx_v_sim_grouped, __pyx_t_12);
         __pyx_t_12 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":72
+        /* "cimulation_analysis_helper.pyx":72
  * 
  *                 sim_grouped = sim_data_c.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
  *                 sim_grouped.columns = sim_grouped.columns.get_level_values(0)             # <<<<<<<<<<<<<<
@@ -2666,7 +2666,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         if (__Pyx_PyObject_SetAttrStr(__pyx_v_sim_grouped, __pyx_n_s_columns, __pyx_t_12) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":75
+        /* "cimulation_analysis_helper.pyx":75
  * 
  *                 # For every feature, calculate scaled squared error
  *                 for feat in features:             # <<<<<<<<<<<<<<
@@ -2715,7 +2715,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
           __Pyx_XDECREF_SET(__pyx_v_feat, __pyx_t_13);
           __pyx_t_13 = 0;
 
-          /* "analysis/cimulation_analysis_helper.pyx":76
+          /* "cimulation_analysis_helper.pyx":76
  *                 # For every feature, calculate scaled squared error
  *                 for feat in features:
  *                     x = np.array(exp_data_c[feat])             # <<<<<<<<<<<<<<
@@ -2748,7 +2748,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
           __Pyx_XDECREF_SET(__pyx_v_x, __pyx_t_13);
           __pyx_t_13 = 0;
 
-          /* "analysis/cimulation_analysis_helper.pyx":77
+          /* "cimulation_analysis_helper.pyx":77
  *                 for feat in features:
  *                     x = np.array(exp_data_c[feat])
  *                     y = np.array(sim_grouped[feat])             # <<<<<<<<<<<<<<
@@ -2781,14 +2781,14 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
           __Pyx_XDECREF_SET(__pyx_v_y, __pyx_t_13);
           __pyx_t_13 = 0;
 
-          /* "analysis/cimulation_analysis_helper.pyx":79
+          /* "cimulation_analysis_helper.pyx":79
  *                     y = np.array(sim_grouped[feat])
  * 
  *                     se, nse = compute_se(x, y)             # <<<<<<<<<<<<<<
  * 
  *                     scaled_squared_errors[feat].append(nse)
  */
-          __pyx_t_13 = __pyx_f_8analysis_26cimulation_analysis_helper_compute_se(__pyx_v_x, __pyx_v_y); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 79, __pyx_L1_error)
+          __pyx_t_13 = __pyx_f_26cimulation_analysis_helper_compute_se(__pyx_v_x, __pyx_v_y); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 79, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_13);
           if ((likely(PyTuple_CheckExact(__pyx_t_13))) || (PyList_CheckExact(__pyx_t_13))) {
             PyObject* sequence = __pyx_t_13;
@@ -2841,7 +2841,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
           __Pyx_XDECREF_SET(__pyx_v_nse, __pyx_t_6);
           __pyx_t_6 = 0;
 
-          /* "analysis/cimulation_analysis_helper.pyx":81
+          /* "cimulation_analysis_helper.pyx":81
  *                     se, nse = compute_se(x, y)
  * 
  *                     scaled_squared_errors[feat].append(nse)             # <<<<<<<<<<<<<<
@@ -2853,7 +2853,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
           __pyx_t_20 = __Pyx_PyObject_Append(__pyx_t_13, __pyx_v_nse); if (unlikely(__pyx_t_20 == ((int)-1))) __PYX_ERR(0, 81, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-          /* "analysis/cimulation_analysis_helper.pyx":75
+          /* "cimulation_analysis_helper.pyx":75
  * 
  *                 # For every feature, calculate scaled squared error
  *                 for feat in features:             # <<<<<<<<<<<<<<
@@ -2863,7 +2863,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
         }
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-        /* "analysis/cimulation_analysis_helper.pyx":67
+        /* "cimulation_analysis_helper.pyx":67
  *             scaled_squared_errors = {key: [] for key in features}
  * 
  *             for condition_number, condition in enumerate(constants.CONDITIONS):             # <<<<<<<<<<<<<<
@@ -2874,7 +2874,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":85
+      /* "cimulation_analysis_helper.pyx":85
  * 
  *             # After calculating statistics for each condition, calculate the RMSE for each feature
  *             all_scaled_rmse = [np.sqrt(np.mean(scaled_squared_errors[feat])) for feat in features]             # <<<<<<<<<<<<<<
@@ -2975,7 +2975,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_XDECREF_SET(__pyx_v_all_scaled_rmse, ((PyObject*)__pyx_t_3));
       __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":87
+      /* "cimulation_analysis_helper.pyx":87
  *             all_scaled_rmse = [np.sqrt(np.mean(scaled_squared_errors[feat])) for feat in features]
  * 
  *             results_dict['Encoding scheme'].append(scheme)             # <<<<<<<<<<<<<<
@@ -2987,7 +2987,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __pyx_t_20 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_v_scheme); if (unlikely(__pyx_t_20 == ((int)-1))) __PYX_ERR(0, 87, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":88
+      /* "cimulation_analysis_helper.pyx":88
  * 
  *             results_dict['Encoding scheme'].append(scheme)
  *             results_dict['Repetitions'].append(repetitions)             # <<<<<<<<<<<<<<
@@ -2999,7 +2999,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __pyx_t_20 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_v_repetitions); if (unlikely(__pyx_t_20 == ((int)-1))) __PYX_ERR(0, 88, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":89
+      /* "cimulation_analysis_helper.pyx":89
  *             results_dict['Encoding scheme'].append(scheme)
  *             results_dict['Repetitions'].append(repetitions)
  *             results_dict['Parameters'].append(params)             # <<<<<<<<<<<<<<
@@ -3011,7 +3011,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __pyx_t_20 = __Pyx_PyObject_Append(__pyx_t_3, __pyx_v_params); if (unlikely(__pyx_t_20 == ((int)-1))) __PYX_ERR(0, 89, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":90
+      /* "cimulation_analysis_helper.pyx":90
  *             results_dict['Repetitions'].append(repetitions)
  *             results_dict['Parameters'].append(params)
  *             results_dict['Mean Scaled RMSE'].append(np.mean(all_scaled_rmse))             # <<<<<<<<<<<<<<
@@ -3044,7 +3044,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":91
+      /* "cimulation_analysis_helper.pyx":91
  *             results_dict['Parameters'].append(params)
  *             results_dict['Mean Scaled RMSE'].append(np.mean(all_scaled_rmse))
  *             results_dict['Crossings'].append(all_scaled_rmse[0])             # <<<<<<<<<<<<<<
@@ -3059,7 +3059,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":92
+      /* "cimulation_analysis_helper.pyx":92
  *             results_dict['Mean Scaled RMSE'].append(np.mean(all_scaled_rmse))
  *             results_dict['Crossings'].append(all_scaled_rmse[0])
  *             results_dict['Time'].append(all_scaled_rmse[1])             # <<<<<<<<<<<<<<
@@ -3074,7 +3074,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":93
+      /* "cimulation_analysis_helper.pyx":93
  *             results_dict['Crossings'].append(all_scaled_rmse[0])
  *             results_dict['Time'].append(all_scaled_rmse[1])
  *             results_dict['Fixations'].append(all_scaled_rmse[2])             # <<<<<<<<<<<<<<
@@ -3089,7 +3089,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_analysis_helper.pyx":62
+      /* "cimulation_analysis_helper.pyx":62
  *         sim_data_r = sim_data_s.loc[sim_data_s['Repetitions'] == repetitions]
  * 
  *         for params in all_params:             # <<<<<<<<<<<<<<
@@ -3099,7 +3099,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "analysis/cimulation_analysis_helper.pyx":95
+    /* "cimulation_analysis_helper.pyx":95
  *             results_dict['Fixations'].append(all_scaled_rmse[2])
  * 
  *         print(f'Inner loop took {round(time.time() - start1, 3)}s')             # <<<<<<<<<<<<<<
@@ -3166,7 +3166,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
     if (__Pyx_PrintOne(0, __pyx_t_3) < 0) __PYX_ERR(0, 95, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "analysis/cimulation_analysis_helper.pyx":58
+    /* "cimulation_analysis_helper.pyx":58
  *     cdef all_params = np.array(sim_data_s['Parameters'].unique())
  * 
  *     for repetitions in all_repetitions:             # <<<<<<<<<<<<<<
@@ -3176,7 +3176,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":97
+  /* "cimulation_analysis_helper.pyx":97
  *         print(f'Inner loop took {round(time.time() - start1, 3)}s')
  * 
  *     print(f'Loop took {round(time.time() - start, 3)}s')             # <<<<<<<<<<<<<<
@@ -3243,7 +3243,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   if (__Pyx_PrintOne(0, __pyx_t_3) < 0) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":99
+  /* "cimulation_analysis_helper.pyx":99
  *     print(f'Loop took {round(time.time() - start, 3)}s')
  * 
  *     return results_dict             # <<<<<<<<<<<<<<
@@ -3255,7 +3255,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __pyx_r = __pyx_v_results_dict;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":40
+  /* "cimulation_analysis_helper.pyx":40
  *     return (squared_error, norm_squared_error)
  * 
  * def parse_results(sim_data_s : pd.DataFrame,             # <<<<<<<<<<<<<<
@@ -3275,7 +3275,7 @@ static PyObject *__pyx_pf_8analysis_26cimulation_analysis_helper_parse_results(C
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
   __Pyx_XDECREF(__pyx_t_16);
-  __Pyx_AddTraceback("analysis.cimulation_analysis_helper.parse_results", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_analysis_helper.parse_results", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_start);
@@ -3375,10 +3375,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_all_params, __pyx_k_all_params, sizeof(__pyx_k_all_params), 0, 0, 1, 1},
   {&__pyx_n_s_all_repetitions, __pyx_k_all_repetitions, sizeof(__pyx_k_all_repetitions), 0, 0, 1, 1},
   {&__pyx_n_s_all_scaled_rmse, __pyx_k_all_scaled_rmse, sizeof(__pyx_k_all_scaled_rmse), 0, 0, 1, 1},
-  {&__pyx_n_s_analysis_cimulation_analysis_hel, __pyx_k_analysis_cimulation_analysis_hel, sizeof(__pyx_k_analysis_cimulation_analysis_hel), 0, 0, 1, 1},
   {&__pyx_n_s_append, __pyx_k_append, sizeof(__pyx_k_append), 0, 0, 1, 1},
   {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
+  {&__pyx_n_s_cimulation_analysis_helper, __pyx_k_cimulation_analysis_helper, sizeof(__pyx_k_cimulation_analysis_helper), 0, 0, 1, 1},
   {&__pyx_kp_s_cimulation_analysis_helper_pyx, __pyx_k_cimulation_analysis_helper_pyx, sizeof(__pyx_k_cimulation_analysis_helper_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_columns, __pyx_k_columns, sizeof(__pyx_k_columns), 0, 0, 1, 1},
@@ -3451,7 +3451,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "analysis/cimulation_analysis_helper.pyx":33
+  /* "cimulation_analysis_helper.pyx":33
  * 
  *     mms = MinMaxScaler()
  *     x = mms.fit_transform(np.array(x).reshape(-1, 1))             # <<<<<<<<<<<<<<
@@ -3462,7 +3462,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "analysis/cimulation_analysis_helper.pyx":50
+  /* "cimulation_analysis_helper.pyx":50
  *     cdef exp_datas =  [exp_data.loc[exp_data['Condition'] == c] for c in constants.CONDITIONS]
  * 
  *     results_dict = {key: [] for key in ['Encoding scheme', 'Repetitions', 'Parameters',             # <<<<<<<<<<<<<<
@@ -3473,7 +3473,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "analysis/cimulation_analysis_helper.pyx":40
+  /* "cimulation_analysis_helper.pyx":40
  *     return (squared_error, norm_squared_error)
  * 
  * def parse_results(sim_data_s : pd.DataFrame,             # <<<<<<<<<<<<<<
@@ -3742,14 +3742,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_analysis__cimulation_analysis_helper) {
+  if (__pyx_module_is_main_cimulation_analysis_helper) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "analysis.cimulation_analysis_helper")) {
-      if (unlikely(PyDict_SetItemString(modules, "analysis.cimulation_analysis_helper", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "cimulation_analysis_helper")) {
+      if (unlikely(PyDict_SetItemString(modules, "cimulation_analysis_helper", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -3770,7 +3770,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "analysis/cimulation_analysis_helper.pyx":16
+  /* "cimulation_analysis_helper.pyx":16
  * """
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -3782,7 +3782,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":18
+  /* "cimulation_analysis_helper.pyx":18
  * import numpy as np
  * # cimport numpy as np
  * import pandas as pd             # <<<<<<<<<<<<<<
@@ -3794,7 +3794,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pd, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":19
+  /* "cimulation_analysis_helper.pyx":19
  * # cimport numpy as np
  * import pandas as pd
  * import time             # <<<<<<<<<<<<<<
@@ -3806,7 +3806,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":21
+  /* "cimulation_analysis_helper.pyx":21
  * import time
  * 
  * from sklearn.preprocessing import MinMaxScaler             # <<<<<<<<<<<<<<
@@ -3827,7 +3827,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":23
+  /* "cimulation_analysis_helper.pyx":23
  * from sklearn.preprocessing import MinMaxScaler
  * 
  * import constants_analysis as constants             # <<<<<<<<<<<<<<
@@ -3839,7 +3839,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_constants, __pyx_t_2) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":24
+  /* "cimulation_analysis_helper.pyx":24
  * 
  * import constants_analysis as constants
  * from typing import List, Any             # <<<<<<<<<<<<<<
@@ -3867,7 +3867,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":27
+  /* "cimulation_analysis_helper.pyx":27
  * 
  * 
  * PARSE_RESULTS = False             # <<<<<<<<<<<<<<
@@ -3876,19 +3876,19 @@ if (!__Pyx_RefNanny) {
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_PARSE_RESULTS, Py_False) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
 
-  /* "analysis/cimulation_analysis_helper.pyx":40
+  /* "cimulation_analysis_helper.pyx":40
  *     return (squared_error, norm_squared_error)
  * 
  * def parse_results(sim_data_s : pd.DataFrame,             # <<<<<<<<<<<<<<
  *                   exp_data : pd.DataFrame,
  *                   scheme : List[Any],
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8analysis_26cimulation_analysis_helper_1parse_results, NULL, __pyx_n_s_analysis_cimulation_analysis_hel); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_26cimulation_analysis_helper_1parse_results, NULL, __pyx_n_s_cimulation_analysis_helper); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_parse_results, __pyx_t_1) < 0) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_analysis_helper.pyx":1
+  /* "cimulation_analysis_helper.pyx":1
  * """             # <<<<<<<<<<<<<<
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3906,11 +3906,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init analysis.cimulation_analysis_helper", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init cimulation_analysis_helper", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init analysis.cimulation_analysis_helper");
+    PyErr_SetString(PyExc_ImportError, "init cimulation_analysis_helper");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

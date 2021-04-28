@@ -92,9 +92,9 @@ def parse_results(sim_data_s : pd.DataFrame,
             results_dict['Time'].append(all_scaled_rmse[1])
             results_dict['Fixations'].append(all_scaled_rmse[2])
             
-        print(f'Inner loop took {round(time.time() - start1, 3)}s')
+        # print(f'Inner loop took {round(time.time() - start1, 3)}s')
         
-    print(f'Loop took {round(time.time() - start, 3)}s')
+    # print(f'Loop took {round(time.time() - start, 3)}s')
                 
     return results_dict
 

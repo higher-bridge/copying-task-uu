@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "analysis.cimulation_helper",
+        "name": "cimulation_helper",
         "sources": [
             "cimulation_helper.pyx"
         ]
     },
-    "module_name": "analysis.cimulation_helper"
+    "module_name": "cimulation_helper"
 }
 END: Cython Metadata */
 
@@ -615,8 +615,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__analysis__cimulation_helper
-#define __PYX_HAVE_API__analysis__cimulation_helper
+#define __PYX_HAVE__cimulation_helper
+#define __PYX_HAVE_API__cimulation_helper
 /* Early includes */
 #include <math.h>
 #ifdef _OPENMP
@@ -831,19 +831,19 @@ static const char *__pyx_f[] = {
 };
 
 /*--- Type declarations ---*/
-struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval;
-struct __pyx_opt_args_8analysis_17cimulation_helper_estim_saccade_time;
-struct __pyx_opt_args_8analysis_17cimulation_helper_estim_mouse_time;
-struct __pyx_opt_args_8analysis_17cimulation_helper_generate_locations;
+struct __pyx_opt_args_17cimulation_helper_compute_dme_retrieval;
+struct __pyx_opt_args_17cimulation_helper_estim_saccade_time;
+struct __pyx_opt_args_17cimulation_helper_estim_mouse_time;
+struct __pyx_opt_args_17cimulation_helper_generate_locations;
 
-/* "analysis/cimulation_helper.pyx":39
+/* "cimulation_helper.pyx":39
  *     return activation
  * 
  * cpdef tuple compute_dme_retrieval(int current_time, list activated_at,             # <<<<<<<<<<<<<<
  *                           float f=.9, float thresh=.325,
  *                           float noise=.28, float decay=.5):
  */
-struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval {
+struct __pyx_opt_args_17cimulation_helper_compute_dme_retrieval {
   int __pyx_n;
   float f;
   float thresh;
@@ -851,42 +851,42 @@ struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval {
   float decay;
 };
 
-/* "analysis/cimulation_helper.pyx":62
+/* "cimulation_helper.pyx":62
  *     return fitts
  * 
  * cpdef int estim_saccade_time(tuple loc1, tuple loc2, int a=25, float b=.04, float sigma=.25):             # <<<<<<<<<<<<<<
  *     cdef float duration, noise
  *     cdef int result
  */
-struct __pyx_opt_args_8analysis_17cimulation_helper_estim_saccade_time {
+struct __pyx_opt_args_17cimulation_helper_estim_saccade_time {
   int __pyx_n;
   int a;
   float b;
   float sigma;
 };
 
-/* "analysis/cimulation_helper.pyx":72
+/* "cimulation_helper.pyx":72
  *     return result
  * 
  * cpdef int estim_mouse_time(tuple loc1, tuple loc2, int a=15, float b=105, float sigma=.25):             # <<<<<<<<<<<<<<
  *     cdef float duration, noise
  *     cdef int result
  */
-struct __pyx_opt_args_8analysis_17cimulation_helper_estim_mouse_time {
+struct __pyx_opt_args_17cimulation_helper_estim_mouse_time {
   int __pyx_n;
   int a;
   float b;
   float sigma;
 };
 
-/* "analysis/cimulation_helper.pyx":82
+/* "cimulation_helper.pyx":82
  *     return result
  * 
  * cpdef generate_locations(n_items:int=4):             # <<<<<<<<<<<<<<
  *     all_example_locations = constants.all_example_locations
  *     all_workspace_locations = constants.all_workspace_locations
  */
-struct __pyx_opt_args_8analysis_17cimulation_helper_generate_locations {
+struct __pyx_opt_args_17cimulation_helper_generate_locations {
   int __pyx_n;
   PyObject *n_items;
 };
@@ -1273,20 +1273,20 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'libc.math' */
 
-/* Module declarations from 'analysis.cimulation_helper' */
-static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *, PyObject *); /*proto*/
-static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int, PyObject *, float, float); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval *__pyx_optional_args); /*proto*/
-static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *, PyObject *); /*proto*/
-static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_estim_saccade_time *__pyx_optional_args); /*proto*/
-static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_estim_mouse_time *__pyx_optional_args); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_generate_locations *__pyx_optional_args); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int, int, int, int __pyx_skip_dispatch); /*proto*/
-#define __Pyx_MODULE_NAME "analysis.cimulation_helper"
-extern int __pyx_module_is_main_analysis__cimulation_helper;
-int __pyx_module_is_main_analysis__cimulation_helper = 0;
+/* Module declarations from 'cimulation_helper' */
+static float __pyx_f_17cimulation_helper_euclidean_distance(PyObject *, PyObject *); /*proto*/
+static float __pyx_f_17cimulation_helper_compute_dme_activation(int, PyObject *, float, float); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_compute_dme_retrieval(int, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_compute_dme_retrieval *__pyx_optional_args); /*proto*/
+static float __pyx_f_17cimulation_helper_fitts_id(PyObject *, PyObject *); /*proto*/
+static int __pyx_f_17cimulation_helper_estim_saccade_time(PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_estim_saccade_time *__pyx_optional_args); /*proto*/
+static int __pyx_f_17cimulation_helper_estim_mouse_time(PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_estim_mouse_time *__pyx_optional_args); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_generate_locations(int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_generate_locations *__pyx_optional_args); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_example_grid_visible(int, int, int, int __pyx_skip_dispatch); /*proto*/
+#define __Pyx_MODULE_NAME "cimulation_helper"
+extern int __pyx_module_is_main_cimulation_helper;
+int __pyx_module_is_main_cimulation_helper = 0;
 
-/* Implementation of 'analysis.cimulation_helper' */
+/* Implementation of 'cimulation_helper' */
 static PyObject *__pyx_builtin_zip;
 static PyObject *__pyx_builtin_sum;
 static PyObject *__pyx_builtin_round;
@@ -1343,6 +1343,7 @@ static const char __pyx_k_current_time[] = "current_time";
 static const char __pyx_k_occlude_time[] = "occlude_time";
 static const char __pyx_k_thresh_range[] = "thresh_range";
 static const char __pyx_k_visible_time[] = "visible_time";
+static const char __pyx_k_cimulation_helper[] = "cimulation_helper";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_constants_analysis[] = "constants_analysis";
 static const char __pyx_k_all_example_locations[] = "all_example_locations";
@@ -1350,7 +1351,6 @@ static const char __pyx_k_cimulation_helper_pyx[] = "cimulation_helper.pyx";
 static const char __pyx_k_all_resource_locations[] = "all_resource_locations";
 static const char __pyx_k_get_param_combinations[] = "get_param_combinations";
 static const char __pyx_k_all_workspace_locations[] = "all_workspace_locations";
-static const char __pyx_k_analysis_cimulation_helper[] = "analysis.cimulation_helper";
 static const char __pyx_k_create_all_encoding_schemes[] = "create_all_encoding_schemes";
 static const char __pyx_k_This_program_is_free_software_y[] = "\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.\n";
 static PyObject *__pyx_n_s_DECAY_RANGE;
@@ -1363,9 +1363,9 @@ static PyObject *__pyx_n_s_activated_at;
 static PyObject *__pyx_n_s_all_example_locations;
 static PyObject *__pyx_n_s_all_resource_locations;
 static PyObject *__pyx_n_s_all_workspace_locations;
-static PyObject *__pyx_n_s_analysis_cimulation_helper;
 static PyObject *__pyx_n_s_arange;
 static PyObject *__pyx_n_s_b;
+static PyObject *__pyx_n_s_cimulation_helper;
 static PyObject *__pyx_kp_s_cimulation_helper_pyx;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_combinations;
@@ -1414,13 +1414,13 @@ static PyObject *__pyx_n_s_thresh_range;
 static PyObject *__pyx_n_s_time;
 static PyObject *__pyx_n_s_visible_time;
 static PyObject *__pyx_n_s_zip;
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n_items); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_schemes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_max_k); /* proto */
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_compute_dme_retrieval(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_2estim_saccade_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_4estim_mouse_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_6generate_locations(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n_items); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_8example_grid_visible(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_10create_all_encoding_schemes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_max_k); /* proto */
+static PyObject *__pyx_pf_17cimulation_helper_12get_param_combinations(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_float_1_0;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
@@ -1433,7 +1433,7 @@ static PyObject *__pyx_codeobj__2;
 static PyObject *__pyx_codeobj__4;
 /* Late includes */
 
-/* "analysis/cimulation_helper.pyx":23
+/* "cimulation_helper.pyx":23
  * 
  * 
  * cdef float euclidean_distance(tuple loc1, tuple loc2):             # <<<<<<<<<<<<<<
@@ -1441,7 +1441,7 @@ static PyObject *__pyx_codeobj__4;
  *     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
  */
 
-static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2) {
+static float __pyx_f_17cimulation_helper_euclidean_distance(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2) {
   PyObject *__pyx_v_dist = 0;
   PyObject *__pyx_v_a = NULL;
   PyObject *__pyx_v_b = NULL;
@@ -1462,7 +1462,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("euclidean_distance", 0);
 
-  /* "analysis/cimulation_helper.pyx":25
+  /* "cimulation_helper.pyx":25
  * cdef float euclidean_distance(tuple loc1, tuple loc2):
  *     cdef list dist
  *     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]             # <<<<<<<<<<<<<<
@@ -1584,7 +1584,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
   __pyx_v_dist = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":26
+  /* "cimulation_helper.pyx":26
  *     cdef list dist
  *     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
  *     return sqrt(sum(dist))             # <<<<<<<<<<<<<<
@@ -1598,7 +1598,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
   __pyx_r = sqrt(__pyx_t_10);
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":23
+  /* "cimulation_helper.pyx":23
  * 
  * 
  * cdef float euclidean_distance(tuple loc1, tuple loc2):             # <<<<<<<<<<<<<<
@@ -1614,7 +1614,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_WriteUnraisable("analysis.cimulation_helper.euclidean_distance", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cimulation_helper.euclidean_distance", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dist);
@@ -1624,7 +1624,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":28
+/* "cimulation_helper.pyx":28
  *     return sqrt(sum(dist))
  * 
  * cdef float compute_dme_activation(int current_time, list activated_at,             # <<<<<<<<<<<<<<
@@ -1632,7 +1632,7 @@ static float __pyx_f_8analysis_17cimulation_helper_euclidean_distance(PyObject *
  *     cdef float summed, act_at, log_noise, activation
  */
 
-static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_decay, float __pyx_v_noise) {
+static float __pyx_f_17cimulation_helper_compute_dme_activation(int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_decay, float __pyx_v_noise) {
   float __pyx_v_summed;
   float __pyx_v_act_at;
   float __pyx_v_log_noise;
@@ -1652,7 +1652,7 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute_dme_activation", 0);
 
-  /* "analysis/cimulation_helper.pyx":32
+  /* "cimulation_helper.pyx":32
  *     cdef float summed, act_at, log_noise, activation
  * 
  *     summed = sum([abs(current_time - act_at) ** (-decay) for act_at in activated_at])             # <<<<<<<<<<<<<<
@@ -1690,7 +1690,7 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_summed = __pyx_t_5;
 
-  /* "analysis/cimulation_helper.pyx":34
+  /* "cimulation_helper.pyx":34
  *     summed = sum([abs(current_time - act_at) ** (-decay) for act_at in activated_at])
  * 
  *     log_noise = random.gauss(0, noise) ** 2             # <<<<<<<<<<<<<<
@@ -1758,7 +1758,7 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_log_noise = __pyx_t_5;
 
-  /* "analysis/cimulation_helper.pyx":35
+  /* "cimulation_helper.pyx":35
  * 
  *     log_noise = random.gauss(0, noise) ** 2
  *     activation = log(summed) + log_noise  # if summed != 0 else log_noise             # <<<<<<<<<<<<<<
@@ -1767,7 +1767,7 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
  */
   __pyx_v_activation = (log(__pyx_v_summed) + __pyx_v_log_noise);
 
-  /* "analysis/cimulation_helper.pyx":37
+  /* "cimulation_helper.pyx":37
  *     activation = log(summed) + log_noise  # if summed != 0 else log_noise
  * 
  *     return activation             # <<<<<<<<<<<<<<
@@ -1777,7 +1777,7 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
   __pyx_r = __pyx_v_activation;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":28
+  /* "cimulation_helper.pyx":28
  *     return sqrt(sum(dist))
  * 
  * cdef float compute_dme_activation(int current_time, list activated_at,             # <<<<<<<<<<<<<<
@@ -1792,14 +1792,14 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_WriteUnraisable("analysis.cimulation_helper.compute_dme_activation", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cimulation_helper.compute_dme_activation", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":39
+/* "cimulation_helper.pyx":39
  *     return activation
  * 
  * cpdef tuple compute_dme_retrieval(int current_time, list activated_at,             # <<<<<<<<<<<<<<
@@ -1807,8 +1807,8 @@ static float __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(int __
  *                           float noise=.28, float decay=.5):
  */
 
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int __pyx_v_current_time, PyObject *__pyx_v_activated_at, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval *__pyx_optional_args) {
+static PyObject *__pyx_pw_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_compute_dme_retrieval(int __pyx_v_current_time, PyObject *__pyx_v_activated_at, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_compute_dme_retrieval *__pyx_optional_args) {
   float __pyx_v_f = ((float).9);
   float __pyx_v_thresh = ((float).325);
   float __pyx_v_noise = ((float).28);
@@ -1840,16 +1840,16 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
     }
   }
 
-  /* "analysis/cimulation_helper.pyx":45
+  /* "cimulation_helper.pyx":45
  *     cdef bint surpassed
  * 
  *     ai = compute_dme_activation(current_time, activated_at, decay, noise)             # <<<<<<<<<<<<<<
  *     rt = f * exp(-ai)
  *     surpassed = ai > thresh
  */
-  __pyx_v_ai = __pyx_f_8analysis_17cimulation_helper_compute_dme_activation(__pyx_v_current_time, __pyx_v_activated_at, __pyx_v_decay, __pyx_v_noise);
+  __pyx_v_ai = __pyx_f_17cimulation_helper_compute_dme_activation(__pyx_v_current_time, __pyx_v_activated_at, __pyx_v_decay, __pyx_v_noise);
 
-  /* "analysis/cimulation_helper.pyx":46
+  /* "cimulation_helper.pyx":46
  * 
  *     ai = compute_dme_activation(current_time, activated_at, decay, noise)
  *     rt = f * exp(-ai)             # <<<<<<<<<<<<<<
@@ -1858,7 +1858,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
  */
   __pyx_v_rt = (__pyx_v_f * exp((-__pyx_v_ai)));
 
-  /* "analysis/cimulation_helper.pyx":47
+  /* "cimulation_helper.pyx":47
  *     ai = compute_dme_activation(current_time, activated_at, decay, noise)
  *     rt = f * exp(-ai)
  *     surpassed = ai > thresh             # <<<<<<<<<<<<<<
@@ -1867,7 +1867,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
  */
   __pyx_v_surpassed = (__pyx_v_ai > __pyx_v_thresh);
 
-  /* "analysis/cimulation_helper.pyx":49
+  /* "cimulation_helper.pyx":49
  *     surpassed = ai > thresh
  * 
  *     return (rt, surpassed)             # <<<<<<<<<<<<<<
@@ -1891,7 +1891,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":39
+  /* "cimulation_helper.pyx":39
  *     return activation
  * 
  * cpdef tuple compute_dme_retrieval(int current_time, list activated_at,             # <<<<<<<<<<<<<<
@@ -1904,7 +1904,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("analysis.cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1913,8 +1913,8 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(int
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_17cimulation_helper_1compute_dme_retrieval(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_v_current_time;
   PyObject *__pyx_v_activated_at = 0;
   float __pyx_v_f;
@@ -2031,12 +2031,12 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval(P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("compute_dme_retrieval", 0, 2, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 39, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_activated_at), (&PyList_Type), 1, "activated_at", 1))) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(__pyx_self, __pyx_v_current_time, __pyx_v_activated_at, __pyx_v_f, __pyx_v_thresh, __pyx_v_noise, __pyx_v_decay);
+  __pyx_r = __pyx_pf_17cimulation_helper_compute_dme_retrieval(__pyx_self, __pyx_v_current_time, __pyx_v_activated_at, __pyx_v_f, __pyx_v_thresh, __pyx_v_noise, __pyx_v_decay);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2047,11 +2047,11 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval(P
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay) {
+static PyObject *__pyx_pf_17cimulation_helper_compute_dme_retrieval(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_current_time, PyObject *__pyx_v_activated_at, float __pyx_v_f, float __pyx_v_thresh, float __pyx_v_noise, float __pyx_v_decay) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  struct __pyx_opt_args_8analysis_17cimulation_helper_compute_dme_retrieval __pyx_t_2;
+  struct __pyx_opt_args_17cimulation_helper_compute_dme_retrieval __pyx_t_2;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2062,7 +2062,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CY
   __pyx_t_2.thresh = __pyx_v_thresh;
   __pyx_t_2.noise = __pyx_v_noise;
   __pyx_t_2.decay = __pyx_v_decay;
-  __pyx_t_1 = __pyx_f_8analysis_17cimulation_helper_compute_dme_retrieval(__pyx_v_current_time, __pyx_v_activated_at, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_17cimulation_helper_compute_dme_retrieval(__pyx_v_current_time, __pyx_v_activated_at, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2071,7 +2071,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CY
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("analysis.cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.compute_dme_retrieval", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2079,7 +2079,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CY
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":51
+/* "cimulation_helper.pyx":51
  *     return (rt, surpassed)
  * 
  * cdef float fitts_id(tuple loc1, tuple loc2):             # <<<<<<<<<<<<<<
@@ -2087,7 +2087,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_compute_dme_retrieval(CY
  * 
  */
 
-static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2) {
+static float __pyx_f_17cimulation_helper_fitts_id(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2) {
   float __pyx_v_distance;
   float __pyx_v_dw;
   float __pyx_v_fitts;
@@ -2102,16 +2102,16 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("fitts_id", 0);
 
-  /* "analysis/cimulation_helper.pyx":56
+  /* "cimulation_helper.pyx":56
  *     cdef float distance, dw, fitts
  * 
  *     distance = euclidean_distance(loc1, loc2)             # <<<<<<<<<<<<<<
  *     dw = (2 * distance) / constants.TARGET_SIZE[0] + 1
  *     fitts = log2(dw)
  */
-  __pyx_v_distance = __pyx_f_8analysis_17cimulation_helper_euclidean_distance(__pyx_v_loc1, __pyx_v_loc2);
+  __pyx_v_distance = __pyx_f_17cimulation_helper_euclidean_distance(__pyx_v_loc1, __pyx_v_loc2);
 
-  /* "analysis/cimulation_helper.pyx":57
+  /* "cimulation_helper.pyx":57
  * 
  *     distance = euclidean_distance(loc1, loc2)
  *     dw = (2 * distance) / constants.TARGET_SIZE[0] + 1             # <<<<<<<<<<<<<<
@@ -2139,7 +2139,7 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_dw = __pyx_t_4;
 
-  /* "analysis/cimulation_helper.pyx":58
+  /* "cimulation_helper.pyx":58
  *     distance = euclidean_distance(loc1, loc2)
  *     dw = (2 * distance) / constants.TARGET_SIZE[0] + 1
  *     fitts = log2(dw)             # <<<<<<<<<<<<<<
@@ -2148,7 +2148,7 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
  */
   __pyx_v_fitts = log2(__pyx_v_dw);
 
-  /* "analysis/cimulation_helper.pyx":60
+  /* "cimulation_helper.pyx":60
  *     fitts = log2(dw)
  * 
  *     return fitts             # <<<<<<<<<<<<<<
@@ -2158,7 +2158,7 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
   __pyx_r = __pyx_v_fitts;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":51
+  /* "cimulation_helper.pyx":51
  *     return (rt, surpassed)
  * 
  * cdef float fitts_id(tuple loc1, tuple loc2):             # <<<<<<<<<<<<<<
@@ -2171,14 +2171,14 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("analysis.cimulation_helper.fitts_id", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cimulation_helper.fitts_id", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":62
+/* "cimulation_helper.pyx":62
  *     return fitts
  * 
  * cpdef int estim_saccade_time(tuple loc1, tuple loc2, int a=25, float b=.04, float sigma=.25):             # <<<<<<<<<<<<<<
@@ -2186,8 +2186,8 @@ static float __pyx_f_8analysis_17cimulation_helper_fitts_id(PyObject *__pyx_v_lo
  *     cdef int result
  */
 
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_estim_saccade_time *__pyx_optional_args) {
+static PyObject *__pyx_pw_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_f_17cimulation_helper_estim_saccade_time(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_estim_saccade_time *__pyx_optional_args) {
   int __pyx_v_a = ((int)25);
   float __pyx_v_b = ((float).04);
   float __pyx_v_sigma = ((float).25);
@@ -2217,16 +2217,16 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
     }
   }
 
-  /* "analysis/cimulation_helper.pyx":66
+  /* "cimulation_helper.pyx":66
  *     cdef int result
  * 
  *     duration = a + (b * euclidean_distance(loc1, loc2))             # <<<<<<<<<<<<<<
  *     noise = random.gauss(mu=1.0, sigma=sigma)
  *     result = int(round(duration * noise))
  */
-  __pyx_v_duration = (__pyx_v_a + (__pyx_v_b * __pyx_f_8analysis_17cimulation_helper_euclidean_distance(__pyx_v_loc1, __pyx_v_loc2)));
+  __pyx_v_duration = (__pyx_v_a + (__pyx_v_b * __pyx_f_17cimulation_helper_euclidean_distance(__pyx_v_loc1, __pyx_v_loc2)));
 
-  /* "analysis/cimulation_helper.pyx":67
+  /* "cimulation_helper.pyx":67
  * 
  *     duration = a + (b * euclidean_distance(loc1, loc2))
  *     noise = random.gauss(mu=1.0, sigma=sigma)             # <<<<<<<<<<<<<<
@@ -2253,7 +2253,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_noise = __pyx_t_4;
 
-  /* "analysis/cimulation_helper.pyx":68
+  /* "cimulation_helper.pyx":68
  *     duration = a + (b * euclidean_distance(loc1, loc2))
  *     noise = random.gauss(mu=1.0, sigma=sigma)
  *     result = int(round(duration * noise))             # <<<<<<<<<<<<<<
@@ -2272,7 +2272,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_result = __pyx_t_5;
 
-  /* "analysis/cimulation_helper.pyx":70
+  /* "cimulation_helper.pyx":70
  *     result = int(round(duration * noise))
  * 
  *     return result             # <<<<<<<<<<<<<<
@@ -2282,7 +2282,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":62
+  /* "cimulation_helper.pyx":62
  *     return fitts
  * 
  * cpdef int estim_saccade_time(tuple loc1, tuple loc2, int a=25, float b=.04, float sigma=.25):             # <<<<<<<<<<<<<<
@@ -2295,7 +2295,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("analysis.cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -2303,8 +2303,8 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(PyObject *__
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_17cimulation_helper_3estim_saccade_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_loc1 = 0;
   PyObject *__pyx_v_loc2 = 0;
   int __pyx_v_a;
@@ -2405,13 +2405,13 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time(PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estim_saccade_time", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 62, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_loc1), (&PyTuple_Type), 1, "loc1", 1))) __PYX_ERR(0, 62, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_loc2), (&PyTuple_Type), 1, "loc2", 1))) __PYX_ERR(0, 62, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(__pyx_self, __pyx_v_loc1, __pyx_v_loc2, __pyx_v_a, __pyx_v_b, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_17cimulation_helper_2estim_saccade_time(__pyx_self, __pyx_v_loc1, __pyx_v_loc2, __pyx_v_a, __pyx_v_b, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2422,11 +2422,11 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time(PyOb
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma) {
+static PyObject *__pyx_pf_17cimulation_helper_2estim_saccade_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_opt_args_8analysis_17cimulation_helper_estim_saccade_time __pyx_t_2;
+  struct __pyx_opt_args_17cimulation_helper_estim_saccade_time __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -2437,7 +2437,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTH
   __pyx_t_2.a = __pyx_v_a;
   __pyx_t_2.b = __pyx_v_b;
   __pyx_t_2.sigma = __pyx_v_sigma;
-  __pyx_t_1 = __pyx_f_8analysis_17cimulation_helper_estim_saccade_time(__pyx_v_loc1, __pyx_v_loc2, 0, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_17cimulation_helper_estim_saccade_time(__pyx_v_loc1, __pyx_v_loc2, 0, &__pyx_t_2); 
   __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
@@ -2447,7 +2447,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTH
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("analysis.cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.estim_saccade_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2455,7 +2455,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTH
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":72
+/* "cimulation_helper.pyx":72
  *     return result
  * 
  * cpdef int estim_mouse_time(tuple loc1, tuple loc2, int a=15, float b=105, float sigma=.25):             # <<<<<<<<<<<<<<
@@ -2463,8 +2463,8 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_2estim_saccade_time(CYTH
  *     cdef int result
  */
 
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_estim_mouse_time *__pyx_optional_args) {
+static PyObject *__pyx_pw_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_f_17cimulation_helper_estim_mouse_time(PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_estim_mouse_time *__pyx_optional_args) {
   int __pyx_v_a = ((int)15);
   float __pyx_v_b = ((float)105.0);
   float __pyx_v_sigma = ((float).25);
@@ -2494,16 +2494,16 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
     }
   }
 
-  /* "analysis/cimulation_helper.pyx":76
+  /* "cimulation_helper.pyx":76
  *     cdef int result
  * 
  *     duration = a + (b * fitts_id(loc1, loc2))             # <<<<<<<<<<<<<<
  *     noise = random.gauss(mu=1.0, sigma=sigma)
  *     result = int(round(duration * noise))
  */
-  __pyx_v_duration = (__pyx_v_a + (__pyx_v_b * __pyx_f_8analysis_17cimulation_helper_fitts_id(__pyx_v_loc1, __pyx_v_loc2)));
+  __pyx_v_duration = (__pyx_v_a + (__pyx_v_b * __pyx_f_17cimulation_helper_fitts_id(__pyx_v_loc1, __pyx_v_loc2)));
 
-  /* "analysis/cimulation_helper.pyx":77
+  /* "cimulation_helper.pyx":77
  * 
  *     duration = a + (b * fitts_id(loc1, loc2))
  *     noise = random.gauss(mu=1.0, sigma=sigma)             # <<<<<<<<<<<<<<
@@ -2530,7 +2530,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_noise = __pyx_t_4;
 
-  /* "analysis/cimulation_helper.pyx":78
+  /* "cimulation_helper.pyx":78
  *     duration = a + (b * fitts_id(loc1, loc2))
  *     noise = random.gauss(mu=1.0, sigma=sigma)
  *     result = int(round(duration * noise))             # <<<<<<<<<<<<<<
@@ -2549,7 +2549,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_result = __pyx_t_5;
 
-  /* "analysis/cimulation_helper.pyx":80
+  /* "cimulation_helper.pyx":80
  *     result = int(round(duration * noise))
  * 
  *     return result             # <<<<<<<<<<<<<<
@@ -2559,7 +2559,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":72
+  /* "cimulation_helper.pyx":72
  *     return result
  * 
  * cpdef int estim_mouse_time(tuple loc1, tuple loc2, int a=15, float b=105, float sigma=.25):             # <<<<<<<<<<<<<<
@@ -2572,7 +2572,7 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("analysis.cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -2580,8 +2580,8 @@ static int __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(PyObject *__py
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_17cimulation_helper_5estim_mouse_time(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_loc1 = 0;
   PyObject *__pyx_v_loc2 = 0;
   int __pyx_v_a;
@@ -2682,13 +2682,13 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time(PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estim_mouse_time", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 72, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_loc1), (&PyTuple_Type), 1, "loc1", 1))) __PYX_ERR(0, 72, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_loc2), (&PyTuple_Type), 1, "loc2", 1))) __PYX_ERR(0, 72, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(__pyx_self, __pyx_v_loc1, __pyx_v_loc2, __pyx_v_a, __pyx_v_b, __pyx_v_sigma);
+  __pyx_r = __pyx_pf_17cimulation_helper_4estim_mouse_time(__pyx_self, __pyx_v_loc1, __pyx_v_loc2, __pyx_v_a, __pyx_v_b, __pyx_v_sigma);
 
   /* function exit code */
   goto __pyx_L0;
@@ -2699,11 +2699,11 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time(PyObje
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma) {
+static PyObject *__pyx_pf_17cimulation_helper_4estim_mouse_time(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_loc1, PyObject *__pyx_v_loc2, int __pyx_v_a, float __pyx_v_b, float __pyx_v_sigma) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_opt_args_8analysis_17cimulation_helper_estim_mouse_time __pyx_t_2;
+  struct __pyx_opt_args_17cimulation_helper_estim_mouse_time __pyx_t_2;
   PyObject *__pyx_t_3 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -2714,7 +2714,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON
   __pyx_t_2.a = __pyx_v_a;
   __pyx_t_2.b = __pyx_v_b;
   __pyx_t_2.sigma = __pyx_v_sigma;
-  __pyx_t_1 = __pyx_f_8analysis_17cimulation_helper_estim_mouse_time(__pyx_v_loc1, __pyx_v_loc2, 0, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_17cimulation_helper_estim_mouse_time(__pyx_v_loc1, __pyx_v_loc2, 0, &__pyx_t_2); 
   __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
@@ -2724,7 +2724,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("analysis.cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.estim_mouse_time", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2732,7 +2732,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":82
+/* "cimulation_helper.pyx":82
  *     return result
  * 
  * cpdef generate_locations(n_items:int=4):             # <<<<<<<<<<<<<<
@@ -2740,8 +2740,8 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_4estim_mouse_time(CYTHON
  *     all_workspace_locations = constants.all_workspace_locations
  */
 
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8analysis_17cimulation_helper_generate_locations *__pyx_optional_args) {
+static PyObject *__pyx_pw_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_generate_locations(CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_17cimulation_helper_generate_locations *__pyx_optional_args) {
   PyObject *__pyx_v_n_items = ((PyObject *)__pyx_int_4);
   PyObject *__pyx_v_all_example_locations = NULL;
   PyObject *__pyx_v_all_workspace_locations = NULL;
@@ -2771,7 +2771,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
     }
   }
 
-  /* "analysis/cimulation_helper.pyx":83
+  /* "cimulation_helper.pyx":83
  * 
  * cpdef generate_locations(n_items:int=4):
  *     all_example_locations = constants.all_example_locations             # <<<<<<<<<<<<<<
@@ -2786,7 +2786,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_all_example_locations = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":84
+  /* "cimulation_helper.pyx":84
  * cpdef generate_locations(n_items:int=4):
  *     all_example_locations = constants.all_example_locations
  *     all_workspace_locations = constants.all_workspace_locations             # <<<<<<<<<<<<<<
@@ -2801,7 +2801,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_all_workspace_locations = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":85
+  /* "cimulation_helper.pyx":85
  *     all_example_locations = constants.all_example_locations
  *     all_workspace_locations = constants.all_workspace_locations
  *     all_resource_locations = constants.all_resource_locations             # <<<<<<<<<<<<<<
@@ -2816,7 +2816,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_all_resource_locations = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":88
+  /* "cimulation_helper.pyx":88
  * 
  *     # Sample a set of locations so we can index matching one from example and workspace
  *     cdef locations = random.sample(list(range(len(all_example_locations))), n_items)             # <<<<<<<<<<<<<<
@@ -2887,7 +2887,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_locations = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":90
+  /* "cimulation_helper.pyx":90
  *     cdef locations = random.sample(list(range(len(all_example_locations))), n_items)
  * 
  *     example_locations = [all_example_locations[i] for i in locations]             # <<<<<<<<<<<<<<
@@ -2946,7 +2946,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_example_locations = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":91
+  /* "cimulation_helper.pyx":91
  * 
  *     example_locations = [all_example_locations[i] for i in locations]
  *     workspace_locations = [all_workspace_locations[i] for i in locations]             # <<<<<<<<<<<<<<
@@ -3005,7 +3005,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_workspace_locations = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":92
+  /* "cimulation_helper.pyx":92
  *     example_locations = [all_example_locations[i] for i in locations]
  *     workspace_locations = [all_workspace_locations[i] for i in locations]
  *     resource_locations = all_resource_locations[0:n_items]             # <<<<<<<<<<<<<<
@@ -3017,7 +3017,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_v_resource_locations = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "analysis/cimulation_helper.pyx":94
+  /* "cimulation_helper.pyx":94
  *     resource_locations = all_resource_locations[0:n_items]
  * 
  *     return example_locations, workspace_locations, resource_locations             # <<<<<<<<<<<<<<
@@ -3040,7 +3040,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":82
+  /* "cimulation_helper.pyx":82
  *     return result
  * 
  * cpdef generate_locations(n_items:int=4):             # <<<<<<<<<<<<<<
@@ -3055,7 +3055,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("analysis.cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_all_example_locations);
@@ -3072,8 +3072,8 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_generate_locations(CYTHON
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_17cimulation_helper_7generate_locations(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_n_items = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -3119,22 +3119,22 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_7generate_locations(PyOb
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("generate_locations", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 82, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_6generate_locations(__pyx_self, __pyx_v_n_items);
+  __pyx_r = __pyx_pf_17cimulation_helper_6generate_locations(__pyx_self, __pyx_v_n_items);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n_items) {
+static PyObject *__pyx_pf_17cimulation_helper_6generate_locations(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n_items) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  struct __pyx_opt_args_8analysis_17cimulation_helper_generate_locations __pyx_t_2;
+  struct __pyx_opt_args_17cimulation_helper_generate_locations __pyx_t_2;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3142,7 +3142,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTH
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.n_items = __pyx_v_n_items;
-  __pyx_t_1 = __pyx_f_8analysis_17cimulation_helper_generate_locations(0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_17cimulation_helper_generate_locations(0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3151,7 +3151,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTH
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("analysis.cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.generate_locations", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3159,7 +3159,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTH
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":96
+/* "cimulation_helper.pyx":96
  *     return example_locations, workspace_locations, resource_locations
  * 
  * cpdef example_grid_visible(int time, int visible_time, int occlude_time):             # <<<<<<<<<<<<<<
@@ -3167,8 +3167,8 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_6generate_locations(CYTH
  * 
  */
 
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_17cimulation_helper_example_grid_visible(int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time, CYTHON_UNUSED int __pyx_skip_dispatch) {
   PyObject *__pyx_v_summed_time = 0;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3181,7 +3181,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("example_grid_visible", 0);
 
-  /* "analysis/cimulation_helper.pyx":97
+  /* "cimulation_helper.pyx":97
  * 
  * cpdef example_grid_visible(int time, int visible_time, int occlude_time):
  *     cdef summed_time = visible_time + occlude_time             # <<<<<<<<<<<<<<
@@ -3193,7 +3193,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
   __pyx_v_summed_time = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":99
+  /* "cimulation_helper.pyx":99
  *     cdef summed_time = visible_time + occlude_time
  * 
  *     while time > summed_time:             # <<<<<<<<<<<<<<
@@ -3209,7 +3209,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (!__pyx_t_3) break;
 
-    /* "analysis/cimulation_helper.pyx":100
+    /* "cimulation_helper.pyx":100
  * 
  *     while time > summed_time:
  *         time -= summed_time             # <<<<<<<<<<<<<<
@@ -3226,7 +3226,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
     __pyx_v_time = __pyx_t_4;
   }
 
-  /* "analysis/cimulation_helper.pyx":102
+  /* "cimulation_helper.pyx":102
  *         time -= summed_time
  * 
  *     if time <= visible_time:             # <<<<<<<<<<<<<<
@@ -3236,7 +3236,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
   __pyx_t_3 = ((__pyx_v_time <= __pyx_v_visible_time) != 0);
   if (__pyx_t_3) {
 
-    /* "analysis/cimulation_helper.pyx":103
+    /* "cimulation_helper.pyx":103
  * 
  *     if time <= visible_time:
  *         return True             # <<<<<<<<<<<<<<
@@ -3248,7 +3248,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
     __pyx_r = Py_True;
     goto __pyx_L0;
 
-    /* "analysis/cimulation_helper.pyx":102
+    /* "cimulation_helper.pyx":102
  *         time -= summed_time
  * 
  *     if time <= visible_time:             # <<<<<<<<<<<<<<
@@ -3257,7 +3257,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
  */
   }
 
-  /* "analysis/cimulation_helper.pyx":105
+  /* "cimulation_helper.pyx":105
  *         return True
  *     else:
  *         return False             # <<<<<<<<<<<<<<
@@ -3271,7 +3271,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
     goto __pyx_L0;
   }
 
-  /* "analysis/cimulation_helper.pyx":96
+  /* "cimulation_helper.pyx":96
  *     return example_locations, workspace_locations, resource_locations
  * 
  * cpdef example_grid_visible(int time, int visible_time, int occlude_time):             # <<<<<<<<<<<<<<
@@ -3283,7 +3283,7 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("analysis.cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_summed_time);
@@ -3293,8 +3293,8 @@ static PyObject *__pyx_f_8analysis_17cimulation_helper_example_grid_visible(int 
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_17cimulation_helper_9example_grid_visible(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   int __pyx_v_time;
   int __pyx_v_visible_time;
   int __pyx_v_occlude_time;
@@ -3356,18 +3356,18 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_9example_grid_visible(Py
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("example_grid_visible", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 96, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(__pyx_self, __pyx_v_time, __pyx_v_visible_time, __pyx_v_occlude_time);
+  __pyx_r = __pyx_pf_17cimulation_helper_8example_grid_visible(__pyx_self, __pyx_v_time, __pyx_v_visible_time, __pyx_v_occlude_time);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time) {
+static PyObject *__pyx_pf_17cimulation_helper_8example_grid_visible(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_time, int __pyx_v_visible_time, int __pyx_v_occlude_time) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3376,7 +3376,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CY
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("example_grid_visible", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_8analysis_17cimulation_helper_example_grid_visible(__pyx_v_time, __pyx_v_visible_time, __pyx_v_occlude_time, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_17cimulation_helper_example_grid_visible(__pyx_v_time, __pyx_v_visible_time, __pyx_v_occlude_time, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3385,7 +3385,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CY
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("analysis.cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.example_grid_visible", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3393,7 +3393,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CY
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":107
+/* "cimulation_helper.pyx":107
  *         return False
  * 
  * def create_all_encoding_schemes(max_k:int=4):             # <<<<<<<<<<<<<<
@@ -3402,9 +3402,9 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_8example_grid_visible(CY
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_11create_all_encoding_schemes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8analysis_17cimulation_helper_11create_all_encoding_schemes = {"create_all_encoding_schemes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_11create_all_encoding_schemes, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_11create_all_encoding_schemes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_17cimulation_helper_11create_all_encoding_schemes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_17cimulation_helper_11create_all_encoding_schemes = {"create_all_encoding_schemes", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_11create_all_encoding_schemes, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_17cimulation_helper_11create_all_encoding_schemes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_max_k = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -3450,18 +3450,18 @@ static PyObject *__pyx_pw_8analysis_17cimulation_helper_11create_all_encoding_sc
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("create_all_encoding_schemes", 0, 0, 1, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 107, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("analysis.cimulation_helper.create_all_encoding_schemes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.create_all_encoding_schemes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_schemes(__pyx_self, __pyx_v_max_k);
+  __pyx_r = __pyx_pf_17cimulation_helper_10create_all_encoding_schemes(__pyx_self, __pyx_v_max_k);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_schemes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_max_k) {
+static PyObject *__pyx_pf_17cimulation_helper_10create_all_encoding_schemes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_max_k) {
   PyObject *__pyx_v_combinations = NULL;
   PyObject *__pyx_v_i = NULL;
   PyObject *__pyx_v_j = NULL;
@@ -3492,7 +3492,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   __Pyx_RefNannySetupContext("create_all_encoding_schemes", 0);
   __Pyx_INCREF(__pyx_v_max_k);
 
-  /* "analysis/cimulation_helper.pyx":108
+  /* "cimulation_helper.pyx":108
  * 
  * def create_all_encoding_schemes(max_k:int=4):
  *     max_k += 1             # <<<<<<<<<<<<<<
@@ -3504,7 +3504,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   __Pyx_DECREF_SET(__pyx_v_max_k, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":109
+  /* "cimulation_helper.pyx":109
  * def create_all_encoding_schemes(max_k:int=4):
  *     max_k += 1
  *     combinations = []             # <<<<<<<<<<<<<<
@@ -3516,7 +3516,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   __pyx_v_combinations = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":111
+  /* "cimulation_helper.pyx":111
  *     combinations = []
  * 
  *     for i in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3577,7 +3577,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "analysis/cimulation_helper.pyx":112
+    /* "cimulation_helper.pyx":112
  * 
  *     for i in range(1, max_k):
  *         for j in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3638,7 +3638,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_5);
       __pyx_t_5 = 0;
 
-      /* "analysis/cimulation_helper.pyx":113
+      /* "cimulation_helper.pyx":113
  *     for i in range(1, max_k):
  *         for j in range(1, max_k):
  *             for k in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3699,7 +3699,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
         __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_8);
         __pyx_t_8 = 0;
 
-        /* "analysis/cimulation_helper.pyx":114
+        /* "cimulation_helper.pyx":114
  *         for j in range(1, max_k):
  *             for k in range(1, max_k):
  *                 for l in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3760,7 +3760,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
           __Pyx_XDECREF_SET(__pyx_v_l, __pyx_t_11);
           __pyx_t_11 = 0;
 
-          /* "analysis/cimulation_helper.pyx":115
+          /* "cimulation_helper.pyx":115
  *             for k in range(1, max_k):
  *                 for l in range(1, max_k):
  *                     if i <= j and j <= k and k <= l:             # <<<<<<<<<<<<<<
@@ -3790,7 +3790,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
           __pyx_L12_bool_binop_done:;
           if (__pyx_t_14) {
 
-            /* "analysis/cimulation_helper.pyx":116
+            /* "cimulation_helper.pyx":116
  *                 for l in range(1, max_k):
  *                     if i <= j and j <= k and k <= l:
  *                         option = [i, j, k, l]             # <<<<<<<<<<<<<<
@@ -3814,7 +3814,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
             __Pyx_XDECREF_SET(__pyx_v_option, ((PyObject*)__pyx_t_11));
             __pyx_t_11 = 0;
 
-            /* "analysis/cimulation_helper.pyx":117
+            /* "cimulation_helper.pyx":117
  *                     if i <= j and j <= k and k <= l:
  *                         option = [i, j, k, l]
  *                         combinations.append(option)             # <<<<<<<<<<<<<<
@@ -3823,7 +3823,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
  */
             __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_combinations, __pyx_v_option); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 117, __pyx_L1_error)
 
-            /* "analysis/cimulation_helper.pyx":115
+            /* "cimulation_helper.pyx":115
  *             for k in range(1, max_k):
  *                 for l in range(1, max_k):
  *                     if i <= j and j <= k and k <= l:             # <<<<<<<<<<<<<<
@@ -3832,7 +3832,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
  */
           }
 
-          /* "analysis/cimulation_helper.pyx":114
+          /* "cimulation_helper.pyx":114
  *         for j in range(1, max_k):
  *             for k in range(1, max_k):
  *                 for l in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3842,7 +3842,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
         }
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-        /* "analysis/cimulation_helper.pyx":113
+        /* "cimulation_helper.pyx":113
  *     for i in range(1, max_k):
  *         for j in range(1, max_k):
  *             for k in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3852,7 +3852,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "analysis/cimulation_helper.pyx":112
+      /* "cimulation_helper.pyx":112
  * 
  *     for i in range(1, max_k):
  *         for j in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3862,7 +3862,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "analysis/cimulation_helper.pyx":111
+    /* "cimulation_helper.pyx":111
  *     combinations = []
  * 
  *     for i in range(1, max_k):             # <<<<<<<<<<<<<<
@@ -3872,7 +3872,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":119
+  /* "cimulation_helper.pyx":119
  *                         combinations.append(option)
  * 
  *     return combinations             # <<<<<<<<<<<<<<
@@ -3884,7 +3884,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   __pyx_r = __pyx_v_combinations;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":107
+  /* "cimulation_helper.pyx":107
  *         return False
  * 
  * def create_all_encoding_schemes(max_k:int=4):             # <<<<<<<<<<<<<<
@@ -3899,7 +3899,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_AddTraceback("analysis.cimulation_helper.create_all_encoding_schemes", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.create_all_encoding_schemes", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_combinations);
@@ -3914,7 +3914,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
   return __pyx_r;
 }
 
-/* "analysis/cimulation_helper.pyx":121
+/* "cimulation_helper.pyx":121
  *     return combinations
  * 
  * def get_param_combinations():             # <<<<<<<<<<<<<<
@@ -3923,20 +3923,20 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_10create_all_encoding_sc
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_13get_param_combinations(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_8analysis_17cimulation_helper_13get_param_combinations = {"get_param_combinations", (PyCFunction)__pyx_pw_8analysis_17cimulation_helper_13get_param_combinations, METH_NOARGS, 0};
-static PyObject *__pyx_pw_8analysis_17cimulation_helper_13get_param_combinations(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_17cimulation_helper_13get_param_combinations(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyMethodDef __pyx_mdef_17cimulation_helper_13get_param_combinations = {"get_param_combinations", (PyCFunction)__pyx_pw_17cimulation_helper_13get_param_combinations, METH_NOARGS, 0};
+static PyObject *__pyx_pw_17cimulation_helper_13get_param_combinations(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_param_combinations (wrapper)", 0);
-  __pyx_r = __pyx_pf_8analysis_17cimulation_helper_12get_param_combinations(__pyx_self);
+  __pyx_r = __pyx_pf_17cimulation_helper_12get_param_combinations(__pyx_self);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations(CYTHON_UNUSED PyObject *__pyx_self) {
+static PyObject *__pyx_pf_17cimulation_helper_12get_param_combinations(CYTHON_UNUSED PyObject *__pyx_self) {
   PyObject *__pyx_v_f_range = NULL;
   PyObject *__pyx_v_decay_range = NULL;
   PyObject *__pyx_v_thresh_range = NULL;
@@ -3972,7 +3972,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_param_combinations", 0);
 
-  /* "analysis/cimulation_helper.pyx":122
+  /* "cimulation_helper.pyx":122
  * 
  * def get_param_combinations():
  *     f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])             # <<<<<<<<<<<<<<
@@ -4065,7 +4065,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_v_f_range = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":123
+  /* "cimulation_helper.pyx":123
  * def get_param_combinations():
  *     f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])
  *     decay_range = np.arange(constants.DECAY_RANGE[0], constants.DECAY_RANGE[1], constants.DECAY_RANGE[2])             # <<<<<<<<<<<<<<
@@ -4158,7 +4158,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_v_decay_range = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":124
+  /* "cimulation_helper.pyx":124
  *     f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])
  *     decay_range = np.arange(constants.DECAY_RANGE[0], constants.DECAY_RANGE[1], constants.DECAY_RANGE[2])
  *     thresh_range = np.arange(constants.THRESH_RANGE[0], constants.THRESH_RANGE[1], constants.THRESH_RANGE[2])             # <<<<<<<<<<<<<<
@@ -4251,7 +4251,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_v_thresh_range = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":125
+  /* "cimulation_helper.pyx":125
  *     decay_range = np.arange(constants.DECAY_RANGE[0], constants.DECAY_RANGE[1], constants.DECAY_RANGE[2])
  *     thresh_range = np.arange(constants.THRESH_RANGE[0], constants.THRESH_RANGE[1], constants.THRESH_RANGE[2])
  *     noise_range = np.arange(constants.NOISE_RANGE[0], constants.NOISE_RANGE[1], constants.NOISE_RANGE[2])             # <<<<<<<<<<<<<<
@@ -4344,7 +4344,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_v_noise_range = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":129
+  /* "cimulation_helper.pyx":129
  *     # print(len(f_range), len(decay_range), len(thresh_range), len(noise_range))
  * 
  *     result = []             # <<<<<<<<<<<<<<
@@ -4356,7 +4356,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":131
+  /* "cimulation_helper.pyx":131
  *     result = []
  * 
  *     for l1 in f_range:             # <<<<<<<<<<<<<<
@@ -4405,7 +4405,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
     __Pyx_XDECREF_SET(__pyx_v_l1, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "analysis/cimulation_helper.pyx":132
+    /* "cimulation_helper.pyx":132
  * 
  *     for l1 in f_range:
  *         for l2 in decay_range:             # <<<<<<<<<<<<<<
@@ -4454,7 +4454,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
       __Pyx_XDECREF_SET(__pyx_v_l2, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_helper.pyx":133
+      /* "cimulation_helper.pyx":133
  *     for l1 in f_range:
  *         for l2 in decay_range:
  *             for l3 in thresh_range:             # <<<<<<<<<<<<<<
@@ -4503,7 +4503,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
         __Pyx_XDECREF_SET(__pyx_v_l3, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "analysis/cimulation_helper.pyx":134
+        /* "cimulation_helper.pyx":134
  *         for l2 in decay_range:
  *             for l3 in thresh_range:
  *                 for l4 in noise_range:             # <<<<<<<<<<<<<<
@@ -4552,7 +4552,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
           __Pyx_XDECREF_SET(__pyx_v_l4, __pyx_t_5);
           __pyx_t_5 = 0;
 
-          /* "analysis/cimulation_helper.pyx":135
+          /* "cimulation_helper.pyx":135
  *             for l3 in thresh_range:
  *                 for l4 in noise_range:
  *                     result.append([round(l1, 3), round(l2, 3), round(l3, 3), round(l4, 3)])             # <<<<<<<<<<<<<<
@@ -4620,7 +4620,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
           __pyx_t_19 = __Pyx_PyList_Append(__pyx_v_result, __pyx_t_5); if (unlikely(__pyx_t_19 == ((int)-1))) __PYX_ERR(0, 135, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-          /* "analysis/cimulation_helper.pyx":134
+          /* "cimulation_helper.pyx":134
  *         for l2 in decay_range:
  *             for l3 in thresh_range:
  *                 for l4 in noise_range:             # <<<<<<<<<<<<<<
@@ -4630,7 +4630,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
         }
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-        /* "analysis/cimulation_helper.pyx":133
+        /* "cimulation_helper.pyx":133
  *     for l1 in f_range:
  *         for l2 in decay_range:
  *             for l3 in thresh_range:             # <<<<<<<<<<<<<<
@@ -4640,7 +4640,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
       }
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "analysis/cimulation_helper.pyx":132
+      /* "cimulation_helper.pyx":132
  * 
  *     for l1 in f_range:
  *         for l2 in decay_range:             # <<<<<<<<<<<<<<
@@ -4650,7 +4650,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "analysis/cimulation_helper.pyx":131
+    /* "cimulation_helper.pyx":131
  *     result = []
  * 
  *     for l1 in f_range:             # <<<<<<<<<<<<<<
@@ -4660,7 +4660,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":137
+  /* "cimulation_helper.pyx":137
  *                     result.append([round(l1, 3), round(l2, 3), round(l3, 3), round(l4, 3)])
  * 
  *     return result             # <<<<<<<<<<<<<<
@@ -4672,7 +4672,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "analysis/cimulation_helper.pyx":121
+  /* "cimulation_helper.pyx":121
  *     return combinations
  * 
  * def get_param_combinations():             # <<<<<<<<<<<<<<
@@ -4691,7 +4691,7 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_17);
   __Pyx_XDECREF(__pyx_t_18);
-  __Pyx_AddTraceback("analysis.cimulation_helper.get_param_combinations", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cimulation_helper.get_param_combinations", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_f_range);
@@ -4709,11 +4709,11 @@ static PyObject *__pyx_pf_8analysis_17cimulation_helper_12get_param_combinations
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"compute_dme_retrieval", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_1compute_dme_retrieval, METH_VARARGS|METH_KEYWORDS, 0},
-  {"estim_saccade_time", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_3estim_saccade_time, METH_VARARGS|METH_KEYWORDS, 0},
-  {"estim_mouse_time", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_5estim_mouse_time, METH_VARARGS|METH_KEYWORDS, 0},
-  {"generate_locations", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_7generate_locations, METH_VARARGS|METH_KEYWORDS, 0},
-  {"example_grid_visible", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8analysis_17cimulation_helper_9example_grid_visible, METH_VARARGS|METH_KEYWORDS, 0},
+  {"compute_dme_retrieval", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_1compute_dme_retrieval, METH_VARARGS|METH_KEYWORDS, 0},
+  {"estim_saccade_time", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_3estim_saccade_time, METH_VARARGS|METH_KEYWORDS, 0},
+  {"estim_mouse_time", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_5estim_mouse_time, METH_VARARGS|METH_KEYWORDS, 0},
+  {"generate_locations", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_7generate_locations, METH_VARARGS|METH_KEYWORDS, 0},
+  {"example_grid_visible", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_17cimulation_helper_9example_grid_visible, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -4769,9 +4769,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_all_example_locations, __pyx_k_all_example_locations, sizeof(__pyx_k_all_example_locations), 0, 0, 1, 1},
   {&__pyx_n_s_all_resource_locations, __pyx_k_all_resource_locations, sizeof(__pyx_k_all_resource_locations), 0, 0, 1, 1},
   {&__pyx_n_s_all_workspace_locations, __pyx_k_all_workspace_locations, sizeof(__pyx_k_all_workspace_locations), 0, 0, 1, 1},
-  {&__pyx_n_s_analysis_cimulation_helper, __pyx_k_analysis_cimulation_helper, sizeof(__pyx_k_analysis_cimulation_helper), 0, 0, 1, 1},
   {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
   {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
+  {&__pyx_n_s_cimulation_helper, __pyx_k_cimulation_helper, sizeof(__pyx_k_cimulation_helper), 0, 0, 1, 1},
   {&__pyx_kp_s_cimulation_helper_pyx, __pyx_k_cimulation_helper_pyx, sizeof(__pyx_k_cimulation_helper_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_combinations, __pyx_k_combinations, sizeof(__pyx_k_combinations), 0, 0, 1, 1},
@@ -4836,7 +4836,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "analysis/cimulation_helper.pyx":107
+  /* "cimulation_helper.pyx":107
  *         return False
  * 
  * def create_all_encoding_schemes(max_k:int=4):             # <<<<<<<<<<<<<<
@@ -4848,7 +4848,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple_);
   __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cimulation_helper_pyx, __pyx_n_s_create_all_encoding_schemes, 107, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 107, __pyx_L1_error)
 
-  /* "analysis/cimulation_helper.pyx":121
+  /* "cimulation_helper.pyx":121
  *     return combinations
  * 
  * def get_param_combinations():             # <<<<<<<<<<<<<<
@@ -5117,14 +5117,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_analysis__cimulation_helper) {
+  if (__pyx_module_is_main_cimulation_helper) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "analysis.cimulation_helper")) {
-      if (unlikely(PyDict_SetItemString(modules, "analysis.cimulation_helper", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "cimulation_helper")) {
+      if (unlikely(PyDict_SetItemString(modules, "cimulation_helper", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -5145,7 +5145,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "analysis/cimulation_helper.pyx":16
+  /* "cimulation_helper.pyx":16
  * """
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -5157,7 +5157,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":18
+  /* "cimulation_helper.pyx":18
  * import numpy as np
  * from libc.math cimport sqrt, exp, log, log2
  * import random             # <<<<<<<<<<<<<<
@@ -5169,7 +5169,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_random, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":20
+  /* "cimulation_helper.pyx":20
  * import random
  * 
  * import constants_analysis as constants             # <<<<<<<<<<<<<<
@@ -5181,31 +5181,31 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_constants, __pyx_t_1) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":107
+  /* "cimulation_helper.pyx":107
  *         return False
  * 
  * def create_all_encoding_schemes(max_k:int=4):             # <<<<<<<<<<<<<<
  *     max_k += 1
  *     combinations = []
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8analysis_17cimulation_helper_11create_all_encoding_schemes, NULL, __pyx_n_s_analysis_cimulation_helper); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_17cimulation_helper_11create_all_encoding_schemes, NULL, __pyx_n_s_cimulation_helper); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_create_all_encoding_schemes, __pyx_t_1) < 0) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":121
+  /* "cimulation_helper.pyx":121
  *     return combinations
  * 
  * def get_param_combinations():             # <<<<<<<<<<<<<<
  *     f_range = np.arange(constants.F_RANGE[0], constants.F_RANGE[1], constants.F_RANGE[2])
  *     decay_range = np.arange(constants.DECAY_RANGE[0], constants.DECAY_RANGE[1], constants.DECAY_RANGE[2])
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8analysis_17cimulation_helper_13get_param_combinations, NULL, __pyx_n_s_analysis_cimulation_helper); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_17cimulation_helper_13get_param_combinations, NULL, __pyx_n_s_cimulation_helper); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_param_combinations, __pyx_t_1) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "analysis/cimulation_helper.pyx":1
+  /* "cimulation_helper.pyx":1
  * """             # <<<<<<<<<<<<<<
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -5222,11 +5222,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init analysis.cimulation_helper", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init cimulation_helper", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init analysis.cimulation_helper");
+    PyErr_SetString(PyExc_ImportError, "init cimulation_helper");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
