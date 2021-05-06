@@ -266,16 +266,20 @@ class Canvas(QWidget):
             self.initOpeningScreen(timeOut)
 
     def showHideHourGlass(self, specific=None):
+        text = None
+
         if specific is None:
             return
 
         elif specific == 'show':
-            self.hourGlass.setVisible(True)
-            text = 'Showing'
+            if not self.hourGlass.isVisible():
+                self.hourGlass.setVisible(True)
+                text = 'Showing'
 
         elif specific == 'hide':
-            self.hourGlass.setVisible(False)
-            text = 'Hiding'
+            if self.hourGlass.isVisible():
+                self.hourGlass.setVisible(False)
+                text = 'Hiding'
 
         elif specific == 'flip':
             if self.hourGlass.isVisible():
@@ -289,30 +293,29 @@ class Canvas(QWidget):
             raise ValueError(f"{specific} is not an accepted keyword for 'showHideHourGlass'." +
                              "Choose from: None, 'show', 'hide', 'flip'.")
 
-        self.writeEvent(f'{text} hourglass')
+        if text is not None:
+            self.writeEvent(f'{text} hourglass')
 
     def showHideExampleGrid(self, specific=None):
         if specific is None:
             return
 
         elif specific == 'show':
-            self.exampleGridBox.setVisible(True)
-            # self.hourGlass.setVisible(False)
+            if not self.exampleGridBox.isVisible():
+                self.exampleGridBox.setVisible(True)
             text = 'Showing'
 
         elif specific == 'hide':
-            self.exampleGridBox.setVisible(False)
-            # self.hourGlass.setVisible(True)
+            if self.exampleGridBox.isVisible():
+                self.exampleGridBox.setVisible(False)
             text = 'Hiding'
 
         elif specific == 'flip':
             if self.exampleGridBox.isVisible():
                 self.exampleGridBox.setVisible(False)
-                # self.hourGlass.setVisible(True)
                 text = 'Hiding'
             else:
                 self.exampleGridBox.setVisible(True)
-                # self.hourGlass.setVisible(False)
                 text = 'Showing'
 
         else:
