@@ -171,6 +171,13 @@ class CustomLabel(QLabel):
 
         self.setAcceptDrops(True)
 
+    def stopTimer(self):
+        try:
+            self.timer.stop()
+            self.timer.disconnect()
+        except:
+            pass
+
     def mousePressEvent(self, e):
         e.ignore()
 

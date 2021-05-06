@@ -30,9 +30,9 @@ NUM_TRIALS = 15
 
 # Define as (0, GAZE_CONTINGENT_DELAY_IN_MS)
 CONDITIONS = [(0, 0),     # No occlusion delay
-              (0, 500),   # 500ms occlusion delay
-              (0, 1000),  # 100ms
-              (0, 1500)]  # etc.
+              (0, 1000),   # 500ms occlusion delay
+              (0, 2000),  # 100ms
+              (0, 3000)]  # etc.
 
 CONDITION_ORDER = [0, 1, 2, 3]  # The lowest number should be 0
 shuffle(CONDITION_ORDER)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER,
                 nTrials=NUM_TRIALS, useCustomTimer=True, addNoise=False,
-                customCalibration=True,
+                customCalibration=True, customCalibrationSize=10,
                 trialTimeOut=TIME_OUT_MS)
 
     ex.showFullScreen()

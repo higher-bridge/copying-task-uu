@@ -197,7 +197,7 @@ class Canvas(QWidget):
         self.showHideHourGlass(hourglassInstruction)
 
         # Check if result needs checking, every 200ms to avoid too much processing
-        if now - self.checkIfFinishedStart >= 200:
+        if now - self.checkIfFinishedStart >= 500:
             self.checkIfFinished()
             self.checkIfFinishedStart = now
                     
@@ -471,8 +471,14 @@ class Canvas(QWidget):
     #     INITIALIZATION OF SCREENS
     # =============================================================================
     def clearScreen(self):
+        self.clearCustomLabelTimers()
+
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
+
+    def clearCustomLabelTimers(self):
+        for i in range(self.copyGridBox.layout().count()):
+            self.copyGridBox.layout().itemAt(i).widget().stopTimer()
     
     def initUI(self):
         self.setWindowTitle(self.title)
