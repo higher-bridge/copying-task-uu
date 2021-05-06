@@ -29,7 +29,7 @@ import helperfunctions as hf
 from cimulation_analysis_helper import parse_results
 
 
-PARSE_RESULTS = True
+PARSE_RESULTS = False
 
 
 if __name__ == '__main__':    
@@ -144,20 +144,23 @@ if __name__ == '__main__':
     for i, feat in enumerate(features):
         sns.barplot(x='Condition', y=feat, data=combined_data, hue='Source', 
                     capsize=.1, errwidth=1.5, 
-                    palette='Blues',
+                    # palette='Blues',
                     ax=axes[i])
-    
+
+        if feat == 'Number of crossings':
+            feat = 'Number of crossings toward example grid'
+
         axes[i].set_xlabel('')
-        axes[i].set_ylabel(feat, fontsize=12)
+        axes[i].set_ylabel(feat, fontsize=15)
     
         if i == 1:
-            axes[i].set_xlabel('Reliability of access', fontsize=12)
+            axes[i].set_xlabel('Reliability of access', fontsize=14)
         
         if i != 2:
             axes[i].get_legend().remove()
             
     f.tight_layout() #(pad=1, w_pad=0.2)
-    f.savefig('../results/plots/model-barplots.png', dpi=500)
+    f.savefig('../results/plots/model-barplots.png', dpi=700)
     plt.show()
     
     
@@ -212,7 +215,7 @@ if __name__ == '__main__':
     for i, feat in enumerate(features):
         sns.barplot(x='Condition', y=feat, data=combined_data, hue='Source', 
                     capsize=.1, errwidth=1.5, 
-                    # palette='Blues',
+                    palette='Blues',
                     ax=axes[i])
     
         axes[i].set_xlabel('')   

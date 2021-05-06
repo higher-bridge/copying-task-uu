@@ -34,15 +34,16 @@ task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if 'a
 all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allAllPlacements.csv' in f]
 correct_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
 
-features = [\
-            'Number of crossings', 
-
+features = [
+            'Number of crossings',
             'Dwell time per crossing (ms)',
             'Completion time (s)', 
             'Fixations per second',
             'Saccade velocity',
-            # 'Peak velocity',
-            'Errors']
+            'Peak velocity'
+            # 'Errors'
+            ]
+
 cols = ['ID', 'Condition', 'Trial']
 [cols.append(f) for f in features]
 results = pd.DataFrame(columns=cols)
@@ -107,8 +108,9 @@ for ID in list(pp_info['ID'].unique()):
                                   'Completion time (s)': float(completion_time / 1000),
                                   'Fixations per second': float(len(fixations) / (completion_time / 1000)),
                                   'Saccade velocity': float(np.median(saccades['avel'])),
-                                  # 'Peak velocity': float(np.median(saccades['pvel'])),
-                                  'Errors':float(errors)},
+                                  'Peak velocity': float(np.median(saccades['pvel']))
+                                  # 'Errors':float(errors)
+                                  },
                                  index=[0])
                 results = results.append(r, ignore_index=True)
                 
@@ -132,8 +134,8 @@ errors_grouped = results.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in 
 errors_grouped.columns = errors_grouped.columns.get_level_values(0)
 
 # Drop median errors from results_grouped and append mean errors from errors_grouped
-results_grouped = results_grouped.drop(['Errors'], axis=1)
-results_grouped['Errors'] = errors_grouped['Errors']
+# results_grouped = results_grouped.drop(['Errors'], axis=1)
+# results_grouped['Errors'] = errors_grouped['Errors']
 
 
 results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
@@ -142,30 +144,30 @@ results_grouped['Condition'] = results_grouped['Condition'].apply(hf.condition_n
 # =============================================================================
 # SEPARATE PLOTS
 # =============================================================================
-colors = sns.color_palette("Blues")[2:]
-
-for f in features:
-    plt.figure(figsize=(4, 5))
-    sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
-                palette=colors)
-    plt.title(f)
-    plt.tight_layout()
-    plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
-    plt.show()
-    
-    plt.figure()
-    for c in list(results_grouped['Condition'].unique()):
-        plot_df = results_grouped.loc[results_grouped['Condition'] == c]
-        sns.distplot(plot_df[f], label=c)
-    
-    plt.title(f)
-    plt.legend(title='Condition')
-    plt.savefig(f'{constants.base_location}/plots/grouped {f} dist.png', dpi=500)
-    plt.show()
-
-    print('\n###########################')
-    hf.test_friedman(results_grouped, 'Condition', f)
-    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
+# colors = sns.color_palette("Blues")[2:]
+#
+# for f in features:
+#     plt.figure(figsize=(4, 5))
+#     sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
+#                 palette=colors)
+#     plt.title(f)
+#     plt.tight_layout()
+#     plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
+#     plt.show()
+#
+#     plt.figure()
+#     for c in list(results_grouped['Condition'].unique()):
+#         plot_df = results_grouped.loc[results_grouped['Condition'] == c]
+#         sns.distplot(plot_df[f], label=c)
+#
+#     plt.title(f)
+#     plt.legend(title='Condition')
+#     plt.savefig(f'{constants.base_location}/plots/grouped {f} dist.png', dpi=500)
+#     plt.show()
+#
+#     print('\n###########################')
+#     hf.test_friedman(results_grouped, 'Condition', f)
+#     hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
 
 # =============================================================================
 # COMBINED BOXPLOTS                
@@ -176,7 +178,7 @@ rcParams['font.size'] = 11
 
 sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
-y_lims = [(1.5, 7.5), (150, 1000), (4 ,15), (2.5, 5), (100, 240), (-0.05, 1)]
+y_lims = [(1.5, 7.5), (150, 1000), (4, 15), (2.5, 5), (100, 240), (210, 430)]
 
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
@@ -185,17 +187,17 @@ for i, feat in enumerate(features):
     sns.boxplot(x='Condition', y=feat, data=results_grouped, #capsize=.1, errwidth=1.5,
                 palette='Blues', ax=axes[i])
     axes[i].set_xlabel('')
-    axes[i].set_ylabel(feat, fontsize=12)
+    axes[i].set_ylabel(feat, fontsize=13)
     axes[i].set_ylim(y_lims[i])
     
     if i < (len(features) / 2):
         axes[i].set_xticks([])
         
     if i == 4:
-        axes[i].set_xlabel('Reliability of access', fontsize=12)
+        axes[i].set_xlabel('Reliability of access', fontsize=13)
 
 f.tight_layout() #(pad=1, w_pad=0.2)
-f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=500)
+f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=700)
 plt.show()
     
 
