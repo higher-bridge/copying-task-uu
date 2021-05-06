@@ -297,18 +297,20 @@ class Canvas(QWidget):
             self.writeEvent(f'{text} hourglass')
 
     def showHideExampleGrid(self, specific=None):
+        text = None
+
         if specific is None:
             return
 
         elif specific == 'show':
             if not self.exampleGridBox.isVisible():
                 self.exampleGridBox.setVisible(True)
-            text = 'Showing'
+                text = 'Showing'
 
         elif specific == 'hide':
             if self.exampleGridBox.isVisible():
                 self.exampleGridBox.setVisible(False)
-            text = 'Hiding'
+                text = 'Hiding'
 
         elif specific == 'flip':
             if self.exampleGridBox.isVisible():
@@ -322,7 +324,8 @@ class Canvas(QWidget):
             raise ValueError(f"{specific} is not an accepted keyword for 'showHideExamplegrid'." +
                              "Choose from: None, 'show', 'hide', 'flip'.")
 
-        self.writeEvent(f'{text} grid')
+        if text is not None:
+            self.writeEvent(f'{text} grid')
     
     def moveAndRenameTrackerFile(self):
         fromLocation = self.projectFolder/'default.edf'
