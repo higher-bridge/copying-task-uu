@@ -67,38 +67,6 @@ def customTimer(parent, now):
 
     return None, None
 
-def customTimerWithReturn(parent, now):
-    """Implement your own custom timer. Integrate with eyetracker if necessary.
-
-    Args:
-        parent: Receives all class variables from Canvas
-        now (int): Receives the current time in milliseconds
-
-    Returns:
-        str or None: Return how to update. Returning None retains current visibility state.
-                     Alternatives: 'hide', 'show', 'flip'.
-    """
-
-    eyeLoc = parent.tracker.sample()
-    currentlyVisible = parent.exampleGridBox.isVisible()
-
-    if eyeLoc[0] > MIDLINE:
-        parent.crossingStart = None
-        return None if currentlyVisible else 'show'
-
-    elif eyeLoc[0] < MIDLINE:
-        if parent.crossingStart is None:
-            parent.crossingStart = now
-            return 'hide' if currentlyVisible else None
-
-        elif (now - parent.crossingStart) < parent.occludedTime:
-            return 'hide' if currentlyVisible else None
-
-        elif (now - parent.crossingStart) > parent.occludedTime:
-            return 'show' if not currentlyVisible else None
-
-    return None
-
 
 class DraggableLabel(QLabel):
 
@@ -171,12 +139,18 @@ class CustomLabel(QLabel):
 
         self.setAcceptDrops(True)
 
-    def stopTimer(self):
+    # def stopTimer(self):
+    #     try:
+    #         self.timer.stop()
+    #         self.timer.disconnect()
+    #     except:
+    #         pass
+
+    def singleShotTransparent(self):
         try:
-            self.timer.stop()
-            self.timer.disconnect()
-        except:
-            pass
+            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
+        except Exception as e:
+            print(e)
 
     def mousePressEvent(self, e):
         e.ignore()
@@ -195,12 +169,12 @@ class CustomLabel(QLabel):
         elif e.mimeData().text() != self.shouldBe:
             e.ignore()
             self.setStyleSheet("background-color:rgba(255, 51, 0, 200)")
-            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
+            self.singleShotTransparent()
 
         else:
             e.acceptProposedAction()
             self.setStyleSheet("background-color:rgba(51, 204, 51, 100)")
-            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
+            self.singleShotTransparent()
 
             # Set new pixmap in this position if position is valid
             self.setPixmap(QPixmap.fromImage(QImage(e.mimeData().imageData())))

@@ -471,14 +471,14 @@ class Canvas(QWidget):
     #     INITIALIZATION OF SCREENS
     # =============================================================================
     def clearScreen(self):
-        self.clearCustomLabelTimers()
+        # self.clearCustomLabelTimers()
 
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
 
-    def clearCustomLabelTimers(self):
-        for i in range(self.copyGridBox.layout().count()):
-            self.copyGridBox.layout().itemAt(i).widget().stopTimer()
+    # def clearCustomLabelTimers(self):
+    #     for i in range(self.copyGridBox.layout().count()):
+    #         self.copyGridBox.layout().itemAt(i).widget().stopTimer()
     
     def initUI(self):
         self.setWindowTitle(self.title)
