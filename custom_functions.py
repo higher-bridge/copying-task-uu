@@ -37,10 +37,11 @@ def customTimer(parent, now):
                      Alternatives: 'hide', 'show', 'flip'.
     """
 
+    if parent.occludedTime == 0:
+        return 'show', 'hide'
+
     eyeLoc = parent.tracker.sample()[0]
     # eyeLoc = parent.mouse.pos().x()
-    # gridVisible = parent.exampleGridBox.isVisible()
-    # hourglassVisible = parent.hourGlass.isVisible()
 
     if parent.crossingStart is None:
         # If midline is crossed to the left, start a counter (crossingStart)

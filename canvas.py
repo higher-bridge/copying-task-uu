@@ -475,10 +475,6 @@ class Canvas(QWidget):
 
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
-
-    # def clearCustomLabelTimers(self):
-    #     for i in range(self.copyGridBox.layout().count()):
-    #         self.copyGridBox.layout().itemAt(i).widget().stopTimer()
     
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -492,6 +488,11 @@ class Canvas(QWidget):
     
     def initOpeningScreen(self, timeOut=False):
         self.disconnectTimer()
+
+        if not timeOut:
+            # Implement thumbs up
+            pass
+
         self.inOpeningScreen = True
         
         # If all trials are done, increment condition counter and 
@@ -530,9 +531,11 @@ class Canvas(QWidget):
             addText = '\nNow may be a good time to re-calibrate.' if self.currentTrial % 10 == 0 else ''
             
             if timeOut:
-                self.label = QLabel(f"You timed out. Press space to continue to the next trial. {addText}")
+                self.label = QLabel(f"You timed out. Press space to continue to the next trial ({self.currentTrial} of "
+                                    f"{self.nTrials}). {addText}")
             else:
-                self.label = QLabel(f"End of trial. Press space to continue to the next trial. {addText}")            
+                self.label = QLabel(f"End of trial. Press space to continue to the next trial ({self.currentTrial} of "
+                                    f"{self.nTrials}). {addText}")
 
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
