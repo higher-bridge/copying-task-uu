@@ -471,9 +471,7 @@ class Canvas(QWidget):
     #     INITIALIZATION OF SCREENS
     # =============================================================================
     def clearScreen(self):
-        # self.clearCustomLabelTimers()
-
-        for i in reversed(range(self.layout.count())): 
+        for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().setParent(None)
     
     def initUI(self):
@@ -482,16 +480,29 @@ class Canvas(QWidget):
         self.setStyleSheet("background-color:rgb(128, 128, 128)")
         self.layout = QVBoxLayout()
 
-        self.writeEvent('UI init',)
+        self.writeEvent('UI init')
 
+        self.loadThumbsUp()
         self.initOpeningScreen()
     
+    def loadThumbsUp(self):
+        path = Path(__file__).parent/'pictograms'/'thumbs.png'
+        with open(path, 'rb') as f:
+            im = f.read()
+
+        image = QImage()
+        image.loadFromData(im)
+        image = image.scaledToWidth(100)
+        pixmap = QPixmap.fromImage(image)
+
+        self.thumbsUp = QLabel()
+
+        self.thumbsUp.setPixmap(pixmap)
+        self.thumbsUp.setAlignment(QtCore.Qt.AlignCenter)
+        self.thumbsUp.setSizePolicy(self.sizePolicy)
+
     def initOpeningScreen(self, timeOut=False):
         self.disconnectTimer()
-
-        if not timeOut:
-            # Implement thumbs up
-            pass
 
         self.inOpeningScreen = True
         
@@ -514,7 +525,8 @@ class Canvas(QWidget):
                 "and as accurately as possible.\n" +
                 "If you make a mistake, the location will briefly turn red. \n" +
                 "Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n" +
-                "performing the task as quickly and as accurately as possible.\n \n" +
+                "performing the task as quickly and as accurately as possible.\n" +
+                "If you performed a trial correctly, you will see a thumbs up at the bottom of the screen, as shown below \n \n" +
                 "If you have any questions now or anytime during the experiment, please ask them straightaway.\n" +
                 "If you need to take a break, please tell the experimenter so.\n \n" +
                 "When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n" +
@@ -528,21 +540,29 @@ class Canvas(QWidget):
                 self.label.setStyleSheet("color:rgba(255, 0, 0, 200)")
 
         elif self.currentTrial > 1:
+            nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
             addText = '\nNow may be a good time to re-calibrate.' if self.currentTrial % 10 == 0 else ''
             
             if timeOut:
-                self.label = QLabel(f"You timed out. Press space to continue to the next trial ({self.currentTrial} of "
-                                    f"{self.nTrials}). {addText}")
+                self.label = QLabel(f"You timed out. {nextTrial} {addText}")
             else:
-                self.label = QLabel(f"End of trial. Press space to continue to the next trial ({self.currentTrial} of "
-                                    f"{self.nTrials}). {addText}")
+                self.label = QLabel(f"End of trial. {nextTrial} {addText}")
 
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
 
         self.installEventFilter(self)
 
+        self.layout.addWidget(QLabel())
         self.layout.addWidget(self.label)
+
+        # Add an empty widget if trial was incorrect, otherwise show a thumbs up
+        if timeOut:
+            self.layout.addWidget(QLabel())
+        else:
+            self.layout.addWidget(self.thumbsUp)
+
+
         self.setLayout(self.layout)
         
         self.show()
