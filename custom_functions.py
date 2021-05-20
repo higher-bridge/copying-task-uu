@@ -43,6 +43,9 @@ def customTimer(parent, now):
     eyeLoc = parent.tracker.sample()[0]
     # eyeLoc = parent.mouse.pos().x()
 
+    if eyeLoc == -1:
+        return None, None
+
     if parent.crossingStart is None:
         # If midline is crossed to the left, start a counter (crossingStart)
         # and hide the example
