@@ -46,6 +46,67 @@ def customTimer(parent, now):
     if eyeLoc == -1:
         return None, None
 
+    if parent.crossingStart is None:  # No timer is running yet
+        if eyeLoc < MIDLINE:  # Start the counter, hide the example grid if visible, show hourglass
+            parent.crossingStart = now
+            return 'hide', 'show'
+
+        else:  # If timer isn't running and gaze > midline, hide example, do not show hourglass
+            return 'hide', 'hide'
+
+    else:  # Timer is running
+        if not parent.backCrossing:  # Only check for completion if we're not backcrossing
+            if (now - parent.crossingStart) > parent.occludedTime:  # Timer is completed
+                if eyeLoc > MIDLINE:  # Gaze > midline, so reset timer and hide both
+                    parent.crossingStart = None
+                    return 'hide', 'hide'
+
+                else:  # Timer is completed but gaze is still on example, so leave the example
+                    return 'show', 'hide'
+
+        if eyeLoc > MIDLINE:
+            if not parent.backCrossing:  # We're now starting a backcrossing, so note the time for that.
+                parent.backCrossing = True
+                parent.backCrossStart = now
+            else:  # If we were already backcrossing, do nothing
+                pass
+            return 'hide', 'hide'  # Do not show example nor hourglass (since timer isn't counting)
+
+        else:  # If eyeLoc < midline
+            if parent.backCrossing:  # We were backcrossing, but gaze is < midline now, so stop the timer
+                parent.backCrossing = False
+                timeSpentAway = now - parent.backCrossStart
+                parent.crossingStart += timeSpentAway
+
+                print(f'Time spent away: {round(timeSpentAway, 2)}')
+
+            # Timer is not completed, gaze is < midline, so hide example and show hourglass.
+            # This is actual waiting time.
+            return 'hide', 'show'
+
+
+
+def customTimerWithoutPause(parent, now):
+    """Implement your own custom timer. Integrate with eyetracker if necessary.
+
+    Args:
+        parent: Receives all class variables from Canvas
+        now (int): Receives the current time in milliseconds
+
+    Returns:
+        str or None: Return how to update. Returning None retains current visibility state.
+                     Alternatives: 'hide', 'show', 'flip'.
+    """
+
+    if parent.occludedTime == 0:
+        return 'show', 'hide'
+
+    eyeLoc = parent.tracker.sample()[0]
+    # eyeLoc = parent.mouse.pos().x()
+
+    if eyeLoc == -1:
+        return None, None
+
     if parent.crossingStart is None:
         # If midline is crossed to the left, start a counter (crossingStart)
         # and hide the example
@@ -143,16 +204,15 @@ class CustomLabel(QLabel):
 
         self.setAcceptDrops(True)
 
-    # def stopTimer(self):
-    #     try:
-    #         self.timer.stop()
-    #         self.timer.disconnect()
-    #     except:
-    #         pass
+    def setTransparent(self):
+        try:
+            self.setStyleSheet("background-color:transparent")
+        except Exception as e:
+            print(e)
 
     def singleShotTransparent(self):
         try:
-            self.timer.singleShot(700, lambda: self.setStyleSheet("background-color:transparent"))
+            self.timer.singleShot(700, self.setTransparent)
         except Exception as e:
             print(e)
 

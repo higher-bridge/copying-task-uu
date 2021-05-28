@@ -78,6 +78,9 @@ class Canvas(QWidget):
         self.useCustomTimer = useCustomTimer
         self.visibleTime = 0
         self.occludedTime = 0
+        self.backCrossing = False
+        self.backCrossStart = 0
+
         self.addNoise = addNoise
         self.trialTimeOut = trialTimeOut
 
@@ -431,9 +434,12 @@ class Canvas(QWidget):
         try:
             visibleTime, occludedTime = self.getConditionTiming()
         except IndexError as e:
-            self.tracker.stop_recording()
-            self.tracker.close(full_close=True)
-            self.moveAndRenameTrackerFile()
+            try:
+                self.tracker.stop_recording()
+                self.tracker.close(full_close=True)
+                self.moveAndRenameTrackerFile()
+            except AttributeError as ae:
+                print(ae)
             
             self.writeEvent('Finished')
             
@@ -454,7 +460,9 @@ class Canvas(QWidget):
         else:
             self.visibleTime = visibleTime
             self.occludedTime = occludedTime 
-        
+
+        self.backCrossStart = 0
+        self.backCrossing = False
         # print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
     
     def getConditionTiming(self):
@@ -537,7 +545,7 @@ class Canvas(QWidget):
                 f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n" +
                 "If you wish to carry on immediately, let the experimenter know.\n" +
                 "If you have taken a break, please wait for the experimenter to start the calibration procedure.")
-                self.label.setStyleSheet("color:rgba(255, 0, 0, 200)")
+                self.label.setStyleSheet("color:rgba(0, 0, 255, 200)")
 
         elif self.currentTrial > 1:
             nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
