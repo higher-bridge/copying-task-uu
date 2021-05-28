@@ -145,7 +145,12 @@ def calculateMeanError(samples):
 
     errors = [euclidean_distance(sample, center) for sample in samples]
 
-    return round(np.mean(errors), 2), round(np.std(errors), 2)
+    try:
+        result = (round(np.mean(errors), 2), round(np.std(errors), 2))
+    except:
+        result = (np.nan, np.nan)
+
+    return result
 
 
 class DraggableLabel(QLabel):

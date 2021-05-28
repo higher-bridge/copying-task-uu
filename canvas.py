@@ -28,6 +28,7 @@ from PyQt5.QtGui import QPixmap, QCursor, QFont, QImage, QPainter
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
+import constants
 from PyGaze.pygaze import libscreen
 from PyGaze.pygaze.eyetracker import EyeTracker
 
@@ -41,7 +42,7 @@ class Canvas(QWidget):
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  customCalibration:bool=False, customCalibrationSize:int=20,
-                 fixationCrossSize=15,
+                 fixationCrossSize=15, fixationCrossMs=3000,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -89,6 +90,7 @@ class Canvas(QWidget):
         self.customCalibration = customCalibration
         self.customCalibrationSize = customCalibrationSize
         self.fixationCrossSize = fixationCrossSize
+        self.fixationCrossMs = fixationCrossMs
 
         self.spacePushed = False
 
@@ -99,6 +101,8 @@ class Canvas(QWidget):
         self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPosition = None
+
+        self.m_error, self.sd_error = 0, 0
         
         # Track correct placements
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
@@ -571,7 +575,7 @@ class Canvas(QWidget):
 
         elif self.currentTrial > 1:
             nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
-            addText = '\nNow may be a good time to re-calibrate.' if self.currentTrial % 10 == 0 else ''
+            addText = f'\nFixation error last trial was {self.m_error} ({self.sd_error})'
             
             if timeOut:
                 self.label = QLabel(f"You timed out. {nextTrial} {addText}")
@@ -624,16 +628,16 @@ class Canvas(QWidget):
         self.runTimer()
 
     # =============================================================================
-    #    GENERATE FIXATION CROSS
+    #    GENERATE FIXATION CROSS. NOTE THAT THIS IS PURELY USED AS AN INDICATION FOR THE EXPERIMENTER
     # =============================================================================
     def stopFixationScreen(self):
         self.fixTimer2.stop()
 
-        m_error, sd_error = calculateMeanError(self.fixationCrossSamples)
-        self.writeEvent(f'Mean error: {m_error}')
-        self.writeEvent(f'SD error: {sd_error}')
+        self.m_error, self.sd_error = calculateMeanError(self.fixationCrossSamples)
+        self.writeEvent(f'Mean fixation cross error: {self.m_error}')
+        self.writeEvent(f'SD fixation cross error: {self.sd_error}')
 
-        print(f'Mean error = {m_error} (SD = {sd_error})')
+        print(f'Mean error = {self.m_error} (SD = {self.sd_error})')
 
         self.clearScreen()
         self.continueInitTask()
@@ -643,10 +647,12 @@ class Canvas(QWidget):
             samp = self.tracker.sample()
         except Exception as e:
             samp = np.nan
+            # samp = (random.gauss(1280, 10), random.gauss(720, 10))  # Used for testing
 
-        self.fixationCrossSamples.append(samp)
-
-        # TODO: write error at bottom of fixation cross screen?
+        # Remove outliers that are very far from the center, as they're more likely a different issue than drift
+        if (constants.DISPSIZE[0] * .2) < samp[0] < (constants.DISPSIZE[0] * .8):
+            if (constants.DISPSIZE[1] * .2) < samp[1] < (constants.DISPSIZE[1] * .8):
+                self.fixationCrossSamples.append(samp)
 
     def fixationScreen(self):
         self.layout.addWidget(self.fixationCross)
@@ -657,7 +663,7 @@ class Canvas(QWidget):
         self.fixTimer2.timeout.connect(self.updateFixationScreen)
         self.fixTimer2.start()
 
-        self.fixTimer.singleShot(3000, self.stopFixationScreen)
+        self.fixTimer.singleShot(self.fixationCrossMs, self.stopFixationScreen)
 
     # =============================================================================
     #    GENERATE GRIDS     
