@@ -23,3 +23,6 @@ ROW_COL_NUM = 3
 TIME_OUT_MS = 42000
 
 MIDLINE = 1100  # 1280 default, set slightly further left to avoid unnecessary triggering
+
+
+SCREEN_CENTER = (DISPSIZE[0] / 2, DISPSIZE[1] / 2)

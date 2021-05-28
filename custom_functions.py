@@ -17,11 +17,13 @@ import time
 
 import numpy as np
 import pandas as pd
+import math
 
 from PyQt5.QtCore import QMimeData, Qt, QTimer
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 
+import constants
 from constants import MIDLINE
 
 
@@ -85,7 +87,6 @@ def customTimer(parent, now):
             return 'hide', 'show'
 
 
-
 def customTimerWithoutPause(parent, now):
     """Implement your own custom timer. Integrate with eyetracker if necessary.
 
@@ -131,6 +132,20 @@ def customTimerWithoutPause(parent, now):
             return 'show', 'hide'
 
     return None, None
+
+
+def euclidean_distance(loc1: tuple, loc2: tuple):
+    dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
+    dist = math.sqrt(sum(dist))
+    return dist
+
+
+def calculateMeanError(samples):
+    center = constants.SCREEN_CENTER
+
+    errors = [euclidean_distance(sample, center) for sample in samples]
+
+    return round(np.mean(errors), 2), round(np.std(errors), 2)
 
 
 class DraggableLabel(QLabel):

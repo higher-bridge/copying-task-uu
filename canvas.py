@@ -14,6 +14,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import json
+import random
 import time
 from random import gauss, sample
 import os
@@ -22,8 +23,8 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QCursor, QFont, QImage
+from PyQt5.QtCore import Qt, QTimer, QPoint
+from PyQt5.QtGui import QPixmap, QCursor, QFont, QImage, QPainter
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
@@ -32,7 +33,7 @@ from PyGaze.pygaze.eyetracker import EyeTracker
 
 import example_grid
 from stimulus import pick_stimuli
-from custom_functions import customTimer, CustomLabel, DraggableLabel #, custom_calibration
+from custom_functions import customTimer, CustomLabel, DraggableLabel, calculateMeanError
 
 
 class Canvas(QWidget):
@@ -40,6 +41,7 @@ class Canvas(QWidget):
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  customCalibration:bool=False, customCalibrationSize:int=20,
+                 fixationCrossSize=15,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -86,11 +88,14 @@ class Canvas(QWidget):
 
         self.customCalibration = customCalibration
         self.customCalibrationSize = customCalibrationSize
+        self.fixationCrossSize = fixationCrossSize
 
         self.spacePushed = False
 
         # Set tracking vars
         self.timer = QTimer(self)
+        self.fixTimer = QTimer()
+        self.fixTimer2 = QTimer()
         self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPosition = None
@@ -491,6 +496,7 @@ class Canvas(QWidget):
         self.writeEvent('UI init')
 
         self.loadThumbsUp()
+        self.loadFixationCross()
         self.initOpeningScreen()
     
     def loadThumbsUp(self):
@@ -508,6 +514,22 @@ class Canvas(QWidget):
         self.thumbsUp.setPixmap(pixmap)
         self.thumbsUp.setAlignment(QtCore.Qt.AlignCenter)
         self.thumbsUp.setSizePolicy(self.sizePolicy)
+
+    def loadFixationCross(self):
+        path = Path(__file__).parent/'pictograms'/'fixation_cross.png'
+        with open(path, 'rb') as f:
+            im = f.read()
+
+        image = QImage()
+        image.loadFromData(im)
+        image = image.scaledToWidth(self.fixationCrossSize)
+        pixmap = QPixmap.fromImage(image)
+
+        self.fixationCross = QLabel()
+
+        self.fixationCross.setPixmap(pixmap)
+        self.fixationCross.setAlignment(QtCore.Qt.AlignCenter)
+        self.fixationCross.setSizePolicy(self.sizePolicy)
 
     def initOpeningScreen(self, timeOut=False):
         self.disconnectTimer()
@@ -559,8 +581,6 @@ class Canvas(QWidget):
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
 
-        self.installEventFilter(self)
-
         self.layout.addWidget(QLabel())
         self.layout.addWidget(self.label)
 
@@ -570,9 +590,9 @@ class Canvas(QWidget):
         else:
             self.layout.addWidget(self.thumbsUp)
 
+        self.installEventFilter(self)
 
         self.setLayout(self.layout)
-        
         self.show()
 
     def initTask(self):
@@ -583,14 +603,18 @@ class Canvas(QWidget):
                                                self.nrow, self.ncol)
         self.shuffledImages = sample(self.images, len(self.images))
 
-        self.setConditionTiming() # Set slightly different timing for each trial
+        self.setConditionTiming()  # Set slightly different timing for each trial
 
+        self.fixationCrossSamples = []
+        self.fixationScreen()
+
+    def continueInitTask(self):
         # Create the actual task layout
         self.createMasterGrid()
-        
+
         self.layout.addWidget(self.masterGrid)
         self.setLayout(self.layout)
-        
+
         self.writeEvent('Task init')
 
         self.show()
@@ -598,7 +622,43 @@ class Canvas(QWidget):
         self.hourGlass.setVisible(False)
         self.inOpeningScreen = False
         self.runTimer()
-        
+
+    # =============================================================================
+    #    GENERATE FIXATION CROSS
+    # =============================================================================
+    def stopFixationScreen(self):
+        self.fixTimer2.stop()
+
+        m_error, sd_error = calculateMeanError(self.fixationCrossSamples)
+        self.writeEvent(f'Mean error: {m_error}')
+        self.writeEvent(f'SD error: {sd_error}')
+
+        print(f'Mean error = {m_error} (SD = {sd_error})')
+
+        self.clearScreen()
+        self.continueInitTask()
+
+    def updateFixationScreen(self):
+        try:
+            samp = self.tracker.sample()
+        except Exception as e:
+            samp = np.nan
+
+        self.fixationCrossSamples.append(samp)
+
+        # TODO: write error at bottom of fixation cross screen?
+
+    def fixationScreen(self):
+        self.layout.addWidget(self.fixationCross)
+        self.setLayout(self.layout)
+        self.show()
+
+        self.fixTimer2.setInterval(5)
+        self.fixTimer2.timeout.connect(self.updateFixationScreen)
+        self.fixTimer2.start()
+
+        self.fixTimer.singleShot(3000, self.stopFixationScreen)
+
     # =============================================================================
     #    GENERATE GRIDS     
     # =============================================================================
