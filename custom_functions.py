@@ -18,6 +18,7 @@ import time
 import numpy as np
 import pandas as pd
 import math
+from math import atan2
 
 from PyQt5.QtCore import QMimeData, Qt, QTimer
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
@@ -140,13 +141,23 @@ def euclidean_distance(loc1: tuple, loc2: tuple):
     return dist
 
 
+def get_angle(x):
+    return np.rad2deg(atan2(x * constants.PIXEL_WIDTH, constants.SCREENDIST))
+
+
+def compute_angle_from_center(sample, center):
+    return get_angle(euclidean_distance(sample, center))
+
+
 def calculateMeanError(samples):
     center = constants.SCREEN_CENTER
-
-    errors = [euclidean_distance(sample, center) for sample in samples]
-
     try:
+        # Discard the first half of samples and the last few
+        half_length = int(len(samples) / 2)
+        errors = [compute_angle_from_center(sample, center) for sample in samples[-half_length:-10]]
+
         result = (round(np.mean(errors), 2), round(np.std(errors), 2))
+
     except:
         result = (np.nan, np.nan)
 

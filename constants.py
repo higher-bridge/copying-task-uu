@@ -15,6 +15,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 DISPSIZE = (2560, 1440)
 SCREENSIZE = (59.8, 33.6)
+SCREENDIST = 67.5
 DUMMYMODE = False
 
 NUM_STIMULI = 6
@@ -26,3 +27,5 @@ MIDLINE = 1100  # 1280 default, set slightly further left to avoid unnecessary t
 
 
 SCREEN_CENTER = (DISPSIZE[0] / 2, DISPSIZE[1] / 2)
+PIXEL_WIDTH = (SCREENSIZE[0]) / DISPSIZE[0]
+PIXEL_HEIGHT = (SCREENSIZE[1]) / DISPSIZE[1]

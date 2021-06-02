@@ -35,7 +35,7 @@ MIDLINE = 1200
 
 RESOLUTION = (2560, 1440)
 DIMENSIONS = (598, 336) # mm size of screen
-DISTANCE = 700 # mm distance from screen
+DISTANCE = 675 # mm distance from screen
 
 # MODEL PARAMETERS
 MAX_MEMORY_REPETITIONS = 3

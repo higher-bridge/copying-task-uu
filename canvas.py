@@ -102,7 +102,7 @@ class Canvas(QWidget):
         self.dragStartTime = None
         self.dragStartPosition = None
 
-        self.m_error, self.sd_error = 0, 0
+        self.mean_error, self.sd_error = 0, 0
         
         # Track correct placements
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
@@ -575,7 +575,7 @@ class Canvas(QWidget):
 
         elif self.currentTrial > 1:
             nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
-            addText = f'\nFixation error last trial was {self.m_error} ({self.sd_error})'
+            addText = f'\nFixation error last trial was {self.mean_error} ({self.sd_error}) degrees.'
             
             if timeOut:
                 self.label = QLabel(f"You timed out. {nextTrial} {addText}")
@@ -633,11 +633,12 @@ class Canvas(QWidget):
     def stopFixationScreen(self):
         self.fixTimer2.stop()
 
-        self.m_error, self.sd_error = calculateMeanError(self.fixationCrossSamples)
-        self.writeEvent(f'Mean fixation cross error: {self.m_error}')
-        self.writeEvent(f'SD fixation cross error: {self.sd_error}')
+        self.mean_error, self.sd_error = calculateMeanError(self.fixationCrossSamples)
+        self.writeEvent(f'Fixation cross error mean: {self.mean_error}')
+        self.writeEvent(f'Fixation cross error sd: {self.sd_error}')
 
-        print(f'Mean error = {self.m_error} (SD = {self.sd_error})')
+        print(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
+        self.tracker.status_msg(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
 
         self.clearScreen()
         self.continueInitTask()
@@ -659,7 +660,7 @@ class Canvas(QWidget):
         self.setLayout(self.layout)
         self.show()
 
-        self.fixTimer2.setInterval(5)
+        self.fixTimer2.setInterval(2)
         self.fixTimer2.timeout.connect(self.updateFixationScreen)
         self.fixTimer2.start()
 
