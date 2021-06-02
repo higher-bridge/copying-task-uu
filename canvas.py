@@ -42,7 +42,7 @@ class Canvas(QWidget):
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  customCalibration:bool=False, customCalibrationSize:int=20,
-                 fixationCrossSize=15, fixationCrossMs=3000,
+                 fixationCrossSize=15, fixationCrossMs=3000, driftToleranceDeg=2.0,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -91,6 +91,7 @@ class Canvas(QWidget):
         self.customCalibrationSize = customCalibrationSize
         self.fixationCrossSize = fixationCrossSize
         self.fixationCrossMs = fixationCrossMs
+        self.driftToleranceDeg = driftToleranceDeg
 
         self.spacePushed = False
 
@@ -124,6 +125,7 @@ class Canvas(QWidget):
         self.recordingSession = 0
 
         self.inOpeningScreen = True
+        self.inFixationScreen = False
         self.initUI()
 
     # =============================================================================
@@ -369,7 +371,11 @@ class Canvas(QWidget):
                 self.clearScreen()
 
                 # Start the task
-                self.initTask()
+                if self.inOpeningScreen:
+                    self.initTask()
+                elif self.inFixationScreen:
+                    self.continueInitTask()
+
                 return True
 
             elif key == QtCore.Qt.Key_Backspace:
@@ -545,10 +551,10 @@ class Canvas(QWidget):
         if self.currentTrial > self.nTrials:
             self.conditionOrderIndex += 1
             self.currentTrial = 1
+
         print(f'Trial {self.currentTrial}, Block {self.conditionOrderIndex}, Condition {self.currentConditionIndex}')
         
         self.spacePushed = False
-
         self.writeEvent('In starting screen')
         
         if self.currentTrial == 1:
@@ -575,12 +581,12 @@ class Canvas(QWidget):
 
         elif self.currentTrial > 1:
             nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
-            addText = f'\nFixation error last trial was {self.mean_error} ({self.sd_error}) degrees.'
+            # addText = f'\nFixation error last trial was {self.mean_error} ({self.sd_error}) degrees.'
             
             if timeOut:
-                self.label = QLabel(f"You timed out. {nextTrial} {addText}")
+                self.label = QLabel(f"You timed out. {nextTrial}")  # {addText}")
             else:
-                self.label = QLabel(f"End of trial. {nextTrial} {addText}")
+                self.label = QLabel(f"End of trial. {nextTrial}")  # {addText}")
 
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
@@ -600,8 +606,8 @@ class Canvas(QWidget):
         self.show()
 
     def initTask(self):
-        self.removeEventFilter(self)
-        
+        self.inOpeningScreen = False
+
         self.images = pick_stimuli(self.allImages, self.nStimuli)
         self.grid = example_grid.generate_grid(self.images,
                                                self.nrow, self.ncol)
@@ -613,18 +619,20 @@ class Canvas(QWidget):
         self.fixationScreen()
 
     def continueInitTask(self):
+        self.inFixationScreen = False
+        
         # Create the actual task layout
         self.createMasterGrid()
 
         self.layout.addWidget(self.masterGrid)
         self.setLayout(self.layout)
 
+        self.removeEventFilter(self)
         self.writeEvent('Task init')
 
         self.show()
 
         self.hourGlass.setVisible(False)
-        self.inOpeningScreen = False
         self.runTimer()
 
     # =============================================================================
@@ -641,21 +649,30 @@ class Canvas(QWidget):
         self.tracker.status_msg(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
 
         self.clearScreen()
-        self.continueInitTask()
+
+        if self.mean_error < self.driftToleranceDeg:
+            self.continueInitTask()
+        else:
+            self.driftWarningScreen()
 
     def updateFixationScreen(self):
         try:
             samp = self.tracker.sample()
+
+            # Remove outliers that are very far from the center, as they're more likely a different issue than drift
+            if (constants.DISPSIZE[0] * .2) < samp[0] < (constants.DISPSIZE[0] * .8):
+                if (constants.DISPSIZE[1] * .2) < samp[1] < (constants.DISPSIZE[1] * .8):
+                    self.fixationCrossSamples.append(samp)
+
         except Exception as e:
             samp = np.nan
             # samp = (random.gauss(1280, 10), random.gauss(720, 10))  # Used for testing
-
-        # Remove outliers that are very far from the center, as they're more likely a different issue than drift
-        if (constants.DISPSIZE[0] * .2) < samp[0] < (constants.DISPSIZE[0] * .8):
-            if (constants.DISPSIZE[1] * .2) < samp[1] < (constants.DISPSIZE[1] * .8):
-                self.fixationCrossSamples.append(samp)
+            self.fixationCrossSamples.append(samp)
 
     def fixationScreen(self):
+        self.inFixationScreen = True
+        self.spacePushed = False
+
         self.layout.addWidget(self.fixationCross)
         self.setLayout(self.layout)
         self.show()
@@ -665,6 +682,22 @@ class Canvas(QWidget):
         self.fixTimer2.start()
 
         self.fixTimer.singleShot(self.fixationCrossMs, self.stopFixationScreen)
+
+    def driftWarningScreen(self):
+        self.writeEvent('Showing drift warning')
+
+        self.label = QLabel("Warning: fixation error was greater than threshold.\n" +
+                            "Press 'backspace' to calibrate or 'spacebar' to continue.")
+
+        self.label.setFont(QFont("Times", 18))
+        self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
+
+        self.layout.addWidget(self.label)
+
+        self.installEventFilter(self)
+
+        self.setLayout(self.layout)
+        self.show()
 
     # =============================================================================
     #    GENERATE GRIDS     
