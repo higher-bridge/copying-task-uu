@@ -42,7 +42,7 @@ class Canvas(QWidget):
                  conditions:list, conditionOrder:list, nTrials:int, 
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  customCalibration:bool=False, customCalibrationSize:int=20,
-                 fixationCrossSize=15, fixationCrossMs=3000, driftToleranceDeg=2.0,
+                 fixationCrossSize=20, fixationCrossMs=3000, driftToleranceDeg=2.0,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -364,6 +364,11 @@ class Canvas(QWidget):
         if e.type() == QtCore.QEvent.KeyPress:
             key = e.key()
 
+            # Retry the fixation cross with key 'r'
+            if key == QtCore.Qt.Key_R and self.inFixationScreen:
+                self.clearScreen()
+                self.initTask()
+
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
                 
                 # Set spacePushed to true and remove all widgets
@@ -646,7 +651,11 @@ class Canvas(QWidget):
         self.writeEvent(f'Fixation cross error sd: {self.sd_error}')
 
         print(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
-        self.tracker.status_msg(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
+
+        try:
+            self.tracker.status_msg(f'Mean error = {self.mean_error}, SD error = {self.sd_error}')
+        except:
+            pass
 
         self.clearScreen()
 

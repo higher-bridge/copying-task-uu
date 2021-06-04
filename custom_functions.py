@@ -88,53 +88,6 @@ def customTimer(parent, now):
             return 'hide', 'show'
 
 
-def customTimerWithoutPause(parent, now):
-    """Implement your own custom timer. Integrate with eyetracker if necessary.
-
-    Args:
-        parent: Receives all class variables from Canvas
-        now (int): Receives the current time in milliseconds
-
-    Returns:
-        str or None: Return how to update. Returning None retains current visibility state.
-                     Alternatives: 'hide', 'show', 'flip'.
-    """
-
-    if parent.occludedTime == 0:
-        return 'show', 'hide'
-
-    eyeLoc = parent.tracker.sample()[0]
-    # eyeLoc = parent.mouse.pos().x()
-
-    if eyeLoc == -1:
-        return None, None
-
-    if parent.crossingStart is None:
-        # If midline is crossed to the left, start a counter (crossingStart)
-        # and hide the example
-        if eyeLoc < MIDLINE:
-            parent.crossingStart = now
-            return 'hide', 'show'
-
-    # If gaze is on the right and no counter is running, hide example grid and show no hourglass
-        elif eyeLoc > MIDLINE:
-            return 'hide', 'hide'
-
-    # If a counter is running, hide the grid until time is reached. This is
-    # regardless of where gaze position is
-    else:
-        if (now - parent.crossingStart) < parent.occludedTime:
-            return 'hide', 'show'
-
-        elif (now - parent.crossingStart) > parent.occludedTime:
-            if eyeLoc > MIDLINE:
-                parent.crossingStart = None
-                
-            return 'show', 'hide'
-
-    return None, None
-
-
 def euclidean_distance(loc1: tuple, loc2: tuple):
     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
     dist = math.sqrt(sum(dist))
