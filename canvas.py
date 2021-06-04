@@ -696,7 +696,7 @@ class Canvas(QWidget):
         self.writeEvent('Showing drift warning')
 
         self.label = QLabel("Warning: fixation error was greater than threshold.\n" +
-                            "Press 'backspace' to calibrate or 'spacebar' to continue.")
+                            "Press 'backspace' to calibrate, 'r' to retry, or 'spacebar' to continue.")
 
         self.label.setFont(QFont("Times", 18))
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignHCenter)
