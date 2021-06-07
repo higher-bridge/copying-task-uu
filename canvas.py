@@ -43,6 +43,7 @@ class Canvas(QWidget):
                  useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
                  customCalibration:bool=False, customCalibrationSize:int=20,
                  fixationCrossSize=20, fixationCrossMs=3000, driftToleranceDeg=2.0,
+                 inTrainingMode=False,
                  left:int=50, top:int=50, width:int=2560, height:int=1440):
         
         super().__init__()
@@ -83,6 +84,7 @@ class Canvas(QWidget):
         self.occludedTime = 0
         self.backCrossing = False
         self.backCrossStart = 0
+        self.possibleBlinkStart = None
 
         self.addNoise = addNoise
         self.trialTimeOut = trialTimeOut
@@ -104,6 +106,7 @@ class Canvas(QWidget):
         self.dragStartPosition = None
 
         self.mean_error, self.sd_error = 0, 0
+        self.inTrainingMode = inTrainingMode
         
         # Track correct placements
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
@@ -674,7 +677,11 @@ class Canvas(QWidget):
                     self.fixationCrossSamples.append(samp)
 
         except Exception as e:
-            samp = np.nan
+            if self.inTrainingMode:  # If in traning mode, pretend there is no tracker error
+                samp = constants.SCREEN_CENTER
+            else:  # Otherwise, return np.nan to indicate an issue
+                samp = np.nan
+
             # samp = (random.gauss(1280, 10), random.gauss(720, 10))  # Used for testing
             self.fixationCrossSamples.append(samp)
 

@@ -61,10 +61,24 @@ def customTimer(parent, now):
         if not parent.backCrossing:  # Only check for completion if we're not backcrossing
             if (now - parent.crossingStart) > parent.occludedTime:  # Timer is completed
                 if eyeLoc > MIDLINE:  # Gaze > midline, so reset timer and hide both
-                    parent.crossingStart = None
-                    return 'hide', 'hide'
+
+                    # If the timer is completed, sometimes blinking would reset the timer. Give an extra 200ms
+                    # to allow for the possibility of blinks (will make removing the grid slower).
+                    if parent.possibleBlinkStart is None:  # Midline is crossed, start a timer if not yet running
+                        parent.possibleBlinkStart = now
+                        return 'show', 'hide'  # Keep the grid visible
+
+                    else:
+                        # If we've left the example for >200ms, this is probably not a blink, so reset
+                        if (now - parent.possibleBlinkStart) > 200:
+                            parent.possibleBlinkStart = None
+                            parent.crossingStart = None
+                            return 'hide', 'hide'
+                        else:
+                            return 'show', 'hide'
 
                 else:  # Timer is completed but gaze is still on example, so leave the example
+                    parent.possibleBlinkStart = None  # Rest the blink timer
                     return 'show', 'hide'
 
         if eyeLoc > MIDLINE:
@@ -81,7 +95,7 @@ def customTimer(parent, now):
                 timeSpentAway = now - parent.backCrossStart
                 parent.crossingStart += timeSpentAway
 
-                print(f'Time spent away: {round(timeSpentAway, 2)}')
+                # print(f'Time spent away: {round(timeSpentAway, 2)}')
 
             # Timer is not completed, gaze is < midline, so hide example and show hourglass.
             # This is actual waiting time.

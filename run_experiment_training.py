@@ -41,7 +41,8 @@ if __name__ == '__main__':
     ex = Canvas(images=images, nStimuli=NUM_STIMULI, imageWidth=IMAGE_WIDTH, 
                 nrow=ROW_COL_NUM, ncol=ROW_COL_NUM,
                 conditions=CONDITIONS, conditionOrder=CONDITION_ORDER, 
-                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=TIME_OUT_MS)
+                nTrials=NUM_TRIALS, useCustomTimer=False, trialTimeOut=TIME_OUT_MS,
+                inTrainingMode=True)
     
     ex.showFullScreen()
     
