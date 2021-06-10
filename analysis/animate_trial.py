@@ -13,9 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import time
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 from celluloid import Camera
 
 import helperfunctions as hf
@@ -44,6 +47,12 @@ events = events.loc[events['Condition'] == condition]
 events = events.loc[events['Trial'] == trial]
 # print(events.head())
 
+# Load all placement info
+placements = pd.read_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
+placements = placements.loc[placements['Condition'] == condition]
+placements = placements.loc[placements['Trial'] == trial]
+
+
 # Find trial start and finish
 start_row = events.loc[events['Event'] == 'Task init']
 start_time = start_row['TrackerTime'].values[0]
@@ -53,6 +62,9 @@ end_row = events.loc[events['Event'] == 'Finished trial']
 end_time = end_row['TrackerTime'].values[0] - start_time
 print(end_time)
 
+time_diff = start_row['TimeDiff'].values[0]
+print(time_diff)
+
 # Subtract the start time from gaze and mouse data (therefore: start at 0 ms)
 gaze_data['time'] = gaze_data['time'].apply(lambda x: int(x - start_time))
 mouse_data['TrackerTime'] = mouse_data['TrackerTime'].apply(lambda x: int(x - start_time))
@@ -60,22 +72,26 @@ print(list(gaze_data['time'])[:10], len(gaze_data))
 
 # 'gx_right' 'gy_right' 'time'
 
-framerate = 60
+gx, gy = list(gaze_data['gx_right']), list(gaze_data['gy_right'])
 
-fig = plt.figure(figsize=(7.5, 5), dpi=600)
+framerate = 20
+patch_width = 130
+patch_height = 140
+
+last_mouse_loc = (0, 0)
+
+start = time.time()
+fig = plt.figure(figsize=(8, 4.5), dpi=200)
 ax = fig.add_subplot(1, 1, 1)
 ax.set_facecolor((.5, .5, .5))
 
 camera = Camera(fig)
 
-last_mouse_loc = (0, 0)
-
 for t in np.arange(len(gaze_data), step=1000/framerate):
     # TODO: show stimuli in example grid and resource grid
     # TODO: add dragging motion from resource grid to workspace grid
 
-    gd = gaze_data.iloc[int(t)]
-    x, y = gd['gx_right'], gd['gy_right']
+    x, y = gx[int(t)], gy[int(t)]
 
     m_idx = hf.find_nearest_index(mouse_data['TrackerTime'], t)
     md = mouse_data.iloc[m_idx]
@@ -83,6 +99,20 @@ for t in np.arange(len(gaze_data), step=1000/framerate):
 
     gaze, = plt.plot(x, y, 'bo')
     mouse, = plt.plot(mx, my, 'r+')
+
+    all_patch_locations = constants.all_example_locations + constants.all_workspace_locations
+    for loc in all_patch_locations:  # Draw empty example grid
+        l = (loc[0] - (patch_width / 2),
+             loc[1] - (patch_height / 2))
+        ax.add_patch(Rectangle(l, patch_width, patch_height,
+                               edgecolor='black', facecolor='none',
+                               linewidth=.8))
+
+    ax.add_patch(Rectangle(constants.resource_grid_corner,  # Draw empty resource box
+                           constants.resource_grid_size[0], constants.resource_grid_size[1],
+                           edgecolor='black', facecolor='none',
+                           linewidth=.8))
+
     plt.xlim((0, constants.RESOLUTION[0]))
     plt.ylim((constants.RESOLUTION[1], 0))
 
@@ -92,4 +122,6 @@ for t in np.arange(len(gaze_data), step=1000/framerate):
 
 animation = camera.animate()
 animation.save(f'../results/plots/animation-{ID}-{condition}-{trial}.mp4', fps=framerate)
+# animation.save(f'../results/plots/animation-{ID}-{condition}-{trial}.gif', fps=framerate)
 
+print(f'Animating took {round(time.time() - start, 1)} seconds')
