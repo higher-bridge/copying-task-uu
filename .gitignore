@@ -143,6 +143,7 @@ settings.json
 *.png
 *.p
 *.zip
+*.mp4
 
 # macOS stuff
 **/.DS_Store

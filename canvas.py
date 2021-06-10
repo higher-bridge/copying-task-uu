@@ -113,7 +113,8 @@ class Canvas(QWidget):
         self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
                                                        'Correct', 'Time',
                                                        'dragDuration', 'dragDistance',
-                                                       'Trial', 'Condition', 'visibleTime'])
+                                                       'Trial', 'Condition', 'visibleTime',
+                                                       'CameFromX', 'CameFromY'])
         
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 

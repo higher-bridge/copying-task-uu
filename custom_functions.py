@@ -265,6 +265,8 @@ class CustomLabel(QLabel):
                 self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
                 self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
                 self.parent.correctPlacements['Correct'][rowIndex] = True
+                self.parent.correctPlacements['cameFromX'][rowIndex] = self.parent.dragStartPosition[0]
+                self.parent.correctPlacements['cameFromY'][rowIndex] = self.parent.dragStartPosition[1]
 
             except:
                 print(f'Item incorrectly placed in ({self.x}, {self.y})')
