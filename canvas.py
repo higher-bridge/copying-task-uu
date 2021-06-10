@@ -114,7 +114,7 @@ class Canvas(QWidget):
                                                        'Correct', 'Time',
                                                        'dragDuration', 'dragDistance',
                                                        'Trial', 'Condition', 'visibleTime',
-                                                       'CameFromX', 'CameFromY'])
+                                                       'cameFromX', 'cameFromY'])
         
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 

@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 from celluloid import Camera
 
 import helperfunctions as hf
+import constants_analysis as constants
 
 ID = '003'
 condition = 0
@@ -59,7 +60,7 @@ print(list(gaze_data['time'])[:10], len(gaze_data))
 
 # 'gx_right' 'gy_right' 'time'
 
-framerate = 30
+framerate = 60
 
 fig = plt.figure(figsize=(7.5, 5), dpi=600)
 ax = fig.add_subplot(1, 1, 1)
@@ -80,10 +81,12 @@ for t in np.arange(len(gaze_data), step=1000/framerate):
     md = mouse_data.iloc[m_idx]
     mx, my = md['x'], md['y']
 
-    plt.plot(x, y, 'bo')
-    plt.plot(mx, my, 'r+')
-    plt.xlim((0, 2560))
-    plt.ylim((1440, 0))
+    gaze, = plt.plot(x, y, 'bo')
+    mouse, = plt.plot(mx, my, 'r+')
+    plt.xlim((0, constants.RESOLUTION[0]))
+    plt.ylim((constants.RESOLUTION[1], 0))
+
+    plt.legend([gaze, mouse], ['gaze', 'mouse'])
 
     camera.snap()
 
