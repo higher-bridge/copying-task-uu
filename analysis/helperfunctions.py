@@ -101,12 +101,12 @@ def order_by_condition(df, condition_order:list):
 
     return new_df
 
-def get_condition_order(df, ID:str, conditions:list=[1, 2, 3, 4]):
+def get_condition_order(df, ID:str, blocks:list=[1, 2, 3, 4]):
     df_id = df.loc[df['ID'] == ID]
     
     condition_order = []
     
-    for condition in conditions:
+    for condition in blocks:
         colname = f'Block {condition}'
         c = list(df_id[colname])[0]
         condition_order.append(c)

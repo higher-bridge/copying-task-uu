@@ -26,17 +26,19 @@ from constants_analysis import base_location
 def load_and_merge(ID, ID_dict, pp_info, base_location): 
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
+    samplefiles = hf.find_files(ID, ID_dict[ID], base_location, '-samples.csv')
     mousefiles = hf.find_files(ID, ID_dict[ID], base_location, '-mouseTracking-')
-    placements = hf.find_files(ID, ID_dict[ID], base_location, '-allPlacements.csv')
+    # placements = hf.find_files(ID, ID_dict[ID], base_location, '-allPlacements.csv')
     c_placements = hf.find_files(ID, ID_dict[ID], base_location, '-correctPlacements.csv')
     
     # Concatenate all separate session files into one larger file
     task_events = hf.concat_event_files(task_event_files)
-    events = hf.concat_event_files(eventfiles)  
+    events = hf.concat_event_files(eventfiles).drop('trial', axis=1)
+    samples = hf.concat_event_files(samplefiles)
     mousedata = hf.concat_event_files(mousefiles) #.drop('Unnamed: 0')
-    all_placements = hf.concat_event_files(placements)
+    # all_placements = hf.concat_event_files(placements)
     correct_placements = hf.concat_event_files(c_placements)
-    
+
     # Order the df in the proper condition, retrieved from participant_info.xlsx
     # (I didn't design the mousetracker filenames with chronological ordering)
     condition_order = hf.get_condition_order(pp_info, ID)
@@ -48,6 +50,13 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
     
     condition_list = np.empty(len(events), dtype=int)
     condition_list[:] = 999
+
+    # Do the same for the sample df's
+    trial_list_samp = np.empty(len(samples), dtype=int)
+    trial_list_samp[:] = 999
+
+    condition_list_samp = np.empty(len(samples), dtype=int)
+    condition_list_samp[:] = 999
     
     # Create empty list to track whether mouse is being dragged
     dragging_list = np.empty(len(events), dtype=bool)
@@ -80,6 +89,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
             # Match the timestamp to the closest timestamp in the fixations df
             start_idx = hf.find_nearest_index(events['end'], start)
             end_idx = hf.find_nearest_index(events['start'], end)
+
+            start_idx_samp = hf.find_nearest_index(samples['time'], start)
+            end_idx_samp = hf.find_nearest_index(samples['time'], end)
             
             # Find during which events items were being dragged with the mouse
             task_init = trial_df.loc[trial_df['Event'] == 'Task init']
@@ -106,6 +118,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
                 trial_list[start_idx:end_idx] = trial_num
                 condition_list[start_idx:end_idx] = condition
                 mouse_valid[mouse_start_idx:mouse_end_idx] = True
+
+                trial_list_samp[start_idx_samp:end_idx_samp] = trial_num
+                condition_list_samp[start_idx_samp:end_idx_samp] = condition
                 
                 # # Plot
                 # if PLOT:
@@ -122,6 +137,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
     events['Trial'] = trial_list
     events['Condition'] = condition_list
     events['Dragging'] = dragging_list
+
+    samples['Trial'] = trial_list_samp
+    samples['Condition'] = condition_list_samp
     
     # Retrieve how many valid trials were recorded per condition
     num_trials = hf.get_num_trials(events)
@@ -145,8 +163,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
     # Write everything to csv
     mouse_events.to_csv(f'../results/{ID}/{ID}-mouseEvents.csv')
     events.to_csv(f'../results/{ID}/{ID}-allFixations.csv')
+    samples.to_csv(f'../results/{ID}/{ID}-allSamples.csv')
     task_events.to_csv(f'../results/{ID}/{ID}-allEvents.csv')
-    all_placements.to_csv(f'../results/{ID}/{ID}-allAllPlacements.csv')
+    # all_placements.to_csv(f'../results/{ID}/{ID}-allAllPlacements.csv')
     correct_placements.to_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
     
     return [b1, b2, b3, b4]
@@ -167,16 +186,16 @@ if __name__ == '__main__':
     base_location_list = [base_location] * len(ID_list)
     
     # Sit back, this will take a while
-    results = Parallel(n_jobs=-5, backend='loky', verbose=True)(delayed(load_and_merge)\
-                                                                (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list, 
-                                                                                                                  ID_dict_list,
-                                                                                                                  pp_info_list,
-                                                                                                                  base_location_list))
-    
-    # results = []
-    # for ID in ID_list:
-    #     results.append(load_and_merge(ID, ID_dict, pp_info, base_location))
-    #     print(f'Parsed {len(results)} of {len(ID_list)} files')
+    # results = Parallel(n_jobs=-5, backend='loky', verbose=True)(delayed(load_and_merge)\
+    #                                                             (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list,
+    #                                                                                                               ID_dict_list,
+    #                                                                                                               pp_info_list,
+    #                                                                                                               base_location_list))
+
+    results = []
+    for ID in ID_list:
+        results.append(load_and_merge(ID, ID_dict, pp_info, base_location))
+        print(f'Parsed {len(results)} of {len(ID_list)} files')
         
     pp_info['Trials condition 0'] = [b[0] for b in results]
     pp_info['Trials condition 1'] = [b[1] for b in results]

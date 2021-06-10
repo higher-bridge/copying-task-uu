@@ -104,6 +104,7 @@ class Canvas(QWidget):
         self.mouse = QCursor()
         self.dragStartTime = None
         self.dragStartPosition = None
+        self.lastNow = 0
 
         self.mean_error, self.sd_error = 0, 0
         self.inTrainingMode = inTrainingMode
@@ -166,12 +167,12 @@ class Canvas(QWidget):
             print(f'{number} is already in use! Use another number or name')
             self.setParticipantNumber()
                 
-    def writeCursorPosition(self):
+    def writeCursorPosition(self, now):
         e = self.mouse.pos()
 
         self.mouseTrackerDict['x'].append(e.x())
         self.mouseTrackerDict['y'].append(e.y())
-        self.mouseTrackerDict['Time'].append(round(time.time() * 1000))
+        self.mouseTrackerDict['Time'].append(now)
         self.mouseTrackerDict['TrackerTime'].append(self.getTrackerClock())
         self.mouseTrackerDict['Trial'].append(self.currentTrial)
         self.mouseTrackerDict['Condition'].append(self.currentConditionIndex)
@@ -196,8 +197,9 @@ class Canvas(QWidget):
         now = round(time.time() * 1000)
 
         # Only write cursor every 2 ms
-        if (now % 2) == 0:
+        if ((now % 2) == 0) and (now != self.lastNow):
             self.writeCursorPosition()
+            self.lastNow = now
 
         # Check for timeout
         if now - self.globalTrialStart >= self.trialTimeOut:
