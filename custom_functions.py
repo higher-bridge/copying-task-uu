@@ -151,7 +151,7 @@ class DraggableLabel(QLabel):
             self.dragStartP = e.pos()
 
             # 'Global' tracking var
-            self.parent.dragStartPosition = e.pos()
+            self.parent.dragStartPosition = e.globalPos()
             self.parent.dragStartTime = round(time.time() * 1000)
 
     def mouseMoveEvent(self, e):
@@ -265,8 +265,9 @@ class CustomLabel(QLabel):
                 self.parent.correctPlacements['dragDuration'][rowIndex] = dragDuration
                 self.parent.correctPlacements['dragDistance'][rowIndex] = dragDistance
                 self.parent.correctPlacements['Correct'][rowIndex] = True
-                self.parent.correctPlacements['cameFromX'][rowIndex] = self.parent.dragStartPosition[0]
-                self.parent.correctPlacements['cameFromY'][rowIndex] = self.parent.dragStartPosition[1]
+                self.parent.correctPlacements['cameFromX'][rowIndex] = self.parent.dragStartPosition.x()
+                self.parent.correctPlacements['cameFromY'][rowIndex] = self.parent.dragStartPosition.y()
 
-            except:
+            except Exception as e:
+                print(e)
                 print(f'Item incorrectly placed in ({self.x}, {self.y})')
