@@ -29,19 +29,19 @@ SUM_DURATION = 6000
 TIMEOUT = 42000
 
 # COMPUTER PARAMETERS
-TARGET_SIZE = (50, 50) # I have divided by 2 because it is more likely to grab
-                       # the stimuli around the center
+TARGET_SIZE = (50, 50)  # I have divided by 2 because it is more likely to grab
+# the stimuli around the center
 MIDLINE = 1200
 
 RESOLUTION = (2560, 1440)
-DIMENSIONS = (598, 336) # mm size of screen
-DISTANCE = 675 # mm distance from screen
+DIMENSIONS = (598, 336)  # mm size of screen
+DISTANCE = 675  # mm distance from screen
 
 # MODEL PARAMETERS
 MAX_MEMORY_REPETITIONS = 3
 
 # Consist of (start, stop, step)
-F_RANGE = (.1, .5, .1) 
+F_RANGE = (.1, .5, .1)
 DECAY_RANGE = (.5, 1., .1)
 THRESH_RANGE = (.175, .275, .025)
 NOISE_RANGE = (.26, .32, .02)
@@ -57,11 +57,20 @@ all_workspace_locations = [(1780, 570), (1910, 570), (2045, 570),
                            (1780, 870), (1910, 870), (2045, 870)]
 all_resource_locations = [(1780, 1080), (1910, 1080), (2045, 1080),
                           (1780, 1300), (1910, 1300), (2045, 1300)]
-resource_grid_corner = (1715, 1010) #, (2110, 1370)]
+
+# all_example_locations_grid = [[(515, 570), (650, 570), (785, 570)],
+#                               [(515, 720), (650, 720), (785, 720)],
+#                               [(515, 870), (650, 870), (785, 870)]]
+# all_workspace_locations_grid = [[(1780, 570), (1910, 570), (2045, 570)],
+#                                 [(1780, 720), (1910, 720), (2045, 720)],
+#                                 [(1780, 870), (1910, 870), (2045, 870)]]
+# all_resource_locations_grid = [(1780, 1080), (1910, 1080), (2045, 1080),
+#                                (1780, 1300), (1910, 1300), (2045, 1300)]
+
+resource_grid_corner = (1715, 1010)  # , (2110, 1370)]
 resource_grid_size = (395, 360)
 
 # NO NEED TO FILL IN
 SCREEN_CENTER = (RESOLUTION[0] / 2, RESOLUTION[1] / 2)
 PIXEL_WIDTH = DIMENSIONS[0] / RESOLUTION[0]
-PIXEL_HEIGHT = DIMENSIONS[1] / RESOLUTION[1] 
-
+PIXEL_HEIGHT = DIMENSIONS[1] / RESOLUTION[1]

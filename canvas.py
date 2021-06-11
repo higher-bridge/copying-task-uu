@@ -199,7 +199,7 @@ class Canvas(QWidget):
 
         # Only write cursor every 2 ms
         if ((now % 2) == 0) and (now != self.lastNow):
-            self.writeCursorPosition()
+            self.writeCursorPosition(now)
             self.lastNow = now
 
         # Check for timeout
@@ -815,7 +815,9 @@ class Canvas(QWidget):
                         'dragDistance': None,
                         'Trial': self.currentTrial,
                         'Condition': self.currentConditionIndex,
-                        'visibleTime': self.visibleTime
+                        'visibleTime': self.visibleTime,
+                        'cameFromX': None,
+                        'cameFromY': None
                     }, index=[0])
                     self.correctPlacements = self.correctPlacements.append(exampleDict, ignore_index=True)
                     
