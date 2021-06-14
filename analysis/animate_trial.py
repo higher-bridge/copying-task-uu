@@ -27,11 +27,25 @@ from celluloid import Camera
 import helperfunctions as hf
 import constants_analysis as constants
 
+
+def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations):
+    stimulus_paths = ['../' + PureWindowsPath(x).as_posix() for x in paths]
+    stimuli = [mpimg.imread(p) for p in stimulus_paths]
+    image_boxes = [OffsetImage(s, zoom=.1) for s in stimuli]
+
+    annotation_boxes = [AnnotationBbox(im, locations[x + y * 3], frameon=False) for x, y, im in
+                        zip(x_locs,
+                            y_locs,
+                            image_boxes)]
+
+    return annotation_boxes
+
+
 ID = '003'
 condition = 0
 trial = 3
 
-# Load mouse tracking data
+### Load mouse tracking data
 mousedata_files = sorted(
     [f for f in hf.getListOfFiles('../results') if (f'/{ID}-' in f) and (f'-mouseTracking-condition{condition}' in f)])
 mouse_data = pd.concat([pd.read_csv(f) for f in mousedata_files], ignore_index=True)
@@ -39,40 +53,26 @@ mouse_data = mouse_data.loc[mouse_data['Condition'] == condition]
 mouse_data = mouse_data.loc[mouse_data['Trial'] == trial]
 # print(mouse_data.head())
 
-# Load all samples
+### Load all samples
 all_gaze_data = pd.read_csv(f'../results/{ID}/{ID}-allSamples.csv')
 gaze_data = all_gaze_data.loc[all_gaze_data['Condition'] == condition]
 gaze_data = gaze_data.loc[gaze_data['Trial'] == trial]
+gx, gy = list(gaze_data['gx_right']), list(gaze_data['gy_right'])
 # print(gaze_data.head())
 
-# Load all events
+### Load all events
 events = pd.read_csv(f'../results/{ID}/{ID}-allEvents.csv')
 events = events.loc[events['Condition'] == condition]
 events = events.loc[events['Trial'] == trial]
 # print(events.head())
 
-# Load all placement info
+### Load all placement info
 placements = pd.read_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
 placements = placements.loc[placements['Condition'] == condition]
 placements = placements.loc[placements['Trial'] == trial]
+placements = placements.sort_values(by='Time', ignore_index=True)
 
-stimulus_paths = ['../' + PureWindowsPath(x).as_posix() for x in list(placements['shouldBe'])]
-stimuli = [mpimg.imread(p) for p in stimulus_paths]
-image_boxes = [OffsetImage(s, zoom=.1) for s in stimuli]
-
-annotation_boxes = [AnnotationBbox(im, constants.all_example_locations[x + y * 3], frameon=False) for x, y, im in
-                    zip(list(placements['x']),
-                        list(placements['y']),
-                        image_boxes)]
-
-# stimulus_locations = [(constants.all_example_locations[x + y * 3],
-#                        stim,
-#                        im_box) for x, y, stim, im_box in zip(list(placements['x']),
-#                                                              list(placements['y']),
-#                                                              stimuli,
-#                                                              image_boxes)]
-
-# Find trial start and finish
+### Find trial start and finish
 start_row = events.loc[events['Event'] == 'Task init']
 start_time = start_row['TrackerTime'].values[0]
 print(start_time)
@@ -84,23 +84,37 @@ print(end_time)
 time_diff = start_row['TimeDiff'].values[0]
 print(time_diff)
 
-# Subtract the start time from gaze and mouse data (therefore: start at 0 ms)
+### Subtract the start time from gaze and mouse data (therefore: start at 0 ms)
 gaze_data['time'] = gaze_data['time'].apply(lambda x: int(x - start_time))
 mouse_data['TrackerTime'] = mouse_data['TrackerTime'].apply(lambda x: int(x - start_time))
-print(list(gaze_data['time'])[:10], len(gaze_data))
+placements['TrackerTime'] = placements['Time'].apply(lambda x: int(x - time_diff - start_time))
+print(placements['TrackerTime'], mouse_data['TrackerTime'])
 
-# 'gx_right' 'gy_right' 'time'
+### Convert example stimuli to annotationBoxes (needs x/y)
+example_stimuli = prepare_stimuli(list(placements['shouldBe']),
+                                  list(placements['x']), list(placements['y']),
+                                  constants.all_example_locations)
 
-gx, gy = list(gaze_data['gx_right']), list(gaze_data['gy_right'])
+### Find when stimuli were placed in workspace grid and convert them to annotationBoxes
+workspace_placed = dict()
+for i, row in placements.iterrows():
+    timestamp = row['TrackerTime']
 
-framerate = 30
+    box = prepare_stimuli([row['shouldBe']],
+                          [row['x']],
+                          [row['y']],
+                          constants.all_workspace_locations)
+
+    workspace_placed[timestamp] = box[0]
+
+framerate = 10
 patch_width = 130
 patch_height = 140
 
 last_mouse_loc = (0, 0)
 
 start = time.time()
-fig = plt.figure(figsize=(8, 4.5), dpi=400)
+fig = plt.figure(figsize=(8, 4.5), dpi=150)
 ax = fig.add_subplot(1, 1, 1)
 ax.set_facecolor((.5, .5, .5))
 
@@ -126,10 +140,12 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
                            linewidth=.8))
 
     ### PLOT EXAMPLE GRID STIMULI ###
-    [ax.add_artist(ab) for ab in annotation_boxes]
-    # for (loc, im, box) in stimulus_locations:
-    #     ab = AnnotationBbox(box, loc, frameon=False)
-    #     ax.add_artist(ab)
+    [ax.add_artist(ab) for ab in example_stimuli]
+
+    ### PLOT CORRECTLY PLACED ITEMS
+    for k in list(workspace_placed.keys()):
+        if t >= k:
+            ax.add_artist(workspace_placed[k])
 
     ### PLOT MOUSE AND GAZE ###
     x, y = gx[int(t)], gy[int(t)]
@@ -140,6 +156,8 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
 
     gaze, = plt.plot(x, y, 'bo')
     mouse, = plt.plot(mx, my, 'r+')
+
+    plt.text(0, 0, f'({mx}, {my})')
 
     ### DO FORMATTING ###
     plt.xlim((0, constants.RESOLUTION[0]))

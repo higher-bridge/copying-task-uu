@@ -792,8 +792,8 @@ class Canvas(QWidget):
         layout = QGridLayout()
         
         i = 0
-        for x in range(self.nrow):
-            for y in range(self.ncol):
+        for x in range(self.ncol):
+            for y in range(self.nrow):
                 label = QLabel(self)
                 label.setFrameStyle(QFrame.Panel)
 
@@ -823,7 +823,7 @@ class Canvas(QWidget):
                     
                     i += 1
 
-                layout.addWidget(label, x, y)
+                layout.addWidget(label, y, x)  # addWidget asks for (row, column)
 
         self.exampleGridBox.setLayout(layout)
         self.exampleGridBox.setTitle('')
@@ -835,8 +835,8 @@ class Canvas(QWidget):
         layout = QGridLayout()
 
         i = 0
-        for x in range(self.nrow):
-            for y in range(self.ncol):
+        for x in range(self.ncol):
+            for y in range(self.nrow):
 
                 # Pass along the name of the intended images for this location
                 if self.grid[x, y]:
@@ -850,7 +850,7 @@ class Canvas(QWidget):
                 label.resize(self.imageWidth, self.imageWidth)
                 label.setAlignment(QtCore.Qt.AlignCenter)
                 label.setSizePolicy(self.sizePolicy)
-                layout.addWidget(label, x, y)
+                layout.addWidget(label, y, x)  # addWidget asks for (row, column)
         
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
@@ -863,8 +863,8 @@ class Canvas(QWidget):
         i = 0
         row = 0
         col = 0
-        for x in range(self.nrow):
-            for y in range(self.ncol):
+        for x in range(self.ncol):
+            for y in range(self.nrow):
                 if self.grid[x, y]:
                     image = self.shuffledImages[i]
                     label = DraggableLabel(self, image)
@@ -876,7 +876,7 @@ class Canvas(QWidget):
                         row += 1
                         col = 0
 
-                    layout.addWidget(label, row, col)
+                    layout.addWidget(label, row, col)  # addWidget asks for (row, column)
                     i += 1
                     col += 1
         
