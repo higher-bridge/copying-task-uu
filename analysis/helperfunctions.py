@@ -16,8 +16,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.image as mpimg
 import seaborn as sns
 import os
+from math import sqrt
+from pathlib import Path, PureWindowsPath
 
 import pingouin as pg
 
@@ -42,10 +46,44 @@ def getListOfFiles(dirName):
                 
     return sorted(allFiles)
 
+def euclidean_distance(loc1, loc2):
+    dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
+    return sqrt(sum(dist))
+
 def find_nearest_index(array, timestamp):
     array = np.asarray(array)
     idx = (np.abs(array - timestamp)).argmin()
     return idx
+
+def find_nearest_location(loc1, locations):
+    distances = np.asarray([euclidean_distance(loc1, loc2) for loc2 in locations])
+    min_dist_idx = distances.argmin()
+
+    return locations[min_dist_idx]
+
+def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pixels=False):
+    stimulus_paths = ['../' + PureWindowsPath(x).as_posix() for x in paths]
+    stimuli = [mpimg.imread(p) for p in stimulus_paths]
+    image_boxes = [OffsetImage(s, zoom=.1) for s in stimuli]
+
+    if not in_pixels:
+        annotation_boxes = [AnnotationBbox(im, locations[x + y * 3], frameon=False) for x, y, im in
+                            zip(y_locs,
+                                x_locs,
+                                image_boxes)]
+    else:
+        annotation_boxes = [AnnotationBbox(im, find_nearest_location((x, y), locations), frameon=False) for x, y, im in
+                            zip(x_locs,
+                                y_locs,
+                                image_boxes)]
+
+    return annotation_boxes
+
+def locate_trial(df, condition, trial):
+    df = df.loc[df['Condition'] == condition]
+    df = df.loc[df['Trial'] == trial]
+
+    return df
 
 def write_IDs_to_dict(all_IDs:list):
     ''' Takes a list of IDs and writes to dict with sub-lists for 
