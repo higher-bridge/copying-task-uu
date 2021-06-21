@@ -230,6 +230,7 @@ class CustomLabel(QLabel):
         # Check if item was dropped in the correct location
         elif e.mimeData().text() != self.shouldBe:
             e.ignore()
+            self.parent.writeEvent(f'Incorrectly placed - {e.mimeData().text()} - {self.shouldBe}')
             self.setStyleSheet("background-color:rgba(255, 51, 0, 200)")
             self.singleShotTransparent()
 
@@ -270,4 +271,4 @@ class CustomLabel(QLabel):
 
             except Exception as e:
                 print(e)
-                print(f'Item incorrectly placed in ({self.x}, {self.y})')
+                # print(f'Item incorrectly placed in ({self.x}, {self.y})')
