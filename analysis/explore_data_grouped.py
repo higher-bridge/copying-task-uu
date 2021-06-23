@@ -26,13 +26,12 @@ import constants_analysis as constants
 pp_info = pd.read_excel('../results/participant_info.xlsx')
 pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
 
-pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
+# pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
 
 
 fixations_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f]
-task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if 'allEvents.csv' in f]
-all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allAllPlacements.csv' in f]
-correct_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
+task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allEvents.csv' in f]
+all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
 
 features = [
             'Number of crossings',
@@ -63,62 +62,62 @@ for ID in list(pp_info['ID'].unique()):
     placements_filename = placements_filenames[0]    
     
     fix_df = pd.read_csv(fix_filename)
-    # fix_df = fix_df.loc[fix_df['type'] == 'fixation']
-    
+
     task_df = pd.read_csv(task_filename)
-    placement_df = pd.read_csv(placements_filename)    
+    placement_df = pd.read_csv(placements_filename)
+
+    for session in list(placement_df['Session'].unique()):
+        fix_df_s = fix_df.loc[fix_df['Session'] == session]
+        task_df_s = task_df.loc[task_df['Session'] == session]
+        placement_df_s = placement_df.loc[placement_df['Session'] == session]
     
-    for condition in list(fix_df['Condition'].unique()):
-        fix_df_c = fix_df.loc[fix_df['Condition'] == condition]
-        task_df_c = task_df.loc[task_df['Condition'] == condition]
-        placement_df_c = placement_df.loc[placement_df['Condition'] == condition]
-        
-        for trial in list(fix_df_c['Trial'].unique()): 
-            if trial not in constants.EXCLUDE_TRIALS:                
-                fix_df_t = fix_df_c.loc[fix_df_c['Trial'] == trial]
-                task_df_t = task_df_c.loc[task_df_c['Trial'] == trial]
-                placement_df_t = placement_df_c.loc[placement_df_c['Trial'] == trial]
+        for condition in list(placement_df_s['Condition'].unique()):
+            if condition != 999:
+                fix_df_c = fix_df_s.loc[fix_df_s['Condition'] == condition]
+                task_df_c = task_df_s.loc[task_df_s['Condition'] == condition]
+                placement_df_c = placement_df_s.loc[placement_df_s['Condition'] == condition]
 
+                for trial in list(placement_df_c['Trial'].unique()):
+                    if trial not in constants.EXCLUDE_TRIALS:
+                        fix_df_t = fix_df_c.loc[fix_df_c['Trial'] == trial]
+                        task_df_t = task_df_c.loc[task_df_c['Trial'] == trial]
+                        placement_df_t = placement_df_c.loc[placement_df_c['Trial'] == trial]
 
-                fixations = fix_df_t.loc[fix_df_t['type'] == 'fixation']
-                saccades = fix_df_t.loc[fix_df_t['type'] == 'saccade']
+                        fixations = fix_df_t.loc[fix_df_t['type'] == 'fixation']
+                        saccades = fix_df_t.loc[fix_df_t['type'] == 'saccade']
 
-                start_times = task_df_t.loc[task_df_t['Event'] == 'Task init']['TrackerTime']
-                start = list(start_times)[0]
-                
-                end_times = task_df_t.loc[task_df_t['Event'] == 'Finished trial']['TrackerTime']
-                end = list(end_times)[0]
-                                
-                completion_time = end - start
-                num_crossings = hf.get_midline_crossings(list(fixations['gavx']))
-                num_fixations = hf.get_left_side_fixations(list(fixations['gavx']))
-                dwell_times = hf.get_dwell_times(list(fixations['gavx']),
-                                                 list(fixations['start']),
-                                                 list(fixations['end']))
-                dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
-                                                               list(fixations['start']),
-                                                               list(fixations['end']))
-                errors = len(placement_df_t.loc[placement_df_t['Correct'] != True])                
-                
-                r = pd.DataFrame({'ID': ID,
-                                  'Condition': int(condition),
-                                  'Trial': int(trial),
-                                  'Number of crossings': float(num_crossings),
-                                  'Dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
-                                  'Completion time (s)': float(completion_time / 1000),
-                                  'Fixations per second': float(len(fixations) / (completion_time / 1000)),
-                                  'Saccade velocity': float(np.median(saccades['avel'])),
-                                  'Peak velocity': float(np.median(saccades['pvel']))
-                                  # 'Errors':float(errors)
-                                  },
-                                 index=[0])
-                results = results.append(r, ignore_index=True)
-                
-                # hf.scatterplot_fixations(fixations, 'gavx', 'gavy', 
-                #                           title=f'ID {ID}, condition {condition}, trial {trial}, crossings={num_crossings}',
-                #                           plot_line=True,
-                #                           save=False,
-                #                           savestr='')
+                        start_times = task_df_t.loc[task_df_t['Event'] == 'Task init']['TrackerTime']
+                        start = list(start_times)[0]
+
+                        end_times = task_df_t.loc[task_df_t['Event'] == 'Finished trial']['TrackerTime']
+                        end = list(end_times)[0]
+
+                        completion_time = end - start
+                        num_crossings = hf.get_midline_crossings(list(fixations['gavx']))
+                        num_fixations = hf.get_left_side_fixations(list(fixations['gavx']))
+                        dwell_times = hf.get_dwell_times(list(fixations['gavx']),
+                                                         list(fixations['start']),
+                                                         list(fixations['end']))
+                        dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
+                                                                       list(fixations['start']),
+                                                                       list(fixations['end']))
+                        errors = len(placement_df_t.loc[placement_df_t['Correct'] != True])
+
+                        r = pd.DataFrame({'ID': ID,
+                                          'Session': session,
+                                          'Condition': int(condition),
+                                          'Trial-session': f'{trial}-{session}',
+                                          'Trial': int(trial),
+                                          'Number of crossings': float(num_crossings),
+                                          'Dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
+                                          'Completion time (s)': float(completion_time / 1000),
+                                          'Fixations per second': float(len(fixations) / (completion_time / 1000)),
+                                          'Saccade velocity': float(np.median(saccades['avel'])),
+                                          'Peak velocity': float(np.median(saccades['pvel']))
+                                          # 'Errors':float(errors)
+                                          },
+                                         index=[0])
+                        results = results.append(r, ignore_index=True)
 
 # =============================================================================
 # AGGREGATE BY MEDIAN                
@@ -130,8 +129,8 @@ results_grouped = results.groupby(['ID', 'Condition']).agg({f: ['median'] for f 
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 
 # Calculate mean for the Errors value
-errors_grouped = results.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
-errors_grouped.columns = errors_grouped.columns.get_level_values(0)
+# errors_grouped = results.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
+# errors_grouped.columns = errors_grouped.columns.get_level_values(0)
 
 # Drop median errors from results_grouped and append mean errors from errors_grouped
 # results_grouped = results_grouped.drop(['Errors'], axis=1)
@@ -139,6 +138,7 @@ errors_grouped.columns = errors_grouped.columns.get_level_values(0)
 
 
 results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
+results_grouped['Condition number'] = results_grouped['Condition']
 results_grouped['Condition'] = results_grouped['Condition'].apply(hf.condition_number_to_name)
 
 # =============================================================================
@@ -188,7 +188,7 @@ for i, feat in enumerate(features):
                 palette='Blues', ax=axes[i])
     axes[i].set_xlabel('')
     axes[i].set_ylabel(feat, fontsize=13)
-    axes[i].set_ylim(y_lims[i])
+    # axes[i].set_ylim(y_lims[i])
     
     if i < (len(features) / 2):
         axes[i].set_xticks([])
@@ -205,23 +205,23 @@ plt.show()
 # COMBINED DISTPLOTS                
 # =============================================================================
 ls = ['-', '--', '-.', ':']
-sp = [f'23{x}' for x in range(1, len(features) + 1)]
+# sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
 f = plt.figure(figsize=(7.5, 5))
-axes = [f.add_subplot(s) for s in sp]
+axes = [f.add_subplot(2, 3, s) for s in range(1, len(features) + 1)]
 
 for i, feat in enumerate(features):
-    for c in list(results_grouped['Condition'].unique()):
-        plot_df = results_grouped.loc[results_grouped['Condition'] == c]
+    for c in list(results_grouped['Condition number'].unique()):
+        plot_df = results_grouped.loc[results_grouped['Condition number'] == c]
         sns.distplot(plot_df[feat], label=c, 
                      hist=False,
-                     kde_kws={'linestyle':ls[c], 'linewidth': 2.5}, 
+                     kde_kws={'linestyle':ls[int(c)], 'linewidth': 2.5},
                      ax=axes[i])
     
-    if i != 3:
-        axes[i].get_legend().remove()
-    else:
-        axes[i].get_legend().set_title('Condition')
+    # if i != 3:
+    #     axes[i].get_legend().remove()
+    # else:
+    #     axes[i].get_legend().set_title('Condition')
     
     axes[i].set_yticks([])
 

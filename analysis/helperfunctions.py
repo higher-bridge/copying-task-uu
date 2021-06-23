@@ -101,18 +101,18 @@ def write_IDs_to_dict(all_IDs:list):
     return ID_dict
 
 def find_files(ID:str, sessions:list, location:str, subfix:str):
-    ''' Returns a list of all files which match {ID}-{session} for all sessions '''
+    ''' Returns a list of tuples (file, session) which match {ID}-{session} for all sessions '''
     all_files = []
-    all_folders = [f'{location}/{ID}']
+    all_folders = [(f'{location}/{ID}', 0)]
     
     if len(sessions) > 0:
-        [all_folders.append(f'{location}/{ID}-{s}') for s in sessions]
+        [all_folders.append( (f'{location}/{ID}-{s}', s) ) for s in sessions]
     
-    for folder in all_folders:
+    for folder, session in all_folders:
         file_list = sorted([f'{folder}/{f}' for f in os.listdir(folder)])
         for file in file_list:
             if subfix in file:
-                all_files.append(file)
+                all_files.append((file, session))
     
     return all_files
 
@@ -120,9 +120,10 @@ def concat_event_files(eventfiles:list):
     ''' Reads and concatenates multiple dataframes '''
     all_sessions = []
 
-    for ef in eventfiles:        
+    for ef, session in eventfiles:
         # Load events
         sess = pd.read_csv(ef)
+        sess['Session'] = [session] * len(sess)
         all_sessions.append(sess)
 
     events = pd.concat(all_sessions, ignore_index=True)
