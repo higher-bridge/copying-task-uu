@@ -13,14 +13,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
 import os
-from joblib import Parallel, delayed
 
 import helperfunctions as hf
 import mouse_analysis
+import numpy as np
+import pandas as pd
 from constants_analysis import base_location
+from joblib import Parallel, delayed
 
 
 def load_and_merge(ID, ID_dict, pp_info, base_location):

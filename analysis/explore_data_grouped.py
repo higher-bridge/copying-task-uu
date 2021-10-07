@@ -13,15 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-import seaborn as sns
-
-import helperfunctions as hf
 import constants_analysis as constants
-
+import helperfunctions as hf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from matplotlib import rcParams
 
 pp_info = pd.read_excel('../results/participant_info.xlsx')
 pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]

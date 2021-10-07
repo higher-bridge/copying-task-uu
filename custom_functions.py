@@ -13,13 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import math
 import time
+from math import atan2
 
 import numpy as np
 import pandas as pd
-import math
-from math import atan2
-
 from PyQt5.QtCore import QMimeData, Qt, QTimer
 from PyQt5.QtGui import QDrag, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel

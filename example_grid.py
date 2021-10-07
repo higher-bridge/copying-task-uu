@@ -13,8 +13,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import numpy as np
 from random import sample
+
+import numpy as np
+
 
 def generate_grid(stimuli:list, nrow:int, ncol:int):
     """Returns an array with grid positions for stimuli. If there are fewer

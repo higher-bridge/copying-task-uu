@@ -13,20 +13,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-import matplotlib.image as mpimg
-import seaborn as sns
 import os
 from math import sqrt
 from pathlib import Path, PureWindowsPath
 
-import pingouin as pg
-
-from sklearn.preprocessing import MinMaxScaler
 import constants_analysis as constants
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pingouin as pg
+import seaborn as sns
+from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+from sklearn.preprocessing import MinMaxScaler
 
 
 def getListOfFiles(dirName):

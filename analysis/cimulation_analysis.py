@@ -13,21 +13,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import numpy as np
-import pandas as pd
-import time
 import os
 import pickle
-
-import seaborn as sns
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-
-from joblib import Parallel, delayed
+import time
 
 import helperfunctions as hf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from cimulation_analysis_helper import parse_results
-
+from joblib import Parallel, delayed
+from matplotlib import rcParams
 
 PARSE_RESULTS = False
 

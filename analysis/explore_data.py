@@ -13,12 +13,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 import helperfunctions as hf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from constants_analysis import EXCLUDE_TRIALS, MIDLINE, base_location
 
 PLOT = True

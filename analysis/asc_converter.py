@@ -13,11 +13,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
 from pathlib import Path
 from typing import List
 
+import numpy as np
+import pandas as pd
 from helperfunctions import euclidean_distance
 
 # TODO: description of EDFConverter settings etc.
@@ -53,7 +53,7 @@ def convert_sacc(row: List[str]) -> pd.DataFrame:
 
     row_dict = {'type' : 'saccade',
                 'start': float(row[2]),
-                'end':float(row[3]),
+                'end': float(row[3]),
                 'dur': dur,
                 'gstx': gstx,
                 'gsty': gsty,

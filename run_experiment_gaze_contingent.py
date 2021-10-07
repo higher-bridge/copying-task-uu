@@ -14,17 +14,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import sys
+from pathlib import Path
 from random import shuffle
 
 from PyQt5.QtWidgets import QApplication
-from pathlib import Path
 
 from canvas import Canvas
+from constants import IMAGE_WIDTH, NUM_STIMULI, ROW_COL_NUM, TIME_OUT_MS
 from stimulus import load_stimuli
-from constants import (NUM_STIMULI,
-                       IMAGE_WIDTH,
-                       ROW_COL_NUM,
-                       TIME_OUT_MS)
 
 NUM_TRIALS = 15
 

@@ -1,7 +1,6 @@
-from pygaze import libscreen
-from pygaze import eyetracker
-
 import time
+
+from pygaze import eyetracker, libscreen
 
 disp = libscreen.Display()
 tracker = eyetracker.EyeTracker(disp, trackertype='dummy')

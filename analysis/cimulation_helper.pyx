@@ -14,7 +14,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import numpy as np
-from libc.math cimport sqrt, exp, log, log2
+
+from libc.math cimport exp, log, log2, sqrt
+
 import random
 
 import constants_analysis as constants

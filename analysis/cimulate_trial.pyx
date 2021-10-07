@@ -13,11 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import time
 import random
+import time
 
-import constants_analysis as constants
 import cimulation_helper as sh
+import constants_analysis as constants
+
 
 def simulate_trial(dict tracking_dict, int k_items, 
                    int visible_time, int occlude_time,

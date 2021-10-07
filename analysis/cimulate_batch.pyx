@@ -13,16 +13,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import numpy as np
-import pandas as pd
+import pickle
 import time
 
-from joblib import Parallel, delayed
-import pickle
-
-import simulation_helper as sh
 import constants_analysis as constants
+import numpy as np
+import pandas as pd
+import simulation_helper as sh
 from cimulate_trial import simulate_trial
+from joblib import Parallel, delayed
+
 
 cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):    
     ID = str(ID).zfill(3)

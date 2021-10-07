@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 from pathlib import Path
 
+
 def getListOfFiles(dirName):
     # create a list of file and sub directories 
     # names in the given directory 

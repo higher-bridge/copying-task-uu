@@ -16,16 +16,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import time
 from pathlib import Path, PureWindowsPath
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-import matplotlib.image as mpimg
-from celluloid import Camera
-
-import helperfunctions as hf
 import constants_analysis as constants
+import helperfunctions as hf
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from celluloid import Camera
+from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+from matplotlib.patches import Rectangle
 
 ID = '003'
 condition = 0

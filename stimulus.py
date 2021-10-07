@@ -14,9 +14,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import os
+from pathlib import Path
 from random import sample
 
-from pathlib import Path
 from PyQt5.QtGui import QImage
 
 

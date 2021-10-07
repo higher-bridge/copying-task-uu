@@ -13,23 +13,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import numpy as np
-import pandas as pd
-import time
 import os
 import pickle
+import time
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-
-from joblib import Parallel, delayed
-from sklearn.preprocessing import MinMaxScaler
-
-import helperfunctions as hf
 import constants_analysis as constants
-
-
+import helperfunctions as hf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from joblib import Parallel, delayed
+from matplotlib import rcParams
+from sklearn.preprocessing import MinMaxScaler
 
 PARSE_RESULTS = False
 

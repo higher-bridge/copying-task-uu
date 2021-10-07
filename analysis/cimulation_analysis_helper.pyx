@@ -13,16 +13,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import time
+from typing import Any, List
+
+import constants_analysis as constants
 import numpy as np
 # cimport numpy as np
 import pandas as pd
-import time
-
 from sklearn.preprocessing import MinMaxScaler
-
-import constants_analysis as constants
-from typing import List, Any
-
 
 PARSE_RESULTS = False
 

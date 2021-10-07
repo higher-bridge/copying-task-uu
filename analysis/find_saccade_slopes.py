@@ -13,18 +13,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-import seaborn as sns
-from joblib import Parallel, delayed
-from pingouin import linear_regression
 from math import atan2
 
-import helperfunctions as hf
 import constants_analysis as constants
+import helperfunctions as hf
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from joblib import Parallel, delayed
+from matplotlib import rcParams
+from pingouin import linear_regression
 from simulation_helper import euclidean_distance, fitts_id
+
 
 def get_angle(x=None, y=None):
     if x != None and y == None:

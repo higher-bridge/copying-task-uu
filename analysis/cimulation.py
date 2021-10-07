@@ -13,15 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import numpy as np
-import pandas as pd
 import time
 
-from joblib import Parallel, delayed
-
 import constants_analysis as constants
-
+import numpy as np
+import pandas as pd
 from cimulate_batch import simulate_batch
+from joblib import Parallel, delayed
 
 if __name__ == '__main__':
     start = time.time()

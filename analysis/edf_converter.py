@@ -13,13 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from pyedfread import edf
+import helperfunctions as hf
 import pandas as pd
 from joblib import Parallel, delayed
+from pyedfread import edf
 
-import helperfunctions as hf
 
-    
 def convert_edf(file, allfiles):
     try:
         new_filename = file.replace('.edf', '-samples.csv')

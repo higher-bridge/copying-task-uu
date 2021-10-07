@@ -14,27 +14,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import json
+import os
 import random
 import time
+from pathlib import Path
 from random import gauss, sample
-import os
 
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QTimer, QPoint
-from PyQt5.QtGui import QPixmap, QCursor, QFont, QImage, QPainter
+from PyQt5.QtCore import QPoint, Qt, QTimer
+from PyQt5.QtGui import QCursor, QFont, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import (QFrame, QGridLayout, QGroupBox, QLabel,
                              QSizePolicy, QVBoxLayout, QWidget)
 
 import constants
+import example_grid
+from custom_functions import (CustomLabel, DraggableLabel, calculateMeanError,
+                              customTimer)
 from PyGaze.pygaze import libscreen
 from PyGaze.pygaze.eyetracker import EyeTracker
-
-import example_grid
 from stimulus import pick_stimuli
-from custom_functions import customTimer, CustomLabel, DraggableLabel, calculateMeanError
 
 
 class Canvas(QWidget):
