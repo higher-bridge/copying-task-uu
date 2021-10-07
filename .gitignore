@@ -153,3 +153,4 @@ results/.DS_Store
 
 # PyCharm
 .idea/
+*.asc
