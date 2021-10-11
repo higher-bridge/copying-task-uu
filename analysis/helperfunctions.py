@@ -60,10 +60,10 @@ def find_nearest_location(loc1, locations):
 
     return locations[min_dist_idx]
 
-def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pixels=False):
+def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pixels=False, zoom=.1):
     stimulus_paths = ['../' + PureWindowsPath(x).as_posix() for x in paths]
     stimuli = [mpimg.imread(p) for p in stimulus_paths]
-    image_boxes = [OffsetImage(s, zoom=.1) for s in stimuli]
+    image_boxes = [OffsetImage(s, zoom=zoom) for s in stimuli]
 
     if not in_pixels:
         annotation_boxes = [AnnotationBbox(im, locations[x + y * 3], frameon=False) for x, y, im in
@@ -90,22 +90,27 @@ def write_IDs_to_dict(all_IDs:list):
     ID_dict = dict()
     
     for ID in all_IDs:
-        temp_ID = ID[0:3]
-        
+        # temp_ID = ID[0:3]
+        temp_ID = ID[0:4]
+
         if temp_ID not in ID_dict.keys():
-            ID_dict[temp_ID] = []        
+            ID_dict[temp_ID] = []
+            ID_dict[temp_ID].append(ID[5:])
         else:
-            ID_dict[temp_ID].append(ID[-1])
+            # ID_dict[temp_ID].append(ID[-1])
+            ID_dict[temp_ID].append(ID[5:])
 
     return ID_dict
 
 def find_files(ID:str, sessions:list, location:str, subfix:str):
     ''' Returns a list of tuples (file, session) which match {ID}-{session} for all sessions '''
     all_files = []
-    all_folders = [(f'{location}/{ID}', 0)]
-    
-    if len(sessions) > 0:
-        [all_folders.append( (f'{location}/{ID}-{s}', s) ) for s in sessions]
+
+    # all_folders = [(f'{location}/{ID}', 0)]
+    # if len(sessions) > 0:
+    #     [all_folders.append((f'{location}/{ID}-{s}', s)) for s in sessions]
+
+    all_folders = [(f'{location}/{ID}-{s}', s) for s in sessions if s != '']
     
     for folder, session in all_folders:
         file_list = sorted([f'{folder}/{f}' for f in os.listdir(folder)])
@@ -146,7 +151,8 @@ def get_condition_order(df, ID:str, blocks:list=[1, 2, 3, 4]):
     
     for condition in blocks:
         colname = f'Block {condition}'
-        c = list(df_id[colname])[0]
+        c = list(df_id[colname])
+        c = c[0]
         condition_order.append(c)
         
     return condition_order

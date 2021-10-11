@@ -166,6 +166,10 @@ def load_and_merge(ID, ID_dict, pp_info, base_location):
                                                    list(mousedata['Condition']),
                                                    list(mousedata['Dragging']))
 
+    if ID not in os.listdir(f'../results'):
+        os.mkdir(f'../results/{ID}')
+        print('not in')
+
     # Write everything to csv
     mouse_events.to_csv(f'../results/{ID}/{ID}-mouseEvents.csv')
     events.to_csv(f'../results/{ID}/{ID}-allFixations.csv')
@@ -183,15 +187,16 @@ if __name__ == '__main__':
 
     ID_dict = hf.write_IDs_to_dict(all_IDs)
     pp_info = pd.read_excel('../results/participant_info.xlsx')
-    pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
+    pp_info['ID'] = pp_info['ID'].astype(str)
+    # pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
 
-    ID_list = list(pp_info['ID'].unique())
+    ID_list = [str(ID) for ID in list(pp_info['ID'].unique())]
     ID_dict_list = [ID_dict] * len(ID_list)
     pp_info_list = [pp_info] * len(ID_list)
     base_location_list = [base_location] * len(ID_list)
 
-    # Sit back, this will take a while
-    results = Parallel(n_jobs=-5,
+    # Sit back, this will take a while (multiprocessing)
+    results = Parallel(n_jobs=-2,
                        backend='loky',
                        verbose=True)(delayed(load_and_merge) \
                                          (ID, IDd, ppi, bll) for ID, IDd, ppi, bll in zip(ID_list,
@@ -199,6 +204,7 @@ if __name__ == '__main__':
                                                                                           pp_info_list,
                                                                                           base_location_list))
 
+    # Sit back, this wil take even longer (single core, uncomment in case multiprocessing doesn't work)
     # results = []
     # for ID in ID_list:
     #     results.append(load_and_merge(ID, ID_dict, pp_info, base_location))
@@ -208,5 +214,10 @@ if __name__ == '__main__':
     pp_info['Trials condition 1'] = [b[1] for b in results]
     pp_info['Trials condition 2'] = [b[2] for b in results]
     pp_info['Trials condition 3'] = [b[3] for b in results]
+
+    try:
+        pp_info = pp_info.drop(['Unnamed: 0'], axis=1)
+    except Exception as e:
+        print(e)
 
     pp_info.to_excel('../results/participant_info.xlsx')
