@@ -60,7 +60,7 @@ def find_nearest_location(loc1, locations):
 
     return locations[min_dist_idx]
 
-def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pixels=False, zoom=.1):
+def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pixels=False, snap_location=True, zoom=.1):
     stimulus_paths = ['../' + PureWindowsPath(x).as_posix() for x in paths]
     stimuli = [mpimg.imread(p) for p in stimulus_paths]
     image_boxes = [OffsetImage(s, zoom=zoom) for s in stimuli]
@@ -70,8 +70,13 @@ def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pix
                             zip(y_locs,
                                 x_locs,
                                 image_boxes)]
-    else:
+    if in_pixels and snap_location:
         annotation_boxes = [AnnotationBbox(im, find_nearest_location((x, y), locations), frameon=False) for x, y, im in
+                            zip(x_locs,
+                                y_locs,
+                                image_boxes)]
+    if in_pixels and not snap_location:
+        annotation_boxes = [AnnotationBbox(im, (x, y), frameon=False) for x, y, im in
                             zip(x_locs,
                                 y_locs,
                                 image_boxes)]

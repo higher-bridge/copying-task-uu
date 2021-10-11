@@ -19,14 +19,21 @@ from pathlib import Path
 import constants_analysis as constants
 import helperfunctions as hf
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import rcParams
 import numpy as np
 import pandas as pd
 from celluloid import Camera
 from matplotlib.patches import Rectangle
 
-ID = '003'
-condition = 1
-trial = 3
+rcParams['font.family'] = 'monospace'
+
+# Set vars
+ID = '1001'
+condition = 2
+trial = 15
+
+framerate = 30
+dpi = 100
 
 ### Load mouse tracking data
 mousedata_files = sorted(
@@ -50,8 +57,8 @@ placements = pd.read_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
 placements = hf.locate_trial(placements, condition, trial)
 
 # Temporary, cameFromX/Y was not recorded in earlier experiment versions. These are manually specified for 003-0-3
-placements['cameFromX'] = [1926, 2070, 1911, 2031, 1761, 1800]
-placements['cameFromY'] = [1100, 1259, 1293, 1093, 1111, 1273]
+# placements['cameFromX'] = [1926, 2070, 1911, 2031, 1761, 1800]
+# placements['cameFromY'] = [1100, 1259, 1293, 1093, 1111, 1273]
 
 placements = placements.sort_values(by='Time', ignore_index=True)
 
@@ -105,6 +112,28 @@ for i, row in placements.iterrows():
 
     workspace_placed[timestamp] = box[0]
 
+### Find when item was picked up and have annotationBoxes following the mouse until dropped
+drag_dict = dict()
+for i, row in placements.iterrows():
+    # Determine when drag action was started
+    start = int(row['TrackerTime'] - row['dragDuration'])
+
+    # Loop through all moments between start and end of drag
+    for drag_moment in range(start, row['TrackerTime']):
+        # Determine where mouse was at this time
+        m_idx = hf.find_nearest_index(mouse_data['TrackerTime'], drag_moment)
+        md = mouse_data.iloc[m_idx]
+        mx, my = md['x'], md['y']
+
+        # Draw the stimulus annotationBox at the mouse location
+        box = hf.prepare_stimuli([row['shouldBe']],
+                                 [mx],
+                                 [my],
+                                 constants.all_workspace_locations,
+                                 in_pixels=True, snap_location=False)
+
+        drag_dict[drag_moment] = box[0]
+
 ### Convert resource grid stimuli to annotationBoxes
 resource_stimuli = hf.prepare_stimuli(list(placements['shouldBe']),
                                       list(placements['cameFromX']),
@@ -119,9 +148,6 @@ hourglass = hf.prepare_stimuli([Path('pictograms/hourglass.png')],
                                in_pixels=True, zoom=.03)
 hourglass = hourglass[0]
 
-# Set vars
-framerate = 30
-dpi = 200
 patch_width = 130
 patch_height = 140
 
@@ -135,9 +161,6 @@ camera = Camera(fig)
 # TODO: add brief opening screen
 
 for t in np.arange(len(gaze_data), step=1000 / framerate):
-    # TODO: Stimulus is placed in wrong resource grid location sometimes. Might be related to manual cameFromX/Y spec
-    # TODO: add dragging motion from resource grid to workspace grid
-
     ### PLOT EMPTY WORKSPACE GRID ###
     for loc in constants.all_workspace_locations:  # Draw empty grids
         l = (loc[0] - (patch_width / 2),
@@ -178,6 +201,11 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
         if t >= k:
             ax.add_artist(workspace_placed[k])
 
+    ### PLOT ITEMS WHILE BEING DRAGGED
+    for k in list(drag_dict.keys()):
+        if t == k:
+            ax.add_artist(drag_dict[k])
+
     ### PLOT MOUSE AND GAZE ###
     x, y = gx[int(t)], gy[int(t)]
 
@@ -196,8 +224,8 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
     plt.yticks([])
 
     ### Show legend with x/y coords for gaze and mouse. zfill(4) so text is same length in each frame
-    x, y = str(round(x)).zfill(4), str(round(y)).zfill(4)
-    mx, my = str(mx).zfill(4), str(my).zfill(4)
+    x, y = str(round(x)).rjust(4), str(round(y)).rjust(4)
+    mx, my = str(mx).rjust(4), str(my).rjust(4)
     plt.legend([gaze, mouse], [f'Gaze ({x}, {y})', f'Mouse ({mx}, {my})'])
 
     camera.snap()
