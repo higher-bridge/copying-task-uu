@@ -67,8 +67,8 @@ def prepare_stimuli(paths:list, x_locs:list, y_locs:list, locations:list, in_pix
 
     if not in_pixels:
         annotation_boxes = [AnnotationBbox(im, locations[x + y * 3], frameon=False) for x, y, im in
-                            zip(y_locs,
-                                x_locs,
+                            zip(x_locs,
+                                y_locs,
                                 image_boxes)]
     if in_pixels and snap_location:
         annotation_boxes = [AnnotationBbox(im, find_nearest_location((x, y), locations), frameon=False) for x, y, im in

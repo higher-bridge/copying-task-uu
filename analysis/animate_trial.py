@@ -33,7 +33,7 @@ condition = 2
 trial = 15
 
 framerate = 30
-dpi = 100
+dpi = 200
 
 ### Load mouse tracking data
 mousedata_files = sorted(
@@ -97,7 +97,8 @@ for i in range(int(end_time)):
 
 ### Convert example stimuli to annotationBoxes (needs x/y)
 example_stimuli = hf.prepare_stimuli(list(placements['shouldBe']),
-                                     list(placements['x']), list(placements['y']),
+                                     list(placements['x']),
+                                     list(placements['y']),
                                      constants.all_example_locations)
 
 ### Find when stimuli were placed in workspace grid and convert them to annotationBoxes
@@ -118,8 +119,8 @@ for i, row in placements.iterrows():
     # Determine when drag action was started
     start = int(row['TrackerTime'] - row['dragDuration'])
 
-    # Loop through all moments between start and end of drag
-    for drag_moment in range(start, row['TrackerTime']):
+    # Loop through all moments between start and end of drag (but remove last 50 ms for smoothness)
+    for drag_moment in range(start, row['TrackerTime'] - 50):
         # Determine where mouse was at this time
         m_idx = hf.find_nearest_index(mouse_data['TrackerTime'], drag_moment)
         md = mouse_data.iloc[m_idx]
@@ -158,8 +159,17 @@ ax.set_facecolor((.5, .5, .5))
 
 camera = Camera(fig)
 
-# TODO: add brief opening screen
+### ADD A BRIEF PRE-TRIAL SCREEN
+show_seconds = 1
+for t in range(show_seconds * framerate):
+    ax.text(constants.SCREEN_CENTER[0], constants.SCREEN_CENTER[1],
+            'Press space to continue to the next trial.',
+            color='black',
+            ha='center',
+            va='center')
+    camera.snap()
 
+### LOOP THROUGH TRIAL TIMEPOINTS
 for t in np.arange(len(gaze_data), step=1000 / framerate):
     ### PLOT EMPTY WORKSPACE GRID ###
     for loc in constants.all_workspace_locations:  # Draw empty grids
@@ -226,14 +236,23 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
     ### Show legend with x/y coords for gaze and mouse. zfill(4) so text is same length in each frame
     x, y = str(round(x)).rjust(4), str(round(y)).rjust(4)
     mx, my = str(mx).rjust(4), str(my).rjust(4)
-    plt.legend([gaze, mouse], [f'Gaze ({x}, {y})', f'Mouse ({mx}, {my})'])
+    plt.legend([gaze, mouse], [f'Gaze  ({x}, {y})', f'Mouse ({mx}, {my})'])
 
     camera.snap()
 
-# TODO: add brief post-trial screen
+### ADD A BRIEF POST-TRIAL SCREEN
+show_seconds = 1
+for t in range(show_seconds * framerate):
+    ax.text(constants.SCREEN_CENTER[0], constants.SCREEN_CENTER[1],
+            'Press space to continue to the next trial.',
+            color='black',
+            ha='center',
+            va='center')
+    camera.snap()
+
+print('Animating and saving...')
 
 animation = camera.animate()
 animation.save(f'../results/plots/animation-pp{ID}-c{condition}-t{trial}.mp4', fps=framerate)
-# animation.save(f'../results/plots/animation-{ID}-{condition}-{trial}.gif', fps=framerate)
 
 print(f'Animating took {round(time.time() - start, 1)} seconds, {round((time.time() - start) / 60, 1)} minutes')
