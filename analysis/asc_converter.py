@@ -144,7 +144,7 @@ if __name__ == '__main__':
         # Remove everything before the new starting point
         rows = rows[starting_row:-1]
 
-        # Filter for fixations and saccades
+        # Filter for fixations and saccades only
         new_rows = []
         for row in rows:
             if row.startswith('EFIX') or row.startswith('ESACC'):
@@ -154,15 +154,17 @@ if __name__ == '__main__':
         # Create an empty dataframe and fill in per row, based on whether it's a FIX or SACC
         df = pd.DataFrame(columns=['type', 'start', 'end', 'dur', 'gstx', 'gsty', 'genx', 'geny', 'gavx', 'gavy',
                                    'avel', 'pvel', 'pups'])
-        for row in new_rows:
-            if row[0] == 'EFIX':
-                converted_row = convert_fix(row)
-            elif row[0] == 'ESACC':
-                converted_row = convert_sacc(row)
-            else:
-                pass  # else-statement for readability, to show that we're doing only fixes and saccades
+        for i, row in enumerate(new_rows):
+            try:
+                if row[0] == 'EFIX':
+                    converted_row = convert_fix(row)
+                if row[0] == 'ESACC':
+                    converted_row = convert_sacc(row)
 
-            df = df.append(converted_row, ignore_index=True)
+                df = df.append(converted_row, ignore_index=True)
+
+            except ValueError as e:
+                print(f'Error in {file}, row{i}: {e}')
 
         # Write to csv
         new_path = str(file).replace('.asc', '-events.csv')
