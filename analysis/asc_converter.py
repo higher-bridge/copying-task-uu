@@ -81,7 +81,8 @@ def convert_fix(row: List[str]) -> pd.DataFrame:
                 'gavy': float(row[6]),
                 'avel': np.nan,
                 'pvel': np.nan,
-                'pups': float(row[7])}
+                'pups': float(row[7]),
+                'trial': -1}
 
     row_df = pd.DataFrame(row_dict, index=[0])
 
@@ -108,7 +109,8 @@ def convert_sacc(row: List[str]) -> pd.DataFrame:
                 'gavy': np.nan,
                 'avel': avel,  # Can't know
                 'pvel': float(row[10]),
-                'pups': np.nan}
+                'pups': np.nan,
+                'trial': -1}
 
     row_df = pd.DataFrame(row_dict, index=[0])
 
@@ -153,18 +155,18 @@ if __name__ == '__main__':
 
         # Create an empty dataframe and fill in per row, based on whether it's a FIX or SACC
         df = pd.DataFrame(columns=['type', 'start', 'end', 'dur', 'gstx', 'gsty', 'genx', 'geny', 'gavx', 'gavy',
-                                   'avel', 'pvel', 'pups'])
+                                   'avel', 'pvel', 'pups', 'trial'])
         for i, row in enumerate(new_rows):
             try:
                 if row[0] == 'EFIX':
                     converted_row = convert_fix(row)
+                    df = df.append(converted_row, ignore_index=True)
                 if row[0] == 'ESACC':
                     converted_row = convert_sacc(row)
-
-                df = df.append(converted_row, ignore_index=True)
+                    df = df.append(converted_row, ignore_index=True)
 
             except ValueError as e:
-                print(f'Error in {file}, row{i}: {e}')
+                print(f'Error in {file}, row{i}: {e}. Continuing with next row.')
 
         # Write to csv
         new_path = str(file).replace('.asc', '-events.csv')

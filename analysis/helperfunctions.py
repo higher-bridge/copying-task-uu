@@ -91,7 +91,7 @@ def locate_trial(df, condition, trial):
 
 def write_IDs_to_dict(all_IDs:list):
     ''' Takes a list of IDs and writes to dict with sub-lists for 
-    barreled IDs (001-2, etc.) '''
+    barreled IDs (1001-2, etc.) '''
     ID_dict = dict()
     
     for ID in all_IDs:
@@ -115,7 +115,7 @@ def find_files(ID:str, sessions:list, location:str, subfix:str):
     # if len(sessions) > 0:
     #     [all_folders.append((f'{location}/{ID}-{s}', s)) for s in sessions]
 
-    all_folders = [(f'{location}/{ID}-{s}', s) for s in sessions if s != '']
+    all_folders = [(f'{location}/{ID}-{s}', s) for s in sessions if s != '' and '0' not in s]
     
     for folder, session in all_folders:
         file_list = sorted([f'{folder}/{f}' for f in os.listdir(folder)])

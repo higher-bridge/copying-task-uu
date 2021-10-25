@@ -21,8 +21,8 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import rcParams
 
-pp_info = pd.read_excel('../results/participant_info.xlsx')
-pp_info['ID'] = [str(x).zfill(3) for x in list(pp_info['ID'])]
+pp_info = pd.read_excel('../results/participant_info.xlsx', engine='openpyxl')
+pp_info['ID'] = [str(x) for x in list(pp_info['ID'])]
 
 # pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
 
@@ -126,6 +126,9 @@ results = results.dropna()
 results_grouped = results.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 
+trial_counts = results.groupby(['ID', 'Condition']).agg('count').reset_index()
+results_grouped['Trial count'] = trial_counts['Trial']
+
 # Calculate mean for the Errors value
 # errors_grouped = results.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
 # errors_grouped.columns = errors_grouped.columns.get_level_values(0)
@@ -211,10 +214,8 @@ axes = [f.add_subplot(2, 3, s) for s in range(1, len(features) + 1)]
 for i, feat in enumerate(features):
     for c in list(results_grouped['Condition number'].unique()):
         plot_df = results_grouped.loc[results_grouped['Condition number'] == c]
-        sns.distplot(plot_df[feat], label=c, 
-                     hist=False,
-                     kde_kws={'linestyle':ls[int(c)], 'linewidth': 2.5},
-                     ax=axes[i])
+        sns.kdeplot(plot_df[feat], label=c,
+                    ax=axes[i])
     
     # if i != 3:
     #     axes[i].get_legend().remove()

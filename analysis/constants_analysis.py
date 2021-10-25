@@ -16,7 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 base_location = '../results'
 
 # EXPERIMENT PARAMETERS
-EXCLUDE_TRIALS = [1, 2, 3, 999]
+EXCLUDE_TRIALS = [1, 999]
+EXCLUDE_EXCEL_BASED = True
+
 NUM_JOBS_SIM = 8
 NUM_TRIALS = 4
 
