@@ -33,14 +33,14 @@ class MouseEvents():
                 'dist', 'velocity', 'peak_velocity',
                 'avg_xpos', 'avg_ypos', 
                 'start', 'end', 'duration',
-                'Trial', 'Condition', 'Dragging',
+                'Trial', 'Condition', 'Session', 'Dragging',
                 'indices']
         
         event_dict = {key: [] for key in keys}
         return event_dict
            
     def add_to_event_dict(self, kind:str, start_location:tuple, end_location:tuple,
-                             dist:float, start:int, end:int, trial:int, condition:int,
+                             dist:float, start:int, end:int, trial:int, condition:int, session:int,
                              dragging:bool,
                              velocity:float=np.nan, peak_velocity:float=np.nan,
                              indices=[]):        
@@ -65,6 +65,7 @@ class MouseEvents():
         
         self.event_dict['Trial'].append(trial)
         self.event_dict['Condition'].append(condition)
+        self.event_dict['Session'].append(session)
         self.event_dict['Dragging'].append(dragging)
         
     def get_event_dict(self, astype:str='dataframe'):
@@ -80,7 +81,7 @@ class MouseEvents():
             return None
         
         
-def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list, sessions:list,
                          dragging:list,
                          max_deviation:int, 
                          min_duration:int, max_duration:int):
@@ -133,12 +134,13 @@ def _get_fixation_events(me, xdata:list, ydata:list, timedata:list, trials:list,
                                      end=timedata[i-1],
                                      trial=trials[i-1],
                                      condition=conditions[i-1],
+                                     session=sessions[i-1],
                                      dragging=dragging[i-1],
                                      indices=np.arange(start_i, i - 1))
     
     return me
                 
-def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, conditions:list, sessions:list,
                         dragging:list,
                         min_deviation:int,
                         min_duration:int, max_duration:int):
@@ -187,6 +189,7 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, 
             
             trial = trials[i]
             condition = conditions[i]
+            session = sessions[i]
             drag = dragging[i]
 
             saccade_measured = True
@@ -209,6 +212,7 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, 
                                          end_location=end_location,
                                          trial=trial,
                                          condition=condition,
+                                         session=session,
                                          dragging=drag,
                                          dist=total_distance,
                                          velocity=np.mean(velocities),
@@ -223,7 +227,7 @@ def _get_saccade_events(me, xdata:list, ydata:list, timedata:list, trials:list, 
                 
             
         
-def get_mouse_events(xdata:list, ydata:list, timedata:list, trials:list, conditions:list,
+def get_mouse_events(xdata:list, ydata:list, timedata:list, trials:list, conditions:list, sessions:list,
                      dragging:list,
                      fix_max_deviation:int=10, 
                      fix_min_duration:int=80, fix_max_duration:int=5000,
@@ -231,10 +235,10 @@ def get_mouse_events(xdata:list, ydata:list, timedata:list, trials:list, conditi
     
     me = MouseEvents()
     
-    me = _get_fixation_events(me, xdata, ydata, timedata, trials, conditions, dragging,
+    me = _get_fixation_events(me, xdata, ydata, timedata, trials, conditions, sessions, dragging,
                              fix_max_deviation, fix_min_duration, fix_max_duration)
     
-    me = _get_saccade_events(me, xdata, ydata, timedata, trials, conditions, dragging,
+    me = _get_saccade_events(me, xdata, ydata, timedata, trials, conditions, sessions, dragging,
                             fix_max_deviation, sac_min_duration, sac_max_duration)
     
     events = me.get_event_dict()

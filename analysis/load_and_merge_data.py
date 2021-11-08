@@ -14,6 +14,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import os
+from pathlib import Path
 
 import helperfunctions as hf
 import mouse_analysis
@@ -38,15 +39,21 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
     # Concatenate all separate session files into one larger file
     task_events = hf.concat_event_files(task_event_files)
     events = hf.concat_event_files(eventfiles).drop('trial', axis=1)
-    mousedata = hf.concat_event_files(mousefiles)  # .drop('Unnamed: 0')
     correct_placements = hf.concat_event_files(c_placements)
     if samples_present:
         samples = hf.concat_event_files(samplefiles)
 
     # Order the df in the proper condition, retrieved from participant_info.xlsx
     # (I didn't design the mousetracker filenames with chronological ordering)
+
+    mousedata = hf.concat_event_files(mousefiles)
     condition_order = hf.get_condition_order(pp_info, ID)
-    mousedata = hf.order_by_condition(mousedata, condition_order)
+
+    if condition_order == [0, 1, 0, 1]:  # Patient study runs 0, 1, 0, 1
+        mousedata = hf.add_sessions(mousedata)
+    else:
+        mousedata = hf.order_by_condition(mousedata, condition_order)
+        mousedata['Session'] = [1] * len(mousedata)
 
     # Create two empty lists in which we will fill in the appropriate trials/condition value
     trial_list = np.empty(len(events), dtype=int)
@@ -55,6 +62,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
     condition_list = np.empty(len(events), dtype=int)
     condition_list[:] = 999
 
+    session_list = np.empty(len(events), dtype=int)
+    session_list[:] = 999
+
     # Do the same for the sample df's
     if samples_present:
         trial_list_samp = np.empty(len(samples), dtype=int)
@@ -62,6 +72,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
 
         condition_list_samp = np.empty(len(samples), dtype=int)
         condition_list_samp[:] = 999
+
+        session_list_samp = np.empty(len(samples), dtype=int)
+        session_list_samp[:] = 999
 
     # Create empty list to track whether mouse is being dragged
     dragging_list = np.empty(len(events), dtype=bool)
@@ -89,7 +102,7 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                 # Find a row in exclude_trials where all variables match. If the length of the resulting df
                 # equals 0, this trial was not in the exclusion list
                 exclusion = exclude_trials.loc[exclude_trials['ID'] == ID]
-                exclusion = exclusion.loc[exclusion['session'] == str(session[0])]
+                exclusion = exclusion.loc[exclusion['session'] == str(session)]
                 exclusion = exclusion.loc[exclusion['condition'] == str(condition)]
                 exclusion = exclusion.loc[exclusion['trial'] == str(trial_num)]
 
@@ -107,8 +120,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                     end = list(end_times)[0]
 
                     # Match the timestamp to the closest timestamp in the fixations df
-                    start_idx = hf.find_nearest_index(events['end'], start)
-                    end_idx = hf.find_nearest_index(events['start'], end)
+                    events_ = events.loc[events['Session'] == session]
+                    start_idx = hf.find_nearest_index(events_['end'], start, keep_index=True)
+                    end_idx = hf.find_nearest_index(events_['start'], end, keep_index=True)
 
                     if samples_present:
                         start_idx_samp = hf.find_nearest_index(samples['time'], start)
@@ -134,24 +148,34 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                     mouse_start_idx = hf.find_nearest_index(mousedata['TrackerTime'], start)
                     mouse_end_idx = hf.find_nearest_index(mousedata['TrackerTime'], end)
 
-                    if start_idx != end_idx:
+                    if start_idx < end_idx:
                         # Set everything between start and end of trial with that condition/trial
                         trial_list[start_idx:end_idx] = trial_num
                         condition_list[start_idx:end_idx] = condition
+                        session_list[start_idx:end_idx] = session
                         mouse_valid[mouse_start_idx:mouse_end_idx] = True
 
                         if samples_present:
                             trial_list_samp[start_idx_samp:end_idx_samp] = trial_num
                             condition_list_samp[start_idx_samp:end_idx_samp] = condition
+                            session_list_samp[start_idx_samp:end_idx_samp] = session
+
+                    if '2031' in ID and trial_num == 2 and condition == 0 and session == 1:
+                        print(session, condition, trial_num, end - start, end_idx - start_idx)
 
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
     events['Condition'] = condition_list
+    events['Session'] = session_list
     events['Dragging'] = dragging_list
 
     if samples_present:
         samples['Trial'] = trial_list_samp
         samples['Condition'] = condition_list_samp
+        samples['Session'] = session_list_samp
+
+    if '2031' in ID:
+        print('')
 
     # Retrieve how many valid trials were recorded per condition
     num_trials = hf.get_num_trials(events)
@@ -174,6 +198,7 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                                                    list(mousedata['TrackerTime']),
                                                    list(mousedata['Trial']),
                                                    list(mousedata['Condition']),
+                                                   list(mousedata['Session']),
                                                    list(mousedata['Dragging']))
 
     if ID not in os.listdir(f'../results'):
@@ -191,13 +216,21 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
 
 
 if __name__ == '__main__':
-    all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f])  # Ignores actual files, only finds folders
-    all_IDs.remove('plots')
+    # all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f])  # Ignores actual files, only finds folders
 
-    ID_dict = hf.write_IDs_to_dict(all_IDs)
+    path = Path(base_location)
+    all_IDs = list(path.glob('*-*-*/'))
+    all_IDs = sorted(all_IDs)
+    # all_IDs.remove('plots')
+
+    ID_dict_temp = hf.write_IDs_to_dict(all_IDs)
     pp_info = pd.read_excel('../results/participant_info.xlsx', engine='openpyxl')
     pp_info['ID'] = pp_info['ID'].astype(str)
     ID_list = [str(ID) for ID in list(pp_info['ID'].unique())]
+
+    # print(list(ID_dict_temp.keys()))
+    # print(ID_list)
+    ID_dict = {ID: value for ID, value in ID_dict_temp.items() if ID in ID_list}
 
     pp_exclude = pd.read_excel('../results/participant_exclude_trials.xlsx', engine='openpyxl').astype(str)
 

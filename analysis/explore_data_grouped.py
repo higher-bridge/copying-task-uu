@@ -41,12 +41,12 @@ features = [
             # 'Errors'
             ]
 
-cols = ['ID', 'Condition', 'Trial']
+cols = ['ID', 'Session', 'Condition', 'Condition-session', 'Trial']
 [cols.append(f) for f in features]
 results = pd.DataFrame(columns=cols)
 
 # =============================================================================
-# WRITE VARIABLES TO ROW FOR EACH ID, CONDITION AND TRIAL
+# WRITE VARIABLES TO ROW FOR EACH ID, SESSION, CONDITION AND TRIAL
 # =============================================================================
 # Data outside of trial start-end are marked with 999 so will be filtered in the next steps
 for ID in list(pp_info['ID'].unique()): 
@@ -104,6 +104,7 @@ for ID in list(pp_info['ID'].unique()):
                         r = pd.DataFrame({'ID': ID,
                                           'Session': session,
                                           'Condition': int(condition),
+                                          'Condition-session': f'{session}-{condition}',
                                           'Trial-session': f'{trial}-{session}',
                                           'Trial': int(trial),
                                           'Number of crossings': float(num_crossings),
@@ -122,11 +123,14 @@ for ID in list(pp_info['ID'].unique()):
 # =============================================================================
 results = results.dropna()
 
-# Group by ID and Condition, use median 
-results_grouped = results.groupby(['ID', 'Condition']).agg({f: ['median'] for f in features}).reset_index()
+# Group by ID and Condition, use median. If there is a session 2, we're working with patient data and should use
+# Condition-session as grouping variable
+condition_var = 'Condition-session' if 2 in list(results['Session']) else 'Condition'
+
+results_grouped = results.groupby(['ID', condition_var]).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 
-trial_counts = results.groupby(['ID', 'Condition']).agg('count').reset_index()
+trial_counts = results.groupby(['ID', condition_var]).agg('count').reset_index()
 results_grouped['Trial count'] = trial_counts['Trial']
 
 # Calculate mean for the Errors value
@@ -139,8 +143,8 @@ results_grouped['Trial count'] = trial_counts['Trial']
 
 
 results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
-results_grouped['Condition number'] = results_grouped['Condition']
-results_grouped['Condition'] = results_grouped['Condition'].apply(hf.condition_number_to_name)
+results_grouped['Condition number'] = results_grouped[condition_var]
+# results_grouped['Condition'] = results_grouped['Condition'].apply(hf.condition_number_to_name)
 
 # =============================================================================
 # SEPARATE PLOTS
@@ -185,7 +189,7 @@ f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(s) for s in sp]
 
 for i, feat in enumerate(features):
-    sns.boxplot(x='Condition', y=feat, data=results_grouped, #capsize=.1, errwidth=1.5,
+    sns.boxplot(x='Condition number', y=feat, data=results_grouped, #capsize=.1, errwidth=1.5,
                 palette='Blues', ax=axes[i])
     axes[i].set_xlabel('')
     axes[i].set_ylabel(feat, fontsize=13)

@@ -49,9 +49,14 @@ def euclidean_distance(loc1, loc2):
     dist = [(a - b) ** 2 for a, b in zip(loc1, loc2)]
     return sqrt(sum(dist))
 
-def find_nearest_index(array, timestamp):
-    array = np.asarray(array)
-    idx = (np.abs(array - timestamp)).argmin()
+def find_nearest_index(array, timestamp, keep_index=False):
+    if keep_index:
+        new_series = abs(array - timestamp)
+        idx = new_series.nsmallest(1).index[0]
+    else:
+        array = np.asarray(array)
+        idx = (np.abs(array - timestamp)).argmin()
+
     return idx
 
 def find_nearest_location(loc1, locations):
@@ -95,15 +100,19 @@ def write_IDs_to_dict(all_IDs:list):
     ID_dict = dict()
     
     for ID in all_IDs:
-        # temp_ID = ID[0:3]
-        temp_ID = ID[0:4]
+        if ID.is_dir():
+            ID = str(ID.parts[-1])
+            # temp_ID = ID[0:3]
+            temp_ID = ID[0:4]
 
-        if temp_ID not in ID_dict.keys():
-            ID_dict[temp_ID] = []
-            ID_dict[temp_ID].append(ID[5:])
-        else:
-            # ID_dict[temp_ID].append(ID[-1])
-            ID_dict[temp_ID].append(ID[5:])
+            if ID[5] != '0':
+
+                if temp_ID not in ID_dict.keys():
+                    ID_dict[temp_ID] = []
+                    ID_dict[temp_ID].append(ID[5:])
+                else:
+                    # ID_dict[temp_ID].append(ID[-1])
+                    ID_dict[temp_ID].append(ID[5:])
 
     return ID_dict
 
@@ -132,11 +141,32 @@ def concat_event_files(eventfiles:list):
     for ef, session in eventfiles:
         # Load events
         sess = pd.read_csv(ef)
-        sess['Session'] = [session] * len(sess)
+        sess['Session'] = [int(session[0])] * len(sess)
         all_sessions.append(sess)
 
     events = pd.concat(all_sessions, ignore_index=True)
     return events
+
+def add_sessions(df):
+    # Find where the first set of conditions [0, 1] stops and where te second set begins. Then assign session 1 and 2
+    # respectively.
+    session_list = np.empty(len(df), dtype=int)
+    session_list[:] = 999
+
+    conditions = np.array(df['Condition'])
+    ones = np.argwhere(conditions == 1)
+
+    middle_marker_idx = 0
+    for i, j in zip(ones[0: len(session_list) - 1], ones[1: len(session_list)]):
+        if j - i > 1:
+            middle_marker_idx = i[0]
+            break
+
+    session_list[0:middle_marker_idx] = 1
+    session_list[middle_marker_idx + 1:len(session_list)] = 2
+    df['Session'] = session_list
+
+    return df
 
 def order_by_condition(df, condition_order:list):
     new_order = []
@@ -162,19 +192,24 @@ def get_condition_order(df, ID:str, blocks:list=[1, 2, 3, 4]):
         
     return condition_order
 
-def get_num_trials(df, conditions=constants.CONDITIONS, exclude=constants.EXCLUDE_TRIALS):
+def get_num_trials(df, exclude=constants.EXCLUDE_TRIALS):
     num_trials = []
     
-    # conditions = sorted(list(df['Condition'].unique()))
-    for condition in conditions:
-        df_c = df.loc[df['Condition'] == condition]
-        trials = [t for t in list(df_c['Trial'].unique()) if t not in exclude]
-        
-        if len(trials) > 0:
-            num_trials.append(len(trials))
-        else:
-            num_trials.append(0)
-        
+    sessions = sorted(list(df['Session'].unique()))
+
+    for session in sessions:
+        if session != 999:
+            df_s = df.loc[df['Session'] == session]
+
+            conditions = sorted(list(df_s['Condition'].unique()))
+
+            for condition in conditions:
+                if condition != 999:
+                    df_c = df_s.loc[df_s['Condition'] == condition]
+                    trials = [t for t in list(df_c['Trial'].unique()) if t not in exclude]
+
+                    num_trials.append(len(trials))
+
     return num_trials
 
 def remove_from_pp_info(df, cols_to_check:list, min_value:int=10):
