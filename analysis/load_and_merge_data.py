@@ -216,12 +216,9 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
 
 
 if __name__ == '__main__':
-    # all_IDs = sorted([f for f in os.listdir(base_location) if not '.' in f])  # Ignores actual files, only finds folders
-
     path = Path(base_location)
     all_IDs = list(path.glob('*-*-*/'))
     all_IDs = sorted(all_IDs)
-    # all_IDs.remove('plots')
 
     ID_dict_temp = hf.write_IDs_to_dict(all_IDs)
     pp_info = pd.read_excel('../results/participant_info.xlsx', engine='openpyxl')
