@@ -41,7 +41,7 @@ features = [
             # 'Errors'
             ]
 
-cols = ['ID', 'Session', 'Condition', 'Condition-session', 'Trial']
+cols = ['ID', 'Session', 'Condition', 'Session-condition', 'Trial']
 [cols.append(f) for f in features]
 results = pd.DataFrame(columns=cols)
 
@@ -104,7 +104,7 @@ for ID in list(pp_info['ID'].unique()):
                         r = pd.DataFrame({'ID': ID,
                                           'Session': session,
                                           'Condition': int(condition),
-                                          'Condition-session': f'{session}-{condition}',
+                                          'Session-condition': f'{session}-{condition}',
                                           'Trial-session': f'{trial}-{session}',
                                           'Trial': int(trial),
                                           'Number of crossings': float(num_crossings),
@@ -125,7 +125,12 @@ results = results.dropna()
 
 # Group by ID and Condition, use median. If there is a session 2, we're working with patient data and should use
 # Condition-session as grouping variable
-condition_var = 'Condition-session' if 2 in list(results['Session']) else 'Condition'
+if 2 in list(results['Session']):
+    condition_var = 'Session-condition'
+    label = condition_var
+else:
+    condition_var = 'Condition'
+    label = 'Reliability of visual access'
 
 results_grouped = results.groupby(['ID', condition_var]).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
@@ -141,10 +146,13 @@ results_grouped['Trial count'] = trial_counts['Trial']
 # results_grouped = results_grouped.drop(['Errors'], axis=1)
 # results_grouped['Errors'] = errors_grouped['Errors']
 
+# Rename condition variables if necessary
+if condition_var == 'Condition':
+    results_grouped['Condition number'] = results_grouped[condition_var].apply(hf.condition_number_to_name)
+else:
+    results_grouped['Condition number'] = results_grouped[condition_var]
 
 results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
-results_grouped['Condition number'] = results_grouped[condition_var]
-# results_grouped['Condition'] = results_grouped['Condition'].apply(hf.condition_number_to_name)
 
 # =============================================================================
 # SEPARATE PLOTS
@@ -181,12 +189,11 @@ rcParams['font.family'] = 'serif'
 rcParams['font.serif'] = ['Times']
 rcParams['font.size'] = 11
 
-sp = [f'23{x}' for x in range(1, len(features) + 1)]
+# y_lims = [(1.5, 7.5), (150, 1000), (4, 15), (2.5, 5), (100, 240), (210, 430)]
 
-y_lims = [(1.5, 7.5), (150, 1000), (4, 15), (2.5, 5), (100, 240), (210, 430)]
-
+nrows, ncols = 2, 3
 f = plt.figure(figsize=(7.5, 5))
-axes = [f.add_subplot(s) for s in sp]
+axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
 
 for i, feat in enumerate(features):
     sns.boxplot(x='Condition number', y=feat, data=results_grouped, #capsize=.1, errwidth=1.5,
@@ -195,11 +202,12 @@ for i, feat in enumerate(features):
     axes[i].set_ylabel(feat, fontsize=13)
     # axes[i].set_ylim(y_lims[i])
     
-    if i < (len(features) / 2):
+    if i < (len(features) - ncols):
+        # Only place xticks on the bottom row
         axes[i].set_xticks([])
         
     if i == 4:
-        axes[i].set_xlabel('Reliability of access', fontsize=13)
+        axes[i].set_xlabel(label, fontsize=13)
 
 f.tight_layout() #(pad=1, w_pad=0.2)
 f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=700)
@@ -210,23 +218,24 @@ plt.show()
 # COMBINED DISTPLOTS                
 # =============================================================================
 ls = ['-', '--', '-.', ':']
-# sp = [f'23{x}' for x in range(1, len(features) + 1)]
 
+nrows, ncols = 2, 3
 f = plt.figure(figsize=(7.5, 5))
-axes = [f.add_subplot(2, 3, s) for s in range(1, len(features) + 1)]
+axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
 
 for i, feat in enumerate(features):
-    for c in list(results_grouped['Condition number'].unique()):
+    for j, c in enumerate(list(results_grouped['Condition number'].unique())):
         plot_df = results_grouped.loc[results_grouped['Condition number'] == c]
         sns.kdeplot(plot_df[feat], label=c,
-                    ax=axes[i])
-    
-    # if i != 3:
-    #     axes[i].get_legend().remove()
-    # else:
-    #     axes[i].get_legend().set_title('Condition')
+                    ax=axes[i], linestyle=ls[j])
     
     axes[i].set_yticks([])
+
+    if i % ncols != 0:
+        axes[i].set_ylabel('')
+
+    if i == 2:
+        axes[i].legend(title=label)
 
 f.tight_layout()
 f.savefig(f'{constants.base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
