@@ -321,7 +321,7 @@ def test_normality(df, dep_var, ind_vars):
     p_values = []
 
     for iv in ind_vars:
-        df_iv = df.loc[df['Condition'] == iv]
+        df_iv = df.loc[df['Condition number'] == iv]
 
         results = pg.normality(df_iv[dep_var])
         p = list(results['pval'])[0]
@@ -357,13 +357,13 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
                 iv_combinations.append((iv, iv1))
 
     for comb in iv_combinations:
-        x = df.loc[df['Condition'] == comb[0]][dep_var]
-        y = df.loc[df['Condition'] == comb[1]][dep_var]
+        x = df.loc[df['Condition number'] == comb[0]][dep_var]
+        y = df.loc[df['Condition number'] == comb[1]][dep_var]
 
         try:
             if is_non_normal:
                 # s, p = wilcoxon(x, y)
-                results = pg.wilcoxon(x, y, 'one-sided')
+                results = pg.wilcoxon(x, y, alternative='two-sided')
                 results = results.round(4)
 
                 t = list(results['W-val'])[0]
@@ -380,7 +380,8 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
 
                 print(f'{prefix}{comb} Wilco: W={round(t, 2)}, p={round(p, 3)}')
             else:
-                results = pg.ttest(x, y, paired=True, tail='one-sided')
+                paired = True if len(x) == len(y) else False
+                results = pg.ttest(x, y, paired=paired, alternative='two-sided')
                 results = results.round(4)
 
                 t = list(results['T'])[0]
@@ -405,10 +406,10 @@ def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
 
 def test_friedman(df, ind_var, dep_var, is_non_normal=None):
     print(f'\n{dep_var}:')
-    test_df = pd.DataFrame()
+    # test_df = pd.DataFrame()
 
     if is_non_normal == None:
-        normality_p = test_normality(df, dep_var, list(df['Condition'].unique()))
+        normality_p = test_normality(df, dep_var, list(df['Condition number'].unique()))
         significants = [p for p in normality_p if p < 0.01]
         is_non_normal = len(significants) > 0
 
@@ -418,7 +419,7 @@ def test_friedman(df, ind_var, dep_var, is_non_normal=None):
         df_iv = df.loc[df[ind_var] == iv]
 
         dv = list(df_iv[dep_var])
-        test_df[f'{dep_var} {iv}'] = dv
+        # test_df[f'{dep_var} {iv}'] = dv
         print(f'{iv}: mean={round(np.mean(dv), 2)}, SD={round(np.std(dv), 2)}')
 
     if not is_non_normal and sphericity_p:

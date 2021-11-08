@@ -31,6 +31,7 @@ fixations_files = [f for f in hf.getListOfFiles(constants.base_location) if '-al
 task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allEvents.csv' in f]
 all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
 
+# Add column names for additional measures
 features = [
             'Number of crossings',
             'Dwell time per crossing (ms)',
@@ -99,8 +100,10 @@ for ID in list(pp_info['ID'].unique()):
                         dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
                                                                        list(fixations['start']),
                                                                        list(fixations['end']))
-                        errors = len(placement_df_t.loc[placement_df_t['Correct'] != True])
+                        # Compute additional outcome measures here
+                        errors = np.nan
 
+                        # Add additional outcome measures here (as specified in features var, line 35)
                         r = pd.DataFrame({'ID': ID,
                                           'Session': session,
                                           'Condition': int(condition),
@@ -157,30 +160,32 @@ results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.
 # =============================================================================
 # SEPARATE PLOTS
 # =============================================================================
-# colors = sns.color_palette("Blues")[2:]
-#
-# for f in features:
-#     plt.figure(figsize=(4, 5))
-#     sns.boxplot('Condition', f, data=results_grouped, #capsize=.1, errwidth=1.5,
-#                 palette=colors)
-#     plt.title(f)
-#     plt.tight_layout()
-#     plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
-#     plt.show()
-#
-#     plt.figure()
-#     for c in list(results_grouped['Condition'].unique()):
-#         plot_df = results_grouped.loc[results_grouped['Condition'] == c]
-#         sns.distplot(plot_df[f], label=c)
-#
-#     plt.title(f)
-#     plt.legend(title='Condition')
-#     plt.savefig(f'{constants.base_location}/plots/grouped {f} dist.png', dpi=500)
-#     plt.show()
-#
-#     print('\n###########################')
-#     hf.test_friedman(results_grouped, 'Condition', f)
-#     hf.test_posthoc(results_grouped, f, list(results_grouped['Condition'].unique()))
+colors = sns.color_palette("Blues")[2:]
+
+for f in features:
+    # Boxplot
+    plt.figure(figsize=(4, 5))
+    sns.boxplot(x='Condition number', y=f, data=results_grouped,  # capsize=.1, errwidth=1.5,
+                palette=colors)
+    plt.title(f)
+    plt.tight_layout()
+    plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
+    plt.show()
+
+    # Distplot
+    plt.figure()
+    for c in list(results_grouped['Condition number'].unique()):
+        plot_df = results_grouped.loc[results_grouped['Condition number'] == c]
+        sns.kdeplot(plot_df[f], label=c)
+
+    plt.title(f)
+    plt.legend(title=label)
+    plt.savefig(f'{constants.base_location}/plots/grouped {f} dist.png', dpi=500)
+    plt.show()
+
+    print('\n###########################')
+    hf.test_friedman(results_grouped, 'Condition number', f)
+    hf.test_posthoc(results_grouped, f, list(results_grouped['Condition number'].unique()))
 
 # =============================================================================
 # COMBINED BOXPLOTS                
@@ -191,6 +196,7 @@ rcParams['font.size'] = 11
 
 # y_lims = [(1.5, 7.5), (150, 1000), (4, 15), (2.5, 5), (100, 240), (210, 430)]
 
+# Adjust nrows and ncols as needed such that nrows * ncols == len(features)
 nrows, ncols = 2, 3
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
@@ -219,6 +225,7 @@ plt.show()
 # =============================================================================
 ls = ['-', '--', '-.', ':']
 
+# Adjust nrows and ncols as needed such that nrows * ncols == len(features)
 nrows, ncols = 2, 3
 f = plt.figure(figsize=(7.5, 5))
 axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
@@ -240,7 +247,3 @@ for i, feat in enumerate(features):
 f.tight_layout()
 f.savefig(f'{constants.base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
 plt.show()
-
-
-
-
