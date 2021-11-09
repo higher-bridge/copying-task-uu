@@ -60,14 +60,13 @@ all_workspace_locations = [(1780, 570), (1910, 570), (2045, 570),
 all_resource_locations = [(1780, 1080), (1910, 1080), (2045, 1080),
                           (1780, 1300), (1910, 1300), (2045, 1300)]
 
-# all_example_locations_grid = [[(515, 570), (650, 570), (785, 570)],
-#                               [(515, 720), (650, 720), (785, 720)],
-#                               [(515, 870), (650, 870), (785, 870)]]
-# all_workspace_locations_grid = [[(1780, 570), (1910, 570), (2045, 570)],
-#                                 [(1780, 720), (1910, 720), (2045, 720)],
-#                                 [(1780, 870), (1910, 870), (2045, 870)]]
-# all_resource_locations_grid = [(1780, 1080), (1910, 1080), (2045, 1080),
-#                                (1780, 1300), (1910, 1300), (2045, 1300)]
+example_min_x = min([x[0] - 100 for x in all_example_locations])
+example_min_y = min(x[1] - 100 for x in all_example_locations)
+example_max_x = max([x[0] + 100 for x in all_example_locations])
+example_max_y = max(x[1] + 100 for x in all_example_locations)
+
+example_boundaries = [(example_min_x, example_min_y),
+                      (example_max_x, example_max_y)]
 
 resource_grid_corner = (1715, 1010)  # , (2110, 1370)]
 resource_grid_size = (395, 360)

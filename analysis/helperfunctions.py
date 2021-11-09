@@ -317,6 +317,116 @@ def get_dwell_time_per_crossing(xpos: list, starts: list, ends: list, midline=co
     return dwell_times
 
 
+def get_fixations_at_grid(x_list, y_list, starts, ends):
+    example_boundaries = constants.example_boundaries
+    example_min, example_max = example_boundaries[0], example_boundaries[1]
+
+    fixations_at_grid = {'x': [],
+                         'y': [],
+                         'start': [],
+                         'end': [],
+                         'duration': []}
+
+    for x, y, start, end in zip(x_list, y_list, starts, ends):
+        if example_min[0] < x < example_max[0]:
+            if example_min[1] < y < example_max[1]:
+                # Fixation was within grid boundaries
+                fixations_at_grid['x'].append(x)
+                fixations_at_grid['y'].append(y)
+                fixations_at_grid['start'].append(start)
+                fixations_at_grid['end'].append(end)
+                fixations_at_grid['duration'].append(end - start)
+
+    return fixations_at_grid
+
+
+def get_dwell_time_at_grid(x_list, y_list, starts, ends):
+    fixations_at_grid = get_fixations_at_grid(x_list, y_list, starts, ends)
+
+    return sum(fixations_at_grid['duration'])
+
+
+def get_fixated_hourglass_duration(df, x_list, y_list, starts, ends):
+    fixations_at_grid = get_fixations_at_grid(x_list, y_list, starts, ends)
+
+    hourglass_fixation_duration = 0
+
+    showing = df.loc[df['Event'] == 'Showing hourglass']
+    hiding = df.loc[df['Event'] == 'Hiding hourglass']
+
+    if len(showing) == 0:
+        return 0
+
+    if len(showing) > len(hiding):
+        hiding = hiding.append(df.loc[df['Event'] == 'Finished trial'])
+
+    time_showing = showing['TrackerTime']
+    time_hiding = hiding['TrackerTime']
+
+    for show, hide in zip(time_showing, time_hiding):
+        # Only count this hourglass duration if there was a fixation within the example grid
+        for start, end in zip(fixations_at_grid['start'], fixations_at_grid['end']):
+            if show < start < hide:
+                fix_end = min(end, hide)
+                duration = fix_end - start
+            elif show < end < hide:  # This is not very likely to happen
+                fix_start = max(start, show)
+                duration = end - fix_start
+            else:
+                duration = 0
+
+            hourglass_fixation_duration += duration
+
+    return hourglass_fixation_duration
+
+
+def get_hourglass_duration(df):
+    hourglasstimer = 0
+    
+    showing = df.loc[df['Event'] == 'Showing hourglass']
+    hiding = df.loc[df['Event'] == 'Hiding hourglass']
+
+    if len(showing) == 0:
+        return 0
+
+    if len(showing) > len(hiding):
+        hiding = hiding.append(df.loc[df['Event'] == 'Finished trial'])
+
+    time_showing = showing['TrackerTime']
+    time_hiding = hiding['TrackerTime']
+    
+    for show, hide in zip(time_showing, time_hiding):
+        hourglass_shown = hide - show
+        hourglasstimer += hourglass_shown
+    
+    return hourglasstimer
+
+
+def number_of_incorrect_placements_per_trial(df):
+    incorrect_placements = 0
+    
+    for i, row in df.iterrows():
+        event = row['Event']
+        
+        if 'Incorrectly placed' in event:
+            incorrect_placements += 1
+    
+    return incorrect_placements
+
+
+def number_of_correct_placements_per_trial(df):
+    correct_placements = 0
+    
+    for i, row in df.iterrows():
+        correct = row['Correct']
+        
+        if correct:
+            correct_placements += 1
+    
+    return correct_placements
+
+
+
 def test_normality(df, dep_var, ind_vars):
     p_values = []
 
