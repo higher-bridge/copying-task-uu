@@ -17,6 +17,8 @@ import helperfunctions as hf
 import pandas as pd
 from joblib import Parallel, delayed
 from pyedfread import edf
+from constants_analysis import base_location
+from pathlib import Path
 
 
 def convert_edf(file, allfiles):
@@ -36,11 +38,9 @@ def convert_edf(file, allfiles):
 
 
 if __name__ == '__main__':
-    path = '../results'
-
-    allfiles = [f for f in hf.getListOfFiles(path)]
+    allfiles = [f for f in hf.getListOfFiles(base_location)]
     files = [f for f in allfiles if '.edf' in f]
-    
+
     allfiles_repeated = [allfiles] * len(files)
     
     results = Parallel(n_jobs=10, backend='loky', verbose=True)(delayed(convert_edf)(f, af) for f, af in zip(files, allfiles_repeated))

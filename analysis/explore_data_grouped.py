@@ -35,7 +35,7 @@ all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if
 # Add column names for additional measures
 features = [
     'Number of crossings',
-    'Dwell time per crossing (ms)',
+    'Total dwell time per crossing (ms)',
     'Completion time (s)',
     'Fixations per second',
     'Saccade velocity',
@@ -46,9 +46,9 @@ features = [
     'Crossings per correct item',
     'Hourglass shown duration (s)',
     'Hourglass fixated duration (s)',
-    'Grid visible dwell (s)',
-    'Grid visible dwell per correct item (s)'
-    # 'Errors'
+    'Total dwell time at grid (s)',
+    'Dwell time per crossing (ms)',
+    'Dwell time at grid per correct item (s)'
 ]
 
 cols = ['ID', 'Session', 'Condition', 'Session-condition', 'Trial']
@@ -127,6 +127,7 @@ for ID in list(pp_info['ID'].unique()):
                         wrong_per_correct = incorrect_placements / correct_placements if correct_placements > 0 else incorrect_placements
                         crossing_per_correct = num_crossings / correct_placements if correct_placements > 0 else 0
                         grid_visible_dwell = dwell_times_at_grid - hourglass_fixated_duration
+                        grid_visible_dwell_per_crossing = grid_visible_dwell / num_crossings if num_crossings > 0 else np.nan
                         grid_visible_dwell_per_correct = grid_visible_dwell / correct_placements if correct_placements > 0 else 0
 
                         # Add additional outcome measures here (as specified in features var, line 35)
@@ -137,7 +138,7 @@ for ID in list(pp_info['ID'].unique()):
                                           'Trial-session': f'{trial}-{session}',
                                           'Trial': int(trial),
                                           'Number of crossings': float(num_crossings),
-                                          'Dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
+                                          'Total dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
                                           'Completion time (s)': float(completion_time / 1000),
                                           'Fixations per second': float(len(fixations) / (completion_time / 1000)),
                                           'Saccade velocity': float(np.median(saccades['avel'])),
@@ -148,10 +149,10 @@ for ID in list(pp_info['ID'].unique()):
                                           'Crossings per correct item': float(crossing_per_correct),
                                           'Hourglass shown duration (s)': float(total_hourglass_duration / 1000),
                                           'Hourglass fixated duration (s)': float(hourglass_fixated_duration / 1000),
-                                          'Grid visible dwell (s)': float(grid_visible_dwell / 1000),
-                                          'Grid visible dwell per correct item (s)': float(
+                                          'Total dwell time at grid (s)': float(grid_visible_dwell / 1000),
+                                          'Dwell time per crossing (ms)': float(grid_visible_dwell_per_crossing),
+                                          'Dwell time at grid per correct item (s)': float(
                                               grid_visible_dwell_per_correct / 1000)
-                                          # 'Errors':float(errors)
                                           },
                                          index=[0])
                         results = results.append(r, ignore_index=True)
@@ -159,6 +160,24 @@ for ID in list(pp_info['ID'].unique()):
 # =============================================================================
 # AGGREGATE BY MEDIAN                
 # =============================================================================
+features = [
+    'Number of crossings',
+    'Dwell time per crossing (ms)',
+    'Completion time (s)',
+    'Fixations per second',
+    'Saccade velocity',
+    'Peak velocity',
+    # 'Incorrect placements',
+    # 'Correct placements',
+    # 'Wrong per correct',
+    # 'Crossings per correct item',
+    # 'Hourglass shown duration (s)',
+    # 'Hourglass fixated duration (s)',
+    # 'Total dwell time at grid (s)',
+    # 'Total dwell time per crossing (ms)',
+    # 'Dwell time at grid per correct item (s)'
+]
+
 results = results.dropna()
 
 # Group by ID and Condition, use median. If there is a session 2, we're working with patient data and should use
@@ -166,23 +185,21 @@ results = results.dropna()
 if 2 in list(results['Session']):
     condition_var = 'Session-condition'
     label = condition_var
+
+    blue = (0 / 256, 170 / 256, 155 / 256)
+    orange = (241 / 256, 142 / 256, 0 / 256)
+    sns.set_palette([blue, orange, blue, orange])
+
 else:
     condition_var = 'Condition'
     label = 'Reliability of visual access'
+    sns.set_palette(sns.color_palette('tab10'))
 
 results_grouped = results.groupby(['ID', condition_var]).agg({f: ['median'] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 
 trial_counts = results.groupby(['ID', condition_var]).agg('count').reset_index()
 results_grouped['Trial count'] = trial_counts['Trial']
-
-# Calculate mean for the Errors value
-# errors_grouped = results.groupby(['ID', 'Condition']).agg({f: ['mean'] for f in features}).reset_index()
-# errors_grouped.columns = errors_grouped.columns.get_level_values(0)
-
-# Drop median errors from results_grouped and append mean errors from errors_grouped
-# results_grouped = results_grouped.drop(['Errors'], axis=1)
-# results_grouped['Errors'] = errors_grouped['Errors']
 
 # Rename condition variables if necessary
 if condition_var == 'Condition':
@@ -196,11 +213,6 @@ results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.
 # SEPARATE PLOTS
 # =============================================================================
 rcParams['font.size'] = 14
-
-# Set the colours
-blue = (0 / 256, 170 / 256, 155 / 256)
-orange = (241 / 256, 142 / 256, 0 / 256)
-sns.set_palette([blue, orange, blue, orange])
 
 # Define two linestyles
 ls = ['-', '--']
@@ -223,10 +235,16 @@ for f in features:
     axes[0].set_xlabel(label)
 
     # Add kdeplot (histogram/kernel density estimation) to the side
-    for i, cond in enumerate(sorted(list(results_grouped['Condition number'].unique()))):
+    condition_list = list(results_grouped['Condition number'].unique())
+    if condition_var == 'Session-condition':
+        condition_list = sorted(condition_list)
+
+    for i, cond in enumerate(condition_list):
         df_c = results_grouped.loc[results_grouped['Condition number'] == cond]
-        sns.kdeplot(y=f, data=df_c, color=sns.color_palette()[i],
-                    fill=True, alpha=.25, linestyle=ls[int(cond[0]) - 1],
+        sns.kdeplot(y=f, data=df_c,
+                    color=sns.color_palette()[i],
+                    fill=True, alpha=.25,
+                    linestyle=ls[int(cond[0]) - 1] if condition_var == 'Session-condition' else ls[0],
                     clip=axes[0].get_ylim(),
                     label=cond,
                     ax=axes[1])
@@ -241,7 +259,8 @@ for f in features:
     if label == 'Session-condition':
         axes[1].legend(title='Session-\ncondition', fontsize=12)
     else:
-        axes[1].legend(title=label, fontsize=12)
+        # axes[1].legend(title=label, fontsize=12)
+        pass
 
     # Set overall parameters and save
     plt.tight_layout()
@@ -255,64 +274,33 @@ for f in features:
 # =============================================================================
 # COMBINED BOXPLOTS
 # =============================================================================
-# rcParams['font.family'] = 'serif'
-# rcParams['font.serif'] = ['Times']
-# rcParams['font.size'] = 11
-#
-# colors = sns.color_palette('RdBu')
-# sns.set_palette(colors)
-#
-# # y_lims = [(1.5, 7.5), (150, 1000), (4, 15), (2.5, 5), (100, 240), (210, 430)]
-#
-# # Adjust nrows and ncols as needed such that nrows * ncols == len(features)
-# nrows, ncols = 4, 4
-# f = plt.figure(figsize=(7.5, 5))
-# axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
-#
-# for i, feat in enumerate(features):
-#     sns.boxplot(x='Condition number', y=feat, data=results_grouped,
-#                 palette='Blues', fliersize=0, ax=axes[i])
-#     sns.stripplot(x='Condition number', y=feat, data=results_grouped,
-#                   color='black', ax=axes[i])
-#     axes[i].set_xlabel('')
-#     axes[i].set_ylabel(feat, fontsize=13)
-#     # axes[i].set_ylim(y_lims[i])
-#
-#     if i < (len(features) - ncols):
-#         # Only place xticks on the bottom row
-#         axes[i].set_xticks([])
-#
-#     if i == 4:
-#         axes[i].set_xlabel(label, fontsize=13)
-#
-# f.tight_layout()  # (pad=1, w_pad=0.2)
-# f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=700)
-# plt.show()
+rcParams['font.family'] = 'serif'
+rcParams['font.serif'] = ['Times']
+rcParams['font.size'] = 11
 
-# =============================================================================
-# COMBINED DISTPLOTS                
-# =============================================================================
-# ls = ['-', '--', '-.', ':']
-#
-# # Adjust nrows and ncols as needed such that nrows * ncols == len(features)
-# nrows, ncols = 2, 7
-# f = plt.figure(figsize=(7.5, 5))
-# axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
-#
-# for i, feat in enumerate(features):
-#     for j, c in enumerate(list(results_grouped['Condition number'].unique())):
-#         plot_df = results_grouped.loc[results_grouped['Condition number'] == c]
-#         sns.kdeplot(plot_df[feat], label=c,
-#                     ax=axes[i], linestyle=ls[j])
-#
-#     axes[i].set_yticks([])
-#
-#     if i % ncols != 0:
-#         axes[i].set_ylabel('')
-#
-#     if i == 2:
-#         axes[i].legend(title=label)
-#
-# f.tight_layout()
-# f.savefig(f'{constants.base_location}/plots/combined-distplots.png', dpi=500, bbox_inches='tight')
-# plt.show()
+colors = sns.color_palette('tab10')
+sns.set_palette(colors)
+
+# Adjust nrows and ncols as needed such that nrows * ncols == len(features)
+nrows, ncols = 2, 3
+f = plt.figure(figsize=(7.5, 5))
+axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
+
+for i, feat in enumerate(features):
+    sns.boxplot(x='Condition number', y=feat, data=results_grouped,
+                palette='Blues', fliersize=0, ax=axes[i])
+    sns.swarmplot(x='Condition number', y=feat, data=results_grouped,
+                  color='black', ax=axes[i])
+    axes[i].set_xlabel('')
+    axes[i].set_ylabel(feat, fontsize=13)
+
+    if i < (len(features) - ncols):
+        # Only place xticks on the bottom row
+        axes[i].set_xticks([])
+
+    if i == 4:
+        axes[i].set_xlabel(label, fontsize=13)
+
+f.tight_layout()  # (pad=1, w_pad=0.2)
+f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=700)
+plt.show()

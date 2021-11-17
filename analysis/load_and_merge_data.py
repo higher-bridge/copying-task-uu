@@ -45,7 +45,6 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
 
     # Order the df in the proper condition, retrieved from participant_info.xlsx
     # (I didn't design the mousetracker filenames with chronological ordering)
-
     mousedata = hf.concat_event_files(mousefiles)
     condition_order = hf.get_condition_order(pp_info, ID)
 
@@ -160,9 +159,6 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                             condition_list_samp[start_idx_samp:end_idx_samp] = condition
                             session_list_samp[start_idx_samp:end_idx_samp] = session
 
-                    if '2031' in ID and trial_num == 2 and condition == 0 and session == 1:
-                        print(session, condition, trial_num, end - start, end_idx - start_idx)
-
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
     events['Condition'] = condition_list
@@ -174,9 +170,6 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
         samples['Condition'] = condition_list_samp
         samples['Session'] = session_list_samp
 
-    if '2031' in ID:
-        print('')
-
     # Retrieve how many valid trials were recorded per condition
     num_trials = hf.get_num_trials(events)
     b1 = int(num_trials[0])
@@ -186,7 +179,7 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
         b3 = int(num_trials[2])
         b4 = int(num_trials[3])
     except IndexError:
-        b3, b4 = 0, 0
+        b3, b4 = np.nan, np.nan
 
     # Remove invalid rows from mousetracker
     mousedata['Valid'] = mouse_valid
@@ -225,32 +218,30 @@ if __name__ == '__main__':
     pp_info['ID'] = pp_info['ID'].astype(str)
     ID_list = [str(ID) for ID in list(pp_info['ID'].unique())]
 
-    # print(list(ID_dict_temp.keys()))
-    # print(ID_list)
     ID_dict = {ID: value for ID, value in ID_dict_temp.items() if ID in ID_list}
 
     pp_exclude = pd.read_excel('../results/participant_exclude_trials.xlsx', engine='openpyxl').astype(str)
 
-    # Sit back, this will take a while (multiprocessing)
-    # ID_dict_list = [ID_dict] * len(ID_list)
-    # pp_info_list = [pp_info] * len(ID_list)
-    # exclude_list = [pp_exclude] * len(ID_list)
-    # base_location_list = [base_location] * len(ID_list)
-    #
-    # results = Parallel(n_jobs=-2,
-    #                    backend='loky',
-    #                    verbose=True)(delayed(load_and_merge) \
-    #                                      (ID, IDd, ppi, bll, el) for ID, IDd, ppi, bll, el in zip(ID_list,
-    #                                                                                               ID_dict_list,
-    #                                                                                               pp_info_list,
-    #                                                                                               base_location_list,
-    #                                                                                               exclude_list))
+    # Sit back, this may take a while (multiprocessing)
+    ID_dict_list = [ID_dict] * len(ID_list)
+    pp_info_list = [pp_info] * len(ID_list)
+    exclude_list = [pp_exclude] * len(ID_list)
+    base_location_list = [base_location] * len(ID_list)
 
-    # Sit back, this wil take even longer (single core, uncomment in case multiprocessing doesn't work)
-    results = []
-    for ID in ID_list:
-        results.append(load_and_merge(ID, ID_dict, pp_info, base_location, pp_exclude))
-        print(f'Parsed {len(results)} of {len(ID_list)} files')
+    results = Parallel(n_jobs=-2,
+                       backend='loky',
+                       verbose=True)(delayed(load_and_merge) \
+                                         (ID, IDd, ppi, bll, el) for ID, IDd, ppi, bll, el in zip(ID_list,
+                                                                                                  ID_dict_list,
+                                                                                                  pp_info_list,
+                                                                                                  base_location_list,
+                                                                                                  exclude_list))
+
+    # Sit back, this may take even longer (single core, uncomment in case multiprocessing doesn't work)
+    # results = []
+    # for ID in ID_list:
+    #     results.append(load_and_merge(ID, ID_dict, pp_info, base_location, pp_exclude))
+    #     print(f'Parsed {len(results)} of {len(ID_list)} files')
 
     pp_info['Trials condition 0'] = [b[0] for b in results]
     pp_info['Trials condition 1'] = [b[1] for b in results]
@@ -259,7 +250,7 @@ if __name__ == '__main__':
 
     try:
         pp_info = pp_info.drop(['Unnamed: 0'], axis=1)
-    except Exception as e:
-        print(e)
+    except KeyError as e:
+        pass
 
     pp_info.to_excel('../results/participant_info.xlsx')

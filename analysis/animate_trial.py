@@ -30,7 +30,7 @@ rcParams['font.family'] = 'monospace'
 # Set vars
 ID = '1001'
 condition = 2
-trial = 15
+trial = 16
 
 framerate = 30
 dpi = 200
@@ -80,7 +80,7 @@ events['ZeroTime'] = events['TrackerTime'].apply(lambda x: int(x - start_time))
 
 ### Retrieve when grid was shown or hidden
 show_hide_grid = []
-is_showing = 'Grid'
+is_showing = 'None'
 for i in range(int(end_time)):
     row = events.loc[events['ZeroTime'] == i]
     if len(row) > 0:
@@ -213,7 +213,7 @@ for t in np.arange(len(gaze_data), step=1000 / framerate):
 
     ### PLOT ITEMS WHILE BEING DRAGGED
     for k in list(drag_dict.keys()):
-        if t == k:
+        if int(round(t)) == k:
             ax.add_artist(drag_dict[k])
 
     ### PLOT MOUSE AND GAZE ###
