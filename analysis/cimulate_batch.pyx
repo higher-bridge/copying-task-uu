@@ -24,7 +24,7 @@ from cimulate_trial import simulate_trial
 from joblib import Parallel, delayed
 
 
-cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):    
+cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model, save_results=True):
     ID = str(ID).zfill(3)
     
     features = ['Number of crossings',
@@ -118,16 +118,19 @@ cpdef simulate_batch(ID, linear_saccade_model, linear_mouse_model):
                                                 
         # print(f'Scheme loop took {round((time.time() - cond_start) * 1000, 1)}ms')
 
-    try:    
-        pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))    
-    except Exception as e:
-        print(f'Could not save pickle {ID}:', e)     
+    if save_results:
+        try:
+            pickle.dump(tracking_dict, open(f'../results/simulations/simulation_{ID}_results.p', 'wb'))
+        except Exception as e:
+            print(f'Could not save pickle {ID}:', e)
 
-    try:    
-        df = pd.DataFrame(tracking_dict)
-        df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
-    except Exception as e:
-        print(f'Could not save dataframe {ID}:', e)          
-    
-    
-    return True
+        try:
+            df = pd.DataFrame(tracking_dict)
+            df.to_csv(f'../results/simulations/simulation_{ID}_results.csv')
+        except Exception as e:
+            print(f'Could not save dataframe {ID}:', e)
+
+        return True
+
+    else:
+        return tracking_dict

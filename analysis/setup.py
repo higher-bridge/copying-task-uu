@@ -6,8 +6,8 @@ Created on Wed Jan  6 15:29:53 2021
 @author: alexos
 """
 
-from Cython.Build import cythonize
 from setuptools import setup
+from Cython.Build import cythonize
 
 setup(
     name='cimulation',

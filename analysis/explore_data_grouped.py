@@ -183,7 +183,7 @@ results = results.dropna()
 # Group by ID and Condition, use median. If there is a session 2, we're working with patient data and should use
 # Condition-session as grouping variable
 if 2 in list(results['Session']):
-    condition_var = 'Session-condition'
+    condition_var = 'Condition'  # Usually 'Session-condition'
     label = condition_var
 
     blue = (0 / 256, 170 / 256, 155 / 256)
