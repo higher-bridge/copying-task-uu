@@ -23,9 +23,9 @@ from joblib import Parallel, delayed
 
 if __name__ == '__main__':
     start = time.time()
-    print(f'Simulating with {constants.NUM_JOBS_SIM} jobs')
+    print(f'Simulating with {constants.NUM_SIMS} jobs')
     
-    IDs = np.arange(1, constants.NUM_JOBS_SIM + 1)
+    IDs = np.arange(1, constants.NUM_SIMS + 1)
     linear_saccade_model = pd.read_excel('../results/lm_results.xlsx', engine='openpyxl')
     linear_mouse_model = pd.read_excel('../results/lm_results_mouse.xlsx', engine='openpyxl')    
 

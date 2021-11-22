@@ -19,12 +19,13 @@ base_location = '../results'
 EXCLUDE_TRIALS = [1, 2, 3, 999]
 EXCLUDE_EXCEL_BASED = True
 
-NUM_JOBS_SIM = 4
+NUM_SIMS = 4
 NUM_TRIALS = 1
+NUM_JOBS_SIM = -3
 
 STIMULI_PER_TRIAL = 6
 
-CONDITIONS = [0, 1]
+CONDITIONS = [0, 1, 2, 3]
 CONDITION_TIMES = [(6000, 0), (4000, 2000), (3000, 3000), (2000, 4000)]
 SUM_DURATION = 6000
 
@@ -41,6 +42,8 @@ DISTANCE = 675  # mm distance from screen
 
 # MODEL PARAMETERS
 MAX_MEMORY_REPETITIONS = 3
+# TODO: MAX_ITEMS_ENCODED
+ERROR_RATES = [.11, .2, .29, .38]
 
 # Consist of (start, stop, step)
 F_RANGE = (.1, .5, .1)
@@ -48,7 +51,12 @@ DECAY_RANGE = (.5, 1., .1)
 THRESH_RANGE = (.175, .275, .025)
 NOISE_RANGE = (.26, .32, .02)
 
-ERROR_RATES = [.11, .2, .29, .38]
+# Features to compare between simulation and observed
+FIT_FEATURES = [
+    'Number of crossings',
+    'Completion time (s)',
+    'Fixations per second'
+]
 
 # Center locations of each stimulus
 all_example_locations = [(515, 570), (650, 570), (785, 570),

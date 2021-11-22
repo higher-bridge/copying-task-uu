@@ -294,7 +294,7 @@ def simulate_participant(ID, linear_saccade_model, linear_mouse_model):
 if __name__ == '__main__':
     start = time.time()
     
-    IDs = np.arange(1, constants.NUM_JOBS_SIM + 1)
+    IDs = np.arange(1, constants.NUM_SIMS + 1)
     linear_saccade_model = pd.read_excel('../results/lm_results.xlsx', engine='openpyxl')
     linear_mouse_model = pd.read_excel('../results/lm_results_mouse.xlsx', engine='openpyxl')    
 

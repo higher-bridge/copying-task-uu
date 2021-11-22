@@ -74,8 +74,11 @@ def parse_results(sim_data_s : pd.DataFrame,
                     x = np.array(exp_data_c[feat])
                     y = np.array(sim_grouped[feat])
                     
-                    se, nse = compute_se(x, y)
-                    
+                    try:
+                        se, nse = compute_se(x, y)
+                    except:
+                        se, nse = compute_se(x, y)
+
                     scaled_squared_errors[feat].append(nse)
                  
     
