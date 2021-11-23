@@ -227,12 +227,22 @@ for f in features:
                 fliersize=0,
                 ax=axes[0])
 
-    # Stripplot (add individual points)
+    # Strip-/swarmplot (add individual points)
     sns.swarmplot(x='Condition number', y=f, data=results_grouped,
                   color='black', #jitter=False,
                   ax=axes[0])
 
+    # Or choose lineplot
+    # sns.lineplot(x='Condition number', y=f, hue='ID',
+    #              palette=[sns.color_palette('Greys')[-1]] * len(list(results_grouped['ID'].unique())),
+    #              marker='o', markersize=5, markeredgewidth=0, alpha=.5,
+    #              estimator=None,
+    #              data=results_grouped,
+    #              ax=axes[0])
+    # axes[0].get_legend().remove()
+
     axes[0].set_xlabel(label)
+    axes[0].set_ylabel(textwrap.fill(f, 20))
 
     # Add kdeplot (histogram/kernel density estimation) to the side
     condition_list = list(results_grouped['Condition number'].unique())

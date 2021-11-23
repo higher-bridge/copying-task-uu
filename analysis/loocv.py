@@ -169,7 +169,6 @@ def combine_cv_results(results: [List[List[Dict]]]) -> None:
         big_df.append(cv_df)
 
     big_df = pd.concat(big_df, ignore_index=True)
-    big_df.to_csv(Path(constants.base_location) / 'simulation_analysis_combined.csv')
 
     # Compute average outcome measure for each parameter combination
     grouped_df = big_df.groupby(by=['Encoding scheme', 'Repetitions', 'Parameters']).agg(np.mean).reset_index()
@@ -191,7 +190,7 @@ def main() -> None:
     ID_list = sorted(list(pp_info['ID'].astype(str).unique()))
 
     ###
-    ID_list.remove('1003')
+    # ID_list.remove('1003')
     ###
 
     print(f'Running Leave-One-Out Cross-Validation simulations with the following {len(ID_list)} IDs: \n{ID_list}\n')
