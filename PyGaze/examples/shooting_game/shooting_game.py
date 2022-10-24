@@ -2,15 +2,15 @@
 # version 2 (09-08-2013)
 # E.S. Dalmaijer (edwin.dalmaijer@gmail.com)
 
-import highscores
-from constants import *
-
-from pygaze import libtime
-from pygaze.libscreen import Display, Screen
-from pygaze.libinput import Keyboard
-from pygaze.eyetracker import EyeTracker
-
 import random
+
+import highscores
+
+from constants import *
+from pygaze import libtime
+from pygaze.eyetracker import EyeTracker
+from pygaze.libinput import Keyboard
+from pygaze.libscreen import Display, Screen
 
 # # # # #
 # prep

@@ -9,14 +9,13 @@
 import os
 import random
 
+import pygaze.libtime as timer
 # PyGaze
 from constants import *
-from pygaze.libscreen import Display, Screen
-from pygaze.libinput import Keyboard
 from pygaze.eyetracker import EyeTracker
+from pygaze.libinput import Keyboard
 from pygaze.liblog import Logfile
-import pygaze.libtime as timer
-
+from pygaze.libscreen import Display, Screen
 
 # # # # #
 # SETUP

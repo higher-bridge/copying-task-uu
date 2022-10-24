@@ -1,7 +1,9 @@
 # example script for using PyGaze
 import random
-from pygaze import Display, Screen, Keyboard, defaults, EyeTracker, libtime
+
 from libopensesame.experiment import experiment
+
+from pygaze import Display, EyeTracker, Keyboard, Screen, defaults, libtime
 
 src = '/home/sebastiaan/git/opensesame/resources/templates/default.opensesame'
 exp = experiment(string=src)

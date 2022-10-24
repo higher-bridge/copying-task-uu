@@ -2,17 +2,18 @@
 # https://github.com/esdalmaijer/PyGaze/
 # Changes here should be added to PyGaze repo, as a pull request.
 
-import time
-import os
-import math
 import copy
+import math
+import os
+import time
+
 import tobii_research as tr
 
 from pygaze import settings
-from pygaze.screen import Screen
-from pygaze.keyboard import Keyboard
 from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
+from pygaze.keyboard import Keyboard
 from pygaze.libtime import clock
+from pygaze.screen import Screen
 
 
 class TobiiProTracker(BaseEyeTracker):

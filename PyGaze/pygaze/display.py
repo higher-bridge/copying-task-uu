@@ -19,10 +19,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.py3compat import *
 from pygaze import settings
-from pygaze._misc.misc import copy_docstr
 from pygaze._display.basedisplay import BaseDisplay
+from pygaze._misc.misc import copy_docstr
+from pygaze.py3compat import *
 
 
 class Display(BaseDisplay):
@@ -36,7 +36,8 @@ class Display(BaseDisplay):
         if disptype == "pygame":
             from pygaze._display.pygamedisplay import PyGameDisplay as Display
         elif disptype == "psychopy":
-            from pygaze._display.psychopydisplay import PsychoPyDisplay  as Display
+            from pygaze._display.psychopydisplay import \
+                PsychoPyDisplay as Display
         elif disptype == "opensesame":
             from pygaze._display.osdisplay import OSDisplay as Display
         else:

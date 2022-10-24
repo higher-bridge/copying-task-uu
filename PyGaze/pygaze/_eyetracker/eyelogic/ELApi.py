@@ -22,11 +22,11 @@
 # This module contains the python prototype declaration for all functions which
 # are neccessary to control the EyeLogic software from an API client.
 
+import os
+import sys
 from ctypes import *
 from ctypes import wintypes
 from enum import Enum
-import os
-import sys
 
 
 ## contains all information about the state of the eyes at a specific time

@@ -13,6 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import textwrap
+
 import constants_analysis as constants
 import helperfunctions as hf
 import matplotlib.pyplot as plt
@@ -20,17 +22,18 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import rcParams
-import textwrap
 
 pp_info = pd.read_excel('../results/participant_info.xlsx', engine='openpyxl')
-pp_info['ID'] = [str(x) for x in list(pp_info['ID'])]
+pp_info['ID'] = pp_info['ID'].astype(str)
+
+exclude_IDs = []
 
 # pp_info = hf.remove_from_pp_info(pp_info, [f'Trials condition {i}' for i in range(4)])
 
 
-fixations_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allFixations.csv' in f]
-task_events_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allEvents.csv' in f]
-all_placements_files = [f for f in hf.getListOfFiles(constants.base_location) if '-allCorrectPlacements.csv' in f]
+fixations_files = [f for f in hf.getListOfFiles(constants.RESULT_DIR) if '-allFixations.csv' in f]
+task_events_files = [f for f in hf.getListOfFiles(constants.RESULT_DIR) if '-allEvents.csv' in f]
+all_placements_files = [f for f in hf.getListOfFiles(constants.RESULT_DIR) if '-allCorrectPlacements.csv' in f]
 
 # Add column names for additional measures
 features = [
@@ -59,7 +62,10 @@ results = pd.DataFrame(columns=cols)
 # WRITE VARIABLES TO ROW FOR EACH ID, SESSION, CONDITION AND TRIAL
 # =============================================================================
 # Data outside of trial start-end are marked with 999 so will be filtered in the next steps
-for ID in list(pp_info['ID'].unique()):
+valid_IDs = [x for x in list(pp_info['ID'].unique()) if x not in exclude_IDs]
+print(f'N={len(valid_IDs)}')
+
+for ID in valid_IDs:
     fix_filenames = [f for f in fixations_files if ID in f]
     fix_filename = fix_filenames[0]
 
@@ -91,8 +97,8 @@ for ID in list(pp_info['ID'].unique()):
                         task_df_t = task_df_c.loc[task_df_c['Trial'] == trial]
                         placement_df_t = placement_df_c.loc[placement_df_c['Trial'] == trial]
 
-                        fixations = fix_df_t.loc[fix_df_t['type'] == 'fixation']
-                        saccades = fix_df_t.loc[fix_df_t['type'] == 'saccade']
+                        fixations = fix_df_t.loc[fix_df_t['type'] == 'FIXA']
+                        saccades = fix_df_t.loc[fix_df_t['type'] == 'SACC']
 
                         start_times = task_df_t.loc[task_df_t['Event'] == 'Task init']['TrackerTime']
                         start = list(start_times)[0]
@@ -101,23 +107,23 @@ for ID in list(pp_info['ID'].unique()):
                         end = list(end_times)[0]
 
                         completion_time = end - start
-                        num_crossings = hf.get_midline_crossings(list(fixations['gavx']))
-                        num_fixations = hf.get_left_side_fixations(list(fixations['gavx']))
-                        dwell_times = hf.get_dwell_times(list(fixations['gavx']),
-                                                         list(fixations['start']),
-                                                         list(fixations['end']))
-                        dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['gavx']),
-                                                                       list(fixations['start']),
-                                                                       list(fixations['end']))
-                        dwell_times_at_grid = hf.get_dwell_time_at_grid(list(fixations['gavx']),
-                                                                        list(fixations['gavy']),
-                                                                        list(fixations['start']),
-                                                                        list(fixations['end']))
+                        num_crossings = hf.get_midline_crossings(list(fixations['avg_x']))
+                        num_fixations = hf.get_left_side_fixations(list(fixations['avg_x']))
+                        dwell_times = hf.get_dwell_times(list(fixations['avg_x']),
+                                                         list(fixations['onset']),
+                                                         list(fixations['offset']))
+                        dwell_time_pc = hf.get_dwell_time_per_crossing(list(fixations['avg_x']),
+                                                                       list(fixations['onset']),
+                                                                       list(fixations['offset']))
+                        dwell_times_at_grid = hf.get_dwell_time_at_grid(list(fixations['avg_x']),
+                                                                        list(fixations['avg_y']),
+                                                                        list(fixations['onset']),
+                                                                        list(fixations['offset']))
                         hourglass_fixated_duration = hf.get_fixated_hourglass_duration(task_df_t,
-                                                                               list(fixations['gavx']),
-                                                                               list(fixations['gavy']),
-                                                                               list(fixations['start']),
-                                                                               list(fixations['end']))
+                                                                                       list(fixations['avg_x']),
+                                                                                       list(fixations['avg_y']),
+                                                                                       list(fixations['onset']),
+                                                                                       list(fixations['offset']))
                         total_hourglass_duration = hf.get_hourglass_duration(task_df_t)
 
                         # Compute additional outcome measures here
@@ -141,8 +147,8 @@ for ID in list(pp_info['ID'].unique()):
                                           'Total dwell time per crossing (ms)': float(np.median(dwell_time_pc)),
                                           'Completion time (s)': float(completion_time / 1000),
                                           'Fixations per second': float(len(fixations) / (completion_time / 1000)),
-                                          'Saccade velocity': float(np.median(saccades['avel'])),
-                                          'Peak velocity': float(np.median(saccades['pvel'])),
+                                          'Saccade velocity': float(np.median(saccades['avg_vel'])),
+                                          'Peak velocity': float(np.median(saccades['peak_vel'])),
                                           'Incorrect placements': float(incorrect_placements),
                                           'Correct placements': float(correct_placements),
                                           'Wrong per correct': float(wrong_per_correct),
@@ -161,19 +167,19 @@ for ID in list(pp_info['ID'].unique()):
 # AGGREGATE BY MEDIAN                
 # =============================================================================
 features = [
-    'Number of crossings',
-    'Dwell time per crossing (ms)',
-    'Completion time (s)',
-    'Fixations per second',
-    'Saccade velocity',
-    'Peak velocity',
-    # 'Incorrect placements',
+    ('Number of crossings', 'mean'),
+    # ('Crossings per correct item', 'mean'),
+    ('Dwell time per crossing (ms)', 'median'),
+    # ('Total dwell time at grid (s)', 'median'),
+    ('Completion time (s)', 'median'),
+    ('Incorrect placements', 'mean'),
+    # 'Saccade velocity',
+    # ('Peak velocity', 'median'),
+    # ('Fixations per second', 'median'),
     # 'Correct placements',
     # 'Wrong per correct',
-    # 'Crossings per correct item',
     # 'Hourglass shown duration (s)',
     # 'Hourglass fixated duration (s)',
-    # 'Total dwell time at grid (s)',
     # 'Total dwell time per crossing (ms)',
     # 'Dwell time at grid per correct item (s)'
 ]
@@ -195,7 +201,7 @@ else:
     label = 'Reliability of visual access'
     sns.set_palette(sns.color_palette('tab10'))
 
-results_grouped = results.groupby(['ID', condition_var]).agg({f: ['median'] for f in features}).reset_index()
+results_grouped = results.groupby(['ID', condition_var]).agg({f[0]: [f[1]] for f in features}).reset_index()
 results_grouped.columns = results_grouped.columns.get_level_values(0)
 
 trial_counts = results.groupby(['ID', condition_var]).agg('count').reset_index()
@@ -207,7 +213,7 @@ if condition_var == 'Condition':
 else:
     results_grouped['Condition number'] = results_grouped[condition_var]
 
-results_grouped.to_csv(f'{constants.base_location}/results-grouped-ID-condition.csv')
+results_grouped.to_csv(f'{constants.RESULT_DIR}/results-grouped-ID-condition.csv')
 
 # =============================================================================
 # SEPARATE PLOTS
@@ -218,58 +224,59 @@ rcParams['font.size'] = 14
 ls = ['-', '--']
 
 # Make a plot for each feature
-for f in features:
-    fig = plt.figure(figsize=(7.5, 5))
-    axes = fig.subplots(1, 2, gridspec_kw=dict(wspace=0))
+for f_ in features:
+    f = f_[0]
+    #     fig = plt.figure(figsize=(7.5, 5))
+    #     axes = fig.subplots(1, 2, gridspec_kw=dict(wspace=0))
+    #
+    #     # Boxplot
+    #     sns.boxplot(x='Condition number', y=f, data=results_grouped,
+    #                 fliersize=0,
+    #                 ax=axes[0])
+    #
+    #     # Stripplot (add individual points)
+    #     sns.swarmplot(x='Condition number', y=f, data=results_grouped,
+    #                   color='black', #jitter=False,
+    #                   ax=axes[0])
+    #
+    #     axes[0].set_xlabel(label)
+    #
+    #     # Add kdeplot (histogram/kernel density estimation) to the side
+    #     condition_list = list(results_grouped['Condition number'].unique())
+    #     if condition_var == 'Session-condition':
+    #         condition_list = sorted(condition_list)
+    #
+    #     for i, cond in enumerate(condition_list):
+    #         df_c = results_grouped.loc[results_grouped['Condition number'] == cond]
+    #         sns.kdeplot(y=f, data=df_c,
+    #                     color=sns.color_palette()[i],
+    #                     fill=True, alpha=.25,
+    #                     linestyle=ls[int(cond[0]) - 1] if condition_var == 'Session-condition' else ls[0],
+    #                     clip=axes[0].get_ylim(),
+    #                     label=cond,
+    #                     ax=axes[1])
+    #
+    #     # Set parameters for kdeplot
+    #     axes[1].set_ylabel('')
+    #     axes[1].set_yticks([])
+    #     axes[1].set_ylim(axes[0].get_ylim())
+    #     axes[1].set_xticks([])
+    #     axes[1].set_xlabel('Distribution density')
+    #
+    #     if label == 'Session-condition':
+    #         axes[1].legend(title='Session-\ncondition', fontsize=12)
+    #     else:
+    #         # axes[1].legend(title=label, fontsize=12)
+    #         pass
+    #
+    #     # Set overall parameters and save
+    #     plt.tight_layout()
+    #     plt.savefig(f'{constants.RESULT_DIR}/plots/grouped {f} box.png', dpi=500)
+    #     plt.show()
 
-    # Boxplot
-    sns.boxplot(x='Condition number', y=f, data=results_grouped,
-                fliersize=0,
-                ax=axes[0])
-
-    # Stripplot (add individual points)
-    sns.swarmplot(x='Condition number', y=f, data=results_grouped,
-                  color='black', #jitter=False,
-                  ax=axes[0])
-
-    axes[0].set_xlabel(label)
-
-    # Add kdeplot (histogram/kernel density estimation) to the side
-    condition_list = list(results_grouped['Condition number'].unique())
-    if condition_var == 'Session-condition':
-        condition_list = sorted(condition_list)
-
-    for i, cond in enumerate(condition_list):
-        df_c = results_grouped.loc[results_grouped['Condition number'] == cond]
-        sns.kdeplot(y=f, data=df_c,
-                    color=sns.color_palette()[i],
-                    fill=True, alpha=.25,
-                    linestyle=ls[int(cond[0]) - 1] if condition_var == 'Session-condition' else ls[0],
-                    clip=axes[0].get_ylim(),
-                    label=cond,
-                    ax=axes[1])
-
-    # Set parameters for kdeplot
-    axes[1].set_ylabel('')
-    axes[1].set_yticks([])
-    axes[1].set_ylim(axes[0].get_ylim())
-    axes[1].set_xticks([])
-    axes[1].set_xlabel('Distribution density')
-
-    if label == 'Session-condition':
-        axes[1].legend(title='Session-\ncondition', fontsize=12)
-    else:
-        # axes[1].legend(title=label, fontsize=12)
-        pass
-
-    # Set overall parameters and save
-    plt.tight_layout()
-    plt.savefig(f'{constants.base_location}/plots/grouped {f} box.png', dpi=500)
-    plt.show()
-
-#     print('\n###########################')
-#     hf.test_friedman(results_grouped, 'Condition number', f)
-#     hf.test_posthoc(results_grouped, f, list(results_grouped['Condition number'].unique()))
+    print('\n###########################')
+    # hf.test_friedman(results_grouped, 'Condition number', f)
+    # hf.test_posthoc(results_grouped, f, list(results_grouped['Condition number'].unique()))
 
 # =============================================================================
 # COMBINED BOXPLOTS
@@ -282,25 +289,35 @@ colors = sns.color_palette('tab10')
 sns.set_palette(colors)
 
 # Adjust nrows and ncols as needed such that nrows * ncols == len(features)
-nrows, ncols = 2, 3
-f = plt.figure(figsize=(7.5, 5))
+nrows, ncols = 2, 2
+f = plt.figure(figsize=(7.5, 7.5))
 axes = [f.add_subplot(nrows, ncols, s) for s in range(1, len(features) + 1)]
 
-for i, feat in enumerate(features):
+for i, feat_ in enumerate(features):
+    feat = feat_[0]
     sns.boxplot(x='Condition number', y=feat, data=results_grouped,
                 palette='Blues', fliersize=0, ax=axes[i])
     sns.swarmplot(x='Condition number', y=feat, data=results_grouped,
-                  color='black', ax=axes[i])
+                  color='black', alpha=.75, size=3, ax=axes[i])
+
+    for ID in list(results_grouped['ID'].unique()):
+        # if ID == '1024':
+        results_ID = results_grouped.loc[results_grouped['ID'] == ID]
+        sns.lineplot(x='Condition number', y=feat, data=results_ID,
+                     color='gray', linestyle='--', linewidth=.5,
+                     ax=axes[i])
+
     axes[i].set_xlabel('')
-    axes[i].set_ylabel(feat, fontsize=13)
+    axes[i].set_ylabel(feat, fontsize=12)
 
     if i < (len(features) - ncols):
         # Only place xticks on the bottom row
         axes[i].set_xticks([])
 
-    if i == 4:
-        axes[i].set_xlabel(label, fontsize=13)
+    if i == 2 or i == 3:
+        # axes[i].set_xlabel(label, fontsize=12)
+        axes[i].set_xlabel('Reliability of visual access', fontsize=12)
 
 f.tight_layout()  # (pad=1, w_pad=0.2)
-f.savefig(f'{constants.base_location}/plots/combined-boxplots.png', dpi=700)
+f.savefig(f'{constants.RESULT_DIR}/plots/combined-boxplots.png', dpi=600)
 plt.show()

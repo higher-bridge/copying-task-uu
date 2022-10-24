@@ -14,17 +14,15 @@
 import os
 import random
 
-from pygaze.defaults import *
 from constants import *
-
+from pygaze.defaults import *
 from pygaze.display import Display
-from pygaze.screen import Screen
 from pygaze.keyboard import Keyboard
+from pygaze.logfile import Logfile
 from pygaze.mouse import Mouse
+from pygaze.screen import Screen
 from pygaze.sound import Sound
 from pygaze.time import Time
-from pygaze.logfile import Logfile
-
 
 # # # # #
 # directory stuff

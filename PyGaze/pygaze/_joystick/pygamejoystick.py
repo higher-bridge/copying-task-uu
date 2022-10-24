@@ -21,9 +21,10 @@
 
 import copy
 
-from pygaze.libtime import clock
 from pygaze import settings
 from pygaze._joystick.basejoystick import BaseJoystick
+from pygaze.libtime import clock
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -32,9 +33,10 @@ try:
 except:
     pass
 
-import pygaze
 import pygame
 from pygame.joystick import Joystick
+
+import pygaze
 
 
 class PyGameJoystick(BaseJoystick):

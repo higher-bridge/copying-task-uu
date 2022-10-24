@@ -5,16 +5,16 @@
 #
 # version 4 (21-Jun-2016)
 
-import os
+import codecs
 import copy
 import json
-import time
+import os
 import socket
-import codecs
-from threading import Lock, Thread
+import time
 from multiprocessing import Event, Process, Queue
-from pygaze.py3compat import *
+from threading import Lock, Thread
 
+from pygaze.py3compat import *
 
 # # # # #
 # EYETRIBE CLASS

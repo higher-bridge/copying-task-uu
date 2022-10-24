@@ -20,17 +20,17 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
 
-from pygaze import settings
-import pygaze
-from pygaze.screen import Screen
-from pygaze.mouse import Mouse
-from pygaze.keyboard import Keyboard
-from pygaze.sound import Sound
-
-import os
-import sys
-import platform
 import array
+import os
+import platform
+import sys
+
+import pygaze
+from pygaze import settings
+from pygaze.keyboard import Keyboard
+from pygaze.mouse import Mouse
+from pygaze.screen import Screen
+from pygaze.sound import Sound
 
 # try importing PIL
 try:
@@ -42,12 +42,14 @@ except:
         print("Failed to import PIL.")
 
 import pylink
+
 custom_display = pylink.EyeLinkCustomDisplay
 
 if settings.DISPTYPE == "pygame":
     import pygame
 elif settings.DISPTYPE == "psychopy":
     import psychopy
+
 import pygame
 
 
@@ -81,8 +83,8 @@ class EyelinkGraphics(custom_display):
         # If we are using a DISPTYPE that cannot be used directly, we have to
         # save the camera image to a temporary file on each frame.
         #if DISPTYPE not in ('pygame', 'psychopy'):
-        import tempfile
         import os
+        import tempfile
         self.tmp_file = os.path.join(tempfile.gettempdir(), "__eyelink__.jpg")
         # drawing properties
         self.xc = self.display.dispsize[0]/2

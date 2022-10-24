@@ -20,14 +20,14 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
 
-from pygaze import settings
-from pygaze.libtime import clock
 import pygaze
-from pygaze.screen import Screen
+from pygaze import settings
+from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
 from pygaze.keyboard import Keyboard
+from pygaze.libtime import clock
+from pygaze.screen import Screen
 from pygaze.sound import Sound
 
-from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -39,7 +39,7 @@ except:
 import copy
 import math
 
-from pygaze._eyetracker.iViewXAPI import  *
+from pygaze._eyetracker.iViewXAPI import *
 
 
 # function for identyfing errors

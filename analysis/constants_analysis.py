@@ -13,13 +13,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-base_location = '../results'
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).parent.parent
+RESULT_DIR = ROOT_DIR / 'results'
+# base_location = '../results'
+
+N_JOBS = 8
 
 # EXPERIMENT PARAMETERS
-EXCLUDE_TRIALS = [1, 2, 3, 999]
-EXCLUDE_EXCEL_BASED = True
+EXCLUDE_TRIALS = [1, 2, 3, 4, 5, 999]
+EXCLUDE_EXCEL_BASED = False
 
-NUM_JOBS_SIM = 4
 NUM_TRIALS = 1
 
 STIMULI_PER_TRIAL = 6
@@ -39,16 +44,17 @@ RESOLUTION = (2560, 1440)
 DIMENSIONS = (598, 336)  # mm size of screen
 DISTANCE = 675  # mm distance from screen
 
-# MODEL PARAMETERS
-MAX_MEMORY_REPETITIONS = 3
-
-# Consist of (start, stop, step)
-F_RANGE = (.1, .5, .1)
-DECAY_RANGE = (.5, 1., .1)
-THRESH_RANGE = (.175, .275, .025)
-NOISE_RANGE = (.26, .32, .02)
-
-ERROR_RATES = [.11, .2, .29, .38]
+# FIXATION DETECTION
+SAMPLING_RATE       = 250
+STEP_SIZE           = 1000
+HESSELS_SAVGOL_LEN  = 31          # Window length of Savitzky-Golay filter in pre-processing
+HESSELS_THR         = 10e12       # Initial slow/fast phase threshold
+HESSELS_LAMBDA      = 2.5         # Number of standard deviations (default 2.5)
+HESSELS_MAX_ITER    = 100         # Max iterations for threshold adaptation (default 200)
+HESSELS_WINDOW_SIZE = 8 * SAMPLING_RATE      # Threshold adaptation window (default 8 seconds) * sampling rate
+HESSELS_MIN_AMP     = 1.0         # Minimal amplitude of fast candidates for merging slow candidates (default 1.0)
+HESSELS_MIN_FIX     = 60         # Minimal fixation duration in ms (default .06)
+PX2DEG              = 0.01982
 
 # Center locations of each stimulus
 all_example_locations = [(515, 570), (650, 570), (785, 570),

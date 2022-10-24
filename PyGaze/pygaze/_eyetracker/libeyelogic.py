@@ -20,17 +20,18 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 #
 
-import pygaze
-from pygaze import settings
-from pygaze.libtime import clock
-from pygaze.screen import Screen
-from pygaze.keyboard import Keyboard
-from pygaze.sound import Sound
-from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
-from threading import Event, Lock, Thread
-from multiprocessing import Queue
 import copy
 import math
+from multiprocessing import Queue
+from threading import Event, Lock, Thread
+
+import pygaze
+from pygaze import settings
+from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
+from pygaze.keyboard import Keyboard
+from pygaze.libtime import clock
+from pygaze.screen import Screen
+from pygaze.sound import Sound
 
 try:
     from pygaze._eyetracker.eyelogic.ELApi import *

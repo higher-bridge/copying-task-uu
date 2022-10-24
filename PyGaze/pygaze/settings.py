@@ -19,6 +19,7 @@ along with PyGaze.  If not, see <http://www.gnu.org/licenses/>.
 
 from pygaze.py3compat import *
 
+
 class Settings(object):
     
     def __init__(self):

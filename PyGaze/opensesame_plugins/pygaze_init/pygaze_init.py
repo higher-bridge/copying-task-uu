@@ -17,16 +17,19 @@ You should have received a copy of the GNU General Public License
 along with PyGaze.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
 import inspect
-from openexp.canvas import canvas
+import os
+
 from libopensesame import debug
 from libopensesame.exceptions import osexception
 from libopensesame.item import item
 from libqtopensesame.items.qtautoplugin import qtautoplugin
-from pygaze.eyetracker import EyeTracker
-from pygaze.display import Display
+from openexp.canvas import canvas
+
 import pygaze
+from pygaze.display import Display
+from pygaze.eyetracker import EyeTracker
+
 
 class pygaze_init(item):
 

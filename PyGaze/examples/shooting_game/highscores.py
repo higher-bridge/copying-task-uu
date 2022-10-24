@@ -18,7 +18,8 @@
 ##	along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import os.path, pickle
+import os.path
+import pickle
 
 # # # # #
 # general

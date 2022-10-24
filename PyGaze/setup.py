@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with qnotero.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
 import glob
-import pygaze
+import os
+
 from setuptools import setup
+
+import pygaze
 
 print("Running setup for PyGaze version {}".format(pygaze.__version__))
 

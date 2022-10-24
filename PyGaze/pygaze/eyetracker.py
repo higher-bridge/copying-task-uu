@@ -19,10 +19,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.py3compat import *
 from pygaze import settings
-from pygaze._misc.misc import copy_docstr
 from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
+from pygaze._misc.misc import copy_docstr
+from pygaze.py3compat import *
 
 
 class EyeTracker(BaseEyeTracker):
@@ -65,6 +65,7 @@ class EyeTracker(BaseEyeTracker):
         if trackertype == "eyelink":
             # import libraries
             from pygaze._eyetracker.libeyelink import libeyelink
+
             # morph class
             self.__class__ = libeyelink
             # initialize
@@ -74,6 +75,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "eyelogic":
             # import libraries
             from pygaze._eyetracker.libeyelogic import EyeLogicTracker
+
             # morph class
             self.__class__ = EyeLogicTracker
             # initialize
@@ -83,6 +85,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "smi":
             # import libraries
             from pygaze._eyetracker.libsmi import SMItracker
+
             # morph class
             self.__class__ = SMItracker
             # initialize
@@ -92,6 +95,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "tobii-legacy":
             # import libraries
             from pygaze._eyetracker.libtobiilegacy import TobiiTracker
+
             # morph class
             self.__class__ = TobiiTracker
             # initialize
@@ -101,6 +105,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "tobii":
             # import libraries
             from pygaze._eyetracker.libtobii import TobiiProTracker
+
             # morph class
             self.__class__ = TobiiProTracker
             # initialize
@@ -110,6 +115,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "tobiiglasses":
             # import libraries
             from pygaze._eyetracker.libtobiiglasses import TobiiGlassesTracker
+
             # morph class
             self.__class__ = TobiiGlassesTracker
             # initialize
@@ -119,6 +125,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "eyetribe":
             # import libraries
             from pygaze._eyetracker.libeyetribe import EyeTribeTracker
+
             # morph class
             self.__class__ = EyeTribeTracker
             # initialize
@@ -128,6 +135,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "opengaze":
             # import libraries
             from pygaze._eyetracker.libopengaze import OpenGazeTracker
+
             # morph class
             self.__class__ = OpenGazeTracker
             # initialize
@@ -137,6 +145,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "alea":
             # import libraries
             from pygaze._eyetracker.libalea import AleaTracker
+
             # morph class
             self.__class__ = AleaTracker
             # initialize
@@ -146,6 +155,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "dummy":
             # import libraries
             from pygaze._eyetracker.libdummytracker import Dummy
+
             # morph class
             self.__class__ = Dummy
             # initialize
@@ -155,6 +165,7 @@ class EyeTracker(BaseEyeTracker):
         elif trackertype == "dumbdummy":
             # import libraries
             from pygaze._eyetracker.libdumbdummy import DumbDummy
+
             # morph class
             self.__class__ = DumbDummy
             # initialize

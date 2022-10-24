@@ -19,8 +19,9 @@
 #
 # version: 0.4 (25-03-2013)
 
-from pygaze import settings
 import sys
+
+from pygaze import settings
 
 # on Windows, PyGame's webcam support is a bit shaky, so we provide a vidcap
 # back-end; project homepage: http://videocapture.sourceforge.net/

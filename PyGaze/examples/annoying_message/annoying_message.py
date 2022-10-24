@@ -10,9 +10,10 @@ MESSAGE = "AFK; BRB"
 
 # import stuff
 import random
+
 from pygaze.defaults import *
-from pygaze.libscreen import Display, Screen
 from pygaze.libinput import Keyboard
+from pygaze.libscreen import Display, Screen
 
 # objects
 disp = Display()

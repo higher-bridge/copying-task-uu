@@ -19,9 +19,10 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.libtime import clock
 from pygaze import settings
 from pygaze._keyboard.basekeyboard import BaseKeyboard
+from pygaze.libtime import clock
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -30,8 +31,10 @@ try:
 except:
      pass
      
-import pygaze
 import pygame
+
+import pygaze
+
 
 class PyGameKeyboard(BaseKeyboard):
 

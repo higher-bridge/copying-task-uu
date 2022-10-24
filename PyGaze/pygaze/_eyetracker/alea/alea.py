@@ -1,9 +1,9 @@
+import copy
+import ctypes
+import datetime
 import os
 import sys
-import copy
 import time
-import datetime
-import ctypes
 from multiprocessing import Queue
 from threading import Event, Lock, Thread
 

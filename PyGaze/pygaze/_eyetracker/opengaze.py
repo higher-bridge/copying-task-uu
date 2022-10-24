@@ -5,15 +5,16 @@
 #
 # Version 1 (27-Apr-2016)
 
+import copy
+import datetime
 import os
 import re
-import copy
-import time
 import socket
-import datetime
-import lxml.etree
+import time
 from multiprocessing import Queue
 from threading import Event, Lock, Thread
+
+import lxml.etree
 
 # TODO: OpenGazeConnection
 # Thread that monitors whether the other threads are still alive, and that

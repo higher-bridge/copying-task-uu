@@ -20,6 +20,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 from pygaze import settings
+
 if settings.DISPTYPE == "psychopy":
     try:
         from psychopy.visual import Aperture

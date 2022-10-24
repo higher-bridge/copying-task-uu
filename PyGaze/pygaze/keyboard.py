@@ -19,10 +19,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.py3compat import *
 from pygaze import settings
-from pygaze._misc.misc import copy_docstr
 from pygaze._keyboard.basekeyboard import BaseKeyboard
+from pygaze._misc.misc import copy_docstr
+from pygaze.py3compat import *
 
 
 class Keyboard(BaseKeyboard):
@@ -34,14 +34,13 @@ class Keyboard(BaseKeyboard):
         # see BaseKeyboard
 
         if disptype == "pygame":
-            from pygaze._keyboard.pygamekeyboard import PyGameKeyboard as \
-                Keyboard
+            from pygaze._keyboard.pygamekeyboard import \
+                PyGameKeyboard as Keyboard
         elif disptype == "psychopy":
-            from pygaze._keyboard.psychopykeyboard import PsychoPyKeyboard as \
-                Keyboard
+            from pygaze._keyboard.psychopykeyboard import \
+                PsychoPyKeyboard as Keyboard
         elif disptype == "opensesame":
-            from pygaze._keyboard.oskeyboard import OSKeyboard as \
-                Keyboard
+            from pygaze._keyboard.oskeyboard import OSKeyboard as Keyboard
         else:
             raise Exception("Unexpected disptype: %s".format(disptype))
         self.__class__ = Keyboard

@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-import urllib2
-import json
-import time
 import datetime
-import threading
-import socket
-import uuid
+import json
 import logging as log
+import socket
+import threading
+import time
+import uuid
+
+import urllib2
 
 log.basicConfig(format='[%(levelname)s]: %(message)s', level=log.DEBUG)
 

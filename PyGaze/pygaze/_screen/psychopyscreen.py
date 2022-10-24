@@ -19,11 +19,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze import settings
 import pygaze
+from pygaze import settings
 from pygaze._misc.misc import pos2psychopos, psychopos2pos, rgb2psychorgb
-
 from pygaze._screen.basescreen import BaseScreen
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -37,11 +37,8 @@ import math
 import os.path
 
 import psychopy
-from psychopy.visual import Circle
-from psychopy.visual import Rect
-from psychopy.visual import ShapeStim
-from psychopy.visual import TextStim
-from psychopy.visual import ImageStim
+from psychopy.visual import Circle, ImageStim, Rect, ShapeStim, TextStim
+
 # Line seems to be broken; see PsychoPyScreen.draw_line below
 #from psychopy.visual import Line
 

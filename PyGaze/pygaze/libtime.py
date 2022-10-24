@@ -19,8 +19,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.py3compat import *
 from pygaze import settings
+from pygaze.py3compat import *
+
 if settings.DISPTYPE == "psychopy":
     from pygaze._time.psychopytime import PsychoPyTime as Time
 elif settings.DISPTYPE == "pygame":
@@ -36,6 +37,7 @@ else:
 # the following function definitions are for backwards compatibility
 
 import pygaze
+
 
 def expstart():
     

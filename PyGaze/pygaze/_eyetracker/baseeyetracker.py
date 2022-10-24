@@ -49,6 +49,7 @@
 
 from pygaze.py3compat import *
 
+
 class BaseEyeTracker:
 
     """

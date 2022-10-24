@@ -21,6 +21,7 @@
 
 from pygaze import settings
 from pygaze._sound.basesound import BaseSound
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -30,10 +31,11 @@ except:
     pass
 
 import math
-import numpy
 import os.path
-import pygame
 import random
+
+import numpy
+import pygame
 
 
 class PyGameSound(BaseSound):

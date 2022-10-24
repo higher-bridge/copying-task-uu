@@ -19,14 +19,13 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program. If not, see <http://www.gnu.org/licenses/>
 
-import os
 import copy
+import os
 import time
-from ctypes import windll, c_int, c_double, byref
-from threading import Thread, Lock
+from ctypes import byref, c_double, c_int, windll
+from threading import Lock, Thread
 
 import numpy
-
 
 # load DLL
 try:

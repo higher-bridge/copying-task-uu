@@ -3,11 +3,8 @@
 # # # # #
 # importing the relevant libraries
 import random
-from pygaze import libscreen
-from pygaze import libtime
-from pygaze import libinput
-from pygaze import liblog
-from pygaze import settings
+
+from pygaze import libinput, liblog, libscreen, libtime, settings
 
 # # # # #
 # setup the experiment

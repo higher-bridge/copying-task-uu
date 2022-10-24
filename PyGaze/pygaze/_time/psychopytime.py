@@ -22,6 +22,7 @@
 import psychopy.core
 
 from pygaze._time.basetime import BaseTime
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly

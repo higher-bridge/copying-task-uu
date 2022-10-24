@@ -23,16 +23,17 @@
 # TobiiTracker
 import copy
 import math
+
 import numpy
 
-from pygaze import settings
-from pygaze.libtime import clock
 import pygaze
-from pygaze.screen import Screen
+from pygaze import settings
+from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
 from pygaze.keyboard import Keyboard
+from pygaze.libtime import clock
+from pygaze.screen import Screen
 from pygaze.sound import Sound
 
-from pygaze._eyetracker.baseeyetracker import BaseEyeTracker
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -46,27 +47,23 @@ except:
 #from letobii import TobiiController
 #
 
-# TobiiController
-from tobii.eye_tracking_io.basic import EyetrackerException
-
-import os
 import datetime
+import os
 
-import tobii.eye_tracking_io.mainloop
+import psychopy.event
+import psychopy.visual
 import tobii.eye_tracking_io.browsing
 import tobii.eye_tracking_io.eyetracker
+import tobii.eye_tracking_io.mainloop
 import tobii.eye_tracking_io.time.clock
 import tobii.eye_tracking_io.time.sync
-
-from tobii.eye_tracking_io.types import Point2D, Blob
-
-import psychopy.visual
-import psychopy.event
+# TobiiController
+from tobii.eye_tracking_io.basic import EyetrackerException
+from tobii.eye_tracking_io.types import Blob, Point2D
 
 # try importing PIL
 try:
-    from PIL import Image
-    from PIL import ImageDraw
+    from PIL import Image, ImageDraw
 except:
     try:
         import Image

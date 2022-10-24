@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with PyGaze.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from libopensesame.item import item
 from libopensesame.exceptions import osexception
+from libopensesame.item import item
 from libqtopensesame.items.qtautoplugin import qtautoplugin
+
 from pygaze.display import Display
+
 
 class pygaze_wait(item):
 	

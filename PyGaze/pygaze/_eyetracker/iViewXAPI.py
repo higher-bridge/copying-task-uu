@@ -11,7 +11,6 @@
 
 from ctypes import *
 
-
 #===========================
 #        Struct Definition
 #===========================

@@ -1,11 +1,10 @@
 import ctypes
 
+import pygaze.libtime as timer
 from constants import *
 from pygaze.display import Display
-from pygaze.screen import Screen
 from pygaze.joystick import Joystick
-import pygaze.libtime as timer
-
+from pygaze.screen import Screen
 
 # # # # #
 # VIBRATION

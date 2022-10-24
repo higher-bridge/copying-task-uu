@@ -20,8 +20,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 from inspect import ismethod
-from pygaze import settings
 
+from pygaze import settings
 
 # # # # #
 # helper functions

@@ -8,8 +8,8 @@
 
 
 from constants import *
-from pygaze.libscreen import Display, Screen
 from pygaze.libinput import Keyboard
+from pygaze.libscreen import Display, Screen
 
 # first, we try to import libwebcam from PyGaze
 try:

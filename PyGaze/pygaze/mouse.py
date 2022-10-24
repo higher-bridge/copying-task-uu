@@ -19,10 +19,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from pygaze.py3compat import *
 from pygaze import settings
 from pygaze._misc.misc import copy_docstr
 from pygaze._mouse.basemouse import BaseMouse
+from pygaze.py3compat import *
 
 
 class Mouse(BaseMouse):

@@ -18,10 +18,13 @@ along with PyGaze.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import inspect
-from openexp.canvas import canvas
+
 from libopensesame.item import item
 from libqtopensesame.items.qtautoplugin import qtautoplugin
+from openexp.canvas import canvas
+
 from pygaze.display import Display
+
 
 class pygaze_drift_correct(item):
 

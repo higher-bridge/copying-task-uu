@@ -3,12 +3,9 @@
 # # # # #
 # importing the relevant libraries
 import random
+
 import constants
-from pygaze import libscreen
-from pygaze import libtime
-from pygaze import liblog
-from pygaze import libinput
-from pygaze import eyetracker
+from pygaze import eyetracker, libinput, liblog, libscreen, libtime
 
 # # # # #
 # experiment setup

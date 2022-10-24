@@ -21,9 +21,10 @@
 
 import copy
 
-from pygaze.libtime import clock
 from pygaze import settings
 from pygaze._mouse.basemouse import BaseMouse
+from pygaze.libtime import clock
+
 # we try importing the copy_docstr function, but as we do not really need it
 # for a proper functioning of the code, we simply ignore it when it fails to
 # be imported correctly
@@ -32,10 +33,11 @@ try:
 except:
     pass
 
+import psychopy.event
+
 import pygaze
 from pygaze._misc.misc import pos2psychopos, psychopos2pos
 
-import psychopy.event
 
 class PsychoPyMouse(BaseMouse):
 

@@ -19,11 +19,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
+import os
+import sys
+from distutils.version import StrictVersion
+
 from pygaze.py3compat import *
 from pygaze.settings import settings
-from distutils.version import StrictVersion
-import sys
-import os
 
 __version__ = version = "0.7.1"
 strict_version = StrictVersion(__version__)
