@@ -14,6 +14,28 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Use SR Research's EDFConverter or EDF2ASC, with the following settings (v = on, x = off):
+v UTF Encoding
+- Samples/Events -> Output samples only
+- Binocular recording -> Output must be monocular (setting output as binocular for a monocular recording also works)
+
+x Output resolution data
+v Output velocity data
+v Output float time
+x Output input values
+
+- Eye position type -> Gaze
+x Load EB log messages
+
+v Block start event output
+v Block message event output
+x Block eye event output
+v Block flags output
+x Block target data
+v Block viewer commands
+
+v Use tabs only as delimiters
 """
 
 from pathlib import Path

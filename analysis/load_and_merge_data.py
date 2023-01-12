@@ -28,20 +28,11 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
     task_event_files = hf.find_files(ID, ID_dict[ID], base_location, '-eventTracking.csv')
     eventfiles = hf.find_files(ID, ID_dict[ID], base_location, '-events.csv')
     c_placements = hf.find_files(ID, ID_dict[ID], base_location, '-correctPlacements.csv')
-    # samplefiles = hf.find_files(ID, ID_dict[ID], base_location, '-samples.csv')
-    samplefiles = []
-
-    if len(samplefiles) > 0:
-        samples_present = True
-    else:
-        samples_present = False
 
     # Concatenate all separate session files into one larger file
     task_events = hf.concat_event_files(task_event_files)
-    events = hf.concat_event_files(eventfiles).drop('trial', axis=1)
+    events = hf.concat_event_files(eventfiles)
     correct_placements = hf.concat_event_files(c_placements)
-    if samples_present:
-        samples = hf.concat_event_files(samplefiles)
 
     # Create two empty lists in which we will fill in the appropriate trials/condition value
     trial_list = np.empty(len(events), dtype=int)
@@ -52,17 +43,6 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
 
     session_list = np.empty(len(events), dtype=int)
     session_list[:] = 999
-
-    # Do the same for the sample df's
-    if samples_present:
-        trial_list_samp = np.empty(len(samples), dtype=int)
-        trial_list_samp[:] = 999
-
-        condition_list_samp = np.empty(len(samples), dtype=int)
-        condition_list_samp[:] = 999
-
-        session_list_samp = np.empty(len(samples), dtype=int)
-        session_list_samp[:] = 999
 
     # For each condition, each trial, get the start and end times and relate it to eye events
     for session in list(task_events['Session'].unique()):
@@ -102,45 +82,26 @@ def load_and_merge(ID, ID_dict, pp_info, base_location, exclude_trials):
                         start_idx = hf.find_nearest_index(events_['offset'], start, keep_index=True)
                         end_idx = hf.find_nearest_index(events_['onset'], end, keep_index=True)
 
-                        if samples_present:
-                            start_idx_samp = hf.find_nearest_index(samples['timestamp'], start)
-                            end_idx_samp = hf.find_nearest_index(samples['timestamp'], end)
-
                         if start_idx < end_idx:
                             # Set everything between start and end of trial with that condition/trial
                             trial_list[start_idx:end_idx] = trial_num
                             condition_list[start_idx:end_idx] = condition
                             session_list[start_idx:end_idx] = session
-                            # mouse_valid[mouse_start_idx:mouse_end_idx] = True
-
-                            if samples_present:
-                                trial_list_samp[start_idx_samp:end_idx_samp] = trial_num
-                                condition_list_samp[start_idx_samp:end_idx_samp] = condition
-                                session_list_samp[start_idx_samp:end_idx_samp] = session
-
-                except:
-                    print(f'Could not parse {ID}, s{session}, c{condition}, t{trial_num}')
+                except Exception as e:
+                    print(f'Could not parse {ID}, s{session}, c{condition}, t{trial_num}: {e}')
 
     # Append trial/condition info to eye events df            
     events['Trial'] = trial_list
     events['Condition'] = condition_list
     events['Session'] = session_list
 
-    if samples_present:
-        samples['Trial'] = trial_list_samp
-        samples['Condition'] = condition_list_samp
-        samples['Session'] = session_list_samp
-
     if ID not in os.listdir(f'../results'):
         os.mkdir(f'../results/{ID}')
 
     # Write everything to csv
-    # mouse_events.to_csv(f'../results/{ID}/{ID}-mouseEvents.csv')
     events.to_csv(f'../results/{ID}/{ID}-allFixations.csv')
     task_events.to_csv(f'../results/{ID}/{ID}-allEvents.csv')
     correct_placements.to_csv(f'../results/{ID}/{ID}-allCorrectPlacements.csv')
-    if samples_present:
-        samples.to_csv(f'../results/{ID}/{ID}-allSamples.csv')
 
     # Retrieve how many valid trials were recorded per condition
     num_trials = hf.get_num_trials(events)

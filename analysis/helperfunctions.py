@@ -22,10 +22,10 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-# import pingouin as pg
+import pingouin as pg
 import seaborn as sns
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 
 def getListOfFiles(dirName):
@@ -44,6 +44,23 @@ def getListOfFiles(dirName):
             allFiles.append(fullPath)
 
     return sorted(allFiles)
+
+
+def rename_features(x):
+    if x == 'Number of crossings':
+        return 'A.  Number of crossings'
+    elif x == 'Items placed after crossing':
+        return 'B.  Items placed after crossing'
+    elif x == 'Dwell time per crossing (ms)':
+        return 'C.  Dwell time per crossing (ms)'
+    elif x == 'Completion time (s)':
+        return 'D.  Completion time (s)'
+    elif x == 'Errors per trial':
+        return 'E.  Errors per trial'
+    elif x == 'Proportion spent waiting':
+        return 'F.  Proportion spent waiting'
+    else:
+        return x
 
 
 def euclidean_distance(loc1, loc2):
@@ -67,6 +84,74 @@ def find_nearest_location(loc1, locations):
     min_dist_idx = distances.argmin()
 
     return locations[min_dist_idx]
+
+
+def normalize_column(df: pd.DataFrame,
+                     feature: str,
+                     groupby: str = 'ID',
+                     groupby2: str = 'Condition') -> pd.DataFrame:
+
+    # Split by group (ID)
+    group_df = []
+    groups = list(df[groupby].unique())
+    for g in groups:
+        df_ = df.loc[df[groupby] == g]
+
+        # Split by second group (Condition)
+        split_df = []
+        splits = list(df_[groupby2].unique())
+        for s in splits:
+            df_s = df_.loc[df_[groupby2] == s]
+
+            # Perform a rolling window over each ID/Condition pair
+            df_s[feature] = df_s[feature].rolling(5, center=True).mean()
+            split_df.append(df_s)
+
+        # Combine conditions back into one df, and scale whole ID
+        split_df = pd.concat(split_df, ignore_index=True)
+        split_df[feature] = MinMaxScaler().fit_transform(np.array(split_df[feature]).reshape(-1, 1))
+        # split_df[feature] = StandardScaler().fit_transform(np.array(split_df[feature]).reshape(-1, 1))
+        group_df.append(split_df)
+
+    # Combine all IDs back together
+    group_df = pd.concat(group_df, ignore_index=True)
+    return group_df
+
+
+def remove_outliers(df: pd.DataFrame,
+                    feature: str,
+                    low_perc=0.0,
+                    high_perc=99.0,
+                    return_indices=False) -> pd.DataFrame:
+    len_before = len(df)
+
+    # Select column
+    x_ = np.array(df[feature].astype(float))
+    x = x_[~np.isnan(x_)]
+
+    # Get low and high percentiles
+    low = np.percentile(x, low_perc)
+    high = np.percentile(x, high_perc)
+
+    if not return_indices:
+        # Only select data that is within the percentiles
+        df = df.loc[df[feature] >= low]
+        df = df.loc[df[feature] <= high]
+
+        len_after = len(df)
+        print(f'{len_before - len_after} trials dropped ({feature})')
+
+        return df
+
+    else:
+        indices = np.argwhere((np.array(df[feature]) < low) |
+                              (np.array(df[feature]) > high)).ravel()
+        print(f'{feature}: '
+              f'before={len_before}, '
+              f'removed={len(indices)}, '
+              f'{round((len(indices) / len_before) * 100, 2)}%')
+
+        return indices
 
 
 def prepare_stimuli(paths: list, x_locs: list, y_locs: list, locations: list, in_pixels=False, snap_location=True,
@@ -276,6 +361,19 @@ def get_midline_crossings(xpos: list, midline=constants.MIDLINE):
     return num_crossings
 
 
+def get_midline_cross_times(xpos: list, timestamp: list, midline=constants.MIDLINE):
+    cross_time = []
+    prev_x = constants.SCREEN_CENTER[0]
+
+    for x, ts in zip(xpos, timestamp):
+        if prev_x > midline and x < midline:
+            cross_time.append(ts)
+
+        prev_x = x
+
+    return cross_time
+
+
 def get_left_side_fixations(xpos: list, midline=constants.MIDLINE):
     return len([x for x in xpos if x < midline])
 
@@ -352,6 +450,65 @@ def get_dwell_time_at_grid(x_list, y_list, starts, ends):
     return sum(fixations_at_grid['duration'])
 
 
+def get_useful_crossings(df, x_list, starts, ends, min_dur=120):
+    starts = np.array(starts).astype(float)
+    ends = np.array(ends).astype(float)
+
+    # Find when grid was showing/hiding
+    showing = df.loc[df['Event'] == 'Showing grid']
+    hiding = df.loc[df['Event'] == 'Hiding grid']
+
+    showing = pd.concat([showing, df.loc[df['Event'] == 'Task init']], ignore_index=True)
+
+    if len(showing) > len(hiding):
+        hiding = pd.concat([hiding, df.loc[df['Event'] == 'Finished trial']], ignore_index=True)
+    elif len(showing) < len(hiding):
+        showing = pd.concat([showing, df.loc[df['Event'] == 'Finished trial']], ignore_index=True)
+
+    time_showing = np.array(showing['TrackerTime'].astype(int))
+    time_hiding = np.array(hiding['TrackerTime'].astype(int))
+
+    # Get start and end of crossing event
+    prev_x = constants.MIDLINE
+    dwellstarts, dwellends = [], []
+    for i, (x, start, end) in enumerate(zip(x_list, starts, ends)):
+        if prev_x >= constants.MIDLINE and x < constants.MIDLINE:
+            dwellstarts.append(i)
+        elif prev_x < constants.MIDLINE and x >= constants.MIDLINE:
+            dwellends.append(i - 1)
+
+        prev_x = x
+
+    if len(dwellstarts) > len(dwellends):
+        dwellends.append(dwellstarts[-1])
+    elif len(dwellstarts) < len(dwellends):
+        dwellends.pop()
+
+    num_crossings = 0
+
+    # For each dwell on the left, check if grid was visible during that time
+    for start, end in zip(dwellstarts, dwellends):
+        starttime = starts[start]
+        endtime = ends[end]
+
+        # Break out of loop, because we only need to know whether this dwell contained one event
+        for showing, hiding in zip(time_showing, time_hiding):
+            # If the grid started showing sometime during a dwell (but must be X ms before dwell ended)
+            if starttime < showing < endtime - min_dur:
+                num_crossings += 1
+                break
+            # If the grid was already showing, maybe it started hiding during a dwell. Must be X ms after dwell start
+            elif starttime + min_dur < hiding < endtime:
+                num_crossings += 1
+                break
+            # Maybe a dwell occurred only while the grid was showing. Count this too
+            elif showing < starttime < hiding and showing < endtime < hiding:
+                num_crossings += 1
+                break
+
+    return num_crossings
+
+
 def get_fixated_hourglass_duration(df, x_list, y_list, starts, ends):
     fixations_at_grid = get_fixations_at_grid(x_list, y_list, starts, ends)
 
@@ -364,7 +521,7 @@ def get_fixated_hourglass_duration(df, x_list, y_list, starts, ends):
         return 0
 
     if len(showing) > len(hiding):
-        hiding = hiding.append(df.loc[df['Event'] == 'Finished trial'])
+        hiding = pd.concat([hiding, df.loc[df['Event'] == 'Finished trial']], ignore_index=True)
 
     time_showing = showing['TrackerTime']
     time_hiding = hiding['TrackerTime']
@@ -396,7 +553,7 @@ def get_hourglass_duration(df):
         return 0
 
     if len(showing) > len(hiding):
-        hiding = hiding.append(df.loc[df['Event'] == 'Finished trial'])
+        hiding = pd.concat([hiding, df.loc[df['Event'] == 'Finished trial']], ignore_index=True)
 
     time_showing = showing['TrackerTime']
     time_hiding = hiding['TrackerTime']
@@ -406,6 +563,32 @@ def get_hourglass_duration(df):
         hourglasstimer += hourglass_shown
     
     return hourglasstimer
+
+
+def get_errors_while_occluded(df):
+    # incorrect_idx = np.argwhere(np.array(df['Event']) == 'Incorrectly placed')
+    incorrect_idx = [i for i, x in enumerate(list(df['Event'])) if 'Incorrectly placed' in x]
+    incorrect_ts = np.array(df['TrackerTime'])[incorrect_idx]
+
+    showing = df.loc[df['Event'] == 'Showing hourglass']
+    hiding = df.loc[df['Event'] == 'Hiding hourglass']
+
+    if len(showing) == 0:
+        return 0
+
+    if len(showing) > len(hiding):
+        hiding = pd.concat([hiding, df.loc[df['Event'] == 'Finished trial']], ignore_index=True)
+
+    time_showing = np.array(showing['TrackerTime'])
+    time_hiding = np.array(hiding['TrackerTime'])
+
+    errors = 0
+    for hide, show in zip(time_hiding[:-1], time_showing[1:]):
+        for its in incorrect_ts:
+            if hide < its <= show + 500:  # show + 500
+                errors += 1
+
+    return errors
 
 
 def number_of_incorrect_placements_per_trial(df):
@@ -432,132 +615,40 @@ def number_of_correct_placements_per_trial(df):
     return correct_placements
 
 
+def get_ttest(df: pd.DataFrame, dep_var: str, ind_var: str):
+    tests = pd.read_excel(constants.RESULT_DIR / 'tests.xlsx', engine='openpyxl')
+    testfeat = tests.loc[tests['Feature'] == dep_var]
 
-# def test_normality(df, dep_var, ind_vars):
-#     p_values = []
-#
-#     for iv in ind_vars:
-#         df_iv = df.loc[df['Condition number'] == iv]
-#
-#         results = pg.normality(df_iv[dep_var])
-#         p = list(results['pval'])[0]
-#
-#         p_values.append(p)
-#
-#     print('')
-#     return p_values
-#
-#
-# def test_sphericity(df, dep_var, ind_var):
-#     p, W, _, _, pval = pg.sphericity(df, dep_var, ind_var, subject='ID')
-#     p = bool(p)
-#
-#     print('')
-#     return p
-#
-#
-# def test_posthoc(df, dep_var, ind_vars, is_non_normal=None):
-#     # print(f'\n{dep_var}')
-#     ind_vars = sorted(ind_vars)
-#
-#     if is_non_normal == None:
-#         normality_p = test_normality(df, dep_var, ind_vars)
-#         significants = [p for p in normality_p if p < 0.01]
-#         is_non_normal = len(significants) > 0
-#
-#     iv_combinations = []
-#
-#     for iv in ind_vars:
-#         for iv1 in ind_vars:
-#             if (iv != iv1) and ((iv, iv1) not in iv_combinations) and ((iv1, iv) not in iv_combinations):
-#                 iv_combinations.append((iv, iv1))
-#
-#     for comb in iv_combinations:
-#         x = df.loc[df['Condition number'] == comb[0]][dep_var]
-#         y = df.loc[df['Condition number'] == comb[1]][dep_var]
-#
-#         try:
-#             if is_non_normal:
-#                 # s, p = wilcoxon(x, y)
-#                 results = pg.wilcoxon(x, y)
-#                 results = results.round(4)
-#
-#                 t = list(results['W-val'])[0]
-#                 p = list(results['p-val'])[0]
-#
-#                 prefix = '   '
-#
-#                 if p < .05:
-#                     prefix = '*  '
-#                 if p < .01:
-#                     prefix = '** '
-#                 if p < .001:
-#                     prefix = '***'
-#
-#                 print(f'{prefix}{comb} Wilco: W={round(t, 2)}, p={round(p, 3)}')
-#             else:
-#                 paired = True if len(x) == len(y) else False
-#                 results = pg.ttest(x, y, paired=paired)
-#                 results = results.round(4)
-#
-#                 t = list(results['T'])[0]
-#                 p = list(results['p-val'])[0]
-#
-#                 prefix = '   '
-#
-#                 if p < .05:
-#                     prefix = '*  '
-#                 if p < .01:
-#                     prefix = '** '
-#                 if p < .001:
-#                     prefix = '***'
-#
-#                 print(f'{prefix}{comb} Ttest: t={round(t, 2)}, p={round(p, 3)}')
-#
-#         except Exception as e:
-#             print(f'Error in {comb}: {e}')
-#
-#     return
-#
-#
-# def test_friedman(df, ind_var, dep_var, is_non_normal=None):
-#     print(f'\n{dep_var}:')
-#     # test_df = pd.DataFrame()
-#
-#     if is_non_normal == None:
-#         normality_p = test_normality(df, dep_var, list(df['Condition number'].unique()))
-#         significants = [p for p in normality_p if p < 0.01]
-#         is_non_normal = len(significants) > 0
-#
-#         sphericity_p = test_sphericity(df, dep_var, ind_var)
-#
-#     for iv in list(df[ind_var].unique()):
-#         df_iv = df.loc[df[ind_var] == iv]
-#
-#         dv = list(df_iv[dep_var])
-#         # test_df[f'{dep_var} {iv}'] = dv
-#         print(f'{iv}: mean={round(np.mean(dv), 2)}, SD={round(np.std(dv), 2)}')
-#
-#     if not is_non_normal and sphericity_p:
-#
-#         print('\nRM ANOVA')
-#         results = pg.rm_anova(data=df, dv=dep_var, within=ind_var, subject='ID', correction=False, detailed=True)
-#         results = results.round(4)
-#         print(results)
-#
-#     else:
-#         print('\nFriedman test')
-#         results = pg.friedman(data=df, dv=dep_var, within=ind_var, subject='ID')
-#
-#         X2 = list(results['Q'])[0]
-#         N = len(list(df['ID'].unique()))
-#         k = len(list(df[ind_var].unique()))
-#         kendall_w = X2 / (N * (k - 1))
-#
-#         results['Kendall'] = [kendall_w]
-#
-#         results = results.round(3)
-#         print(results)
+    ind_vars = sorted(list(df[ind_var].unique()))
+
+    iv_combinations = []
+    for iv in ind_vars:
+        for iv1 in ind_vars:
+            if (iv != iv1) and ((iv, iv1) not in iv_combinations) and ((iv1, iv) not in iv_combinations):
+                iv_combinations.append((iv, iv1))
+
+    sigs = {'comb': [], 'p': [], 'sig': []}
+    for comb in iv_combinations:
+        # Locate only this condition + its comparison
+        testf = testfeat.loc[testfeat['Condition'] == comb[0]]
+        testf = testf.loc[testf['Comparison'] == comb[1]]
+
+        p = testf['p'].values[0]
+
+        if p < .001:
+            sig = '***'
+        elif p < .01:
+            sig = '**'
+        elif p < .05:
+            sig = '*'
+        else:
+            sig = ''
+
+        sigs['comb'].append(comb)
+        sigs['p'].append(p)
+        sigs['sig'].append(sig)
+
+    return sigs
 
 
 def compute_se(x, y):
@@ -570,19 +661,3 @@ def compute_se(x, y):
     norm_squared_error = (np.mean(x) - np.mean(y)) ** 2
 
     return squared_error, norm_squared_error
-
-
-def scatterplot_fixations(data, x, y, title: str, plot_line=False, save=True, savestr: str = ''):
-    # Plot fixations
-    plt.figure()
-    sns.scatterplot(x, y, data=data)
-    if plot_line:
-        sns.lineplot(x, y, data=data, sort=False)
-    plt.xlim((0, 2560))
-    plt.ylim((1440, 0))  # Note that the y-axis needs to be flipped
-    plt.xlabel('x (pixels)')
-    plt.ylabel('y (pixels)')
-    plt.title(title)
-    if save:
-        plt.savefig(savestr, dpi=500)
-    plt.show()

@@ -19,21 +19,11 @@ ROOT_DIR = Path(__file__).parent.parent
 RESULT_DIR = ROOT_DIR / 'results'
 # base_location = '../results'
 
-N_JOBS = 8
+N_JOBS = 4
 
 # EXPERIMENT PARAMETERS
-EXCLUDE_TRIALS = [1, 2, 3, 4, 5, 999]
+EXCLUDE_TRIALS = [999]
 EXCLUDE_EXCEL_BASED = False
-
-NUM_TRIALS = 1
-
-STIMULI_PER_TRIAL = 6
-
-CONDITIONS = [0, 1]
-CONDITION_TIMES = [(6000, 0), (4000, 2000), (3000, 3000), (2000, 4000)]
-SUM_DURATION = 6000
-
-TIMEOUT = 42000
 
 # COMPUTER PARAMETERS
 TARGET_SIZE = (50, 50)  # I have divided by 2 because it is more likely to grab
@@ -45,15 +35,15 @@ DIMENSIONS = (598, 336)  # mm size of screen
 DISTANCE = 675  # mm distance from screen
 
 # FIXATION DETECTION
-SAMPLING_RATE       = 250
-STEP_SIZE           = 1000
-HESSELS_SAVGOL_LEN  = 31          # Window length of Savitzky-Golay filter in pre-processing
-HESSELS_THR         = 10e12       # Initial slow/fast phase threshold
+SAMPLING_RATE       = 1000
+STEP_SIZE           = 999
+HESSELS_SAVGOL_LEN  = 51          # Window length of Savitzky-Golay filter in pre-processing
+HESSELS_THR         = 10e6        # Initial slow/fast phase threshold
 HESSELS_LAMBDA      = 2.5         # Number of standard deviations (default 2.5)
 HESSELS_MAX_ITER    = 100         # Max iterations for threshold adaptation (default 200)
 HESSELS_WINDOW_SIZE = 8 * SAMPLING_RATE      # Threshold adaptation window (default 8 seconds) * sampling rate
 HESSELS_MIN_AMP     = 1.0         # Minimal amplitude of fast candidates for merging slow candidates (default 1.0)
-HESSELS_MIN_FIX     = 60         # Minimal fixation duration in ms (default .06)
+HESSELS_MIN_FIX     = 60          # Minimal fixation duration in ms (default 60)
 PX2DEG              = 0.01982
 
 # Center locations of each stimulus

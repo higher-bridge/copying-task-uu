@@ -38,14 +38,14 @@ from stimulus import pick_stimuli
 
 
 class Canvas(QWidget):
-    def __init__(self, images:list, nStimuli:int, imageWidth:int, nrow:int, ncol:int,
-                 conditions:list, conditionOrder:list, nTrials:int, 
-                 useCustomTimer:bool=False, trialTimeOut:int=10000, addNoise=True,
-                 customCalibration:bool=False, customCalibrationSize:int=20,
+    def __init__(self, images: list, nStimuli: int, imageWidth: int, nrow: int, ncol: int,
+                 conditions: list, conditionOrder: list, nTrials: int,
+                 useCustomTimer: bool = False, trialTimeOut: int = 10000, addNoise=True,
+                 customCalibration: bool = False, customCalibrationSize: int = 20,
                  fixationCrossSize=20, fixationCrossMs=3000, driftToleranceDeg=2.0,
                  inTrainingMode=False,
-                 left:int=50, top:int=50, width:int=2560, height:int=1440):
-        
+                 left: int = 50, top: int = 50, width: int = 2560, height: int = 1440):
+
         super().__init__()
         # Set window params
         self.title = 'Copying task'
@@ -58,7 +58,7 @@ class Canvas(QWidget):
         self.sizePolicy.setHeightForWidth(True)
         self.setSizePolicy(self.sizePolicy)
         self.styleStr = "background-color:transparent"
-        
+
         # Set stimuli params
         self.nStimuli = nStimuli
         self.allImages = images
@@ -68,13 +68,13 @@ class Canvas(QWidget):
         self.imageWidth = imageWidth
         self.nrow = nrow
         self.ncol = ncol
-        
+
         # Set experiment params
         self.nTrials = nTrials
         self.conditions = conditions
         self.nConditions = len(conditions)
         self.conditionOrder = conditionOrder
-        
+
         self.currentTrial = 1
         self.conditionOrderIndex = 0
         self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
@@ -108,14 +108,14 @@ class Canvas(QWidget):
 
         self.mean_error, self.sd_error = 0, 0
         self.inTrainingMode = inTrainingMode
-        
+
         # Track correct placements
-        self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe', 
+        self.correctPlacements = pd.DataFrame(columns=['x', 'y', 'Name', 'shouldBe',
                                                        'Correct', 'Time',
                                                        'dragDuration', 'dragDistance',
                                                        'Trial', 'Condition', 'visibleTime',
                                                        'cameFromX', 'cameFromY'])
-        
+
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
 
         self.eventTracker = pd.DataFrame(columns=['Time', 'TrackerTime', 'TimeDiff', 'Event', 'Condition', 'Trial'])
@@ -123,7 +123,7 @@ class Canvas(QWidget):
         self.projectFolder = Path(__file__).parent
 
         self.ppNumber = None
-        self.setParticipantNumber()        
+        self.setParticipantNumber()
 
         self.disp = None
         self.tracker = None
@@ -139,35 +139,35 @@ class Canvas(QWidget):
     def setParticipantNumber(self):
         # Get input
         number = input('Enter participant number or name:\n')
-        
+
         # If input is none, try again (recursively)
         if len(number) < 1 or number is None:
             print('Invalid input, try again')
             self.setParticipantNumber()
-        
+
         # Read already used numbers
-        with open(self.projectFolder/'results/usedNumbers.txt', 'r') as f:
+        with open(self.projectFolder / 'results/usedNumbers.txt', 'r') as f:
             usedNumbers = json.load(f)
-        
+
         # If not in use, save and return
         if number not in usedNumbers:
             self.ppNumber = number
             usedNumbers.append(number)
-            
-            with open(self.projectFolder/'results/usedNumbers.txt', 'w') as f:
+
+            with open(self.projectFolder / 'results/usedNumbers.txt', 'w') as f:
                 json.dump(usedNumbers, f)
-                
+
             # Make dedicated folder for this person
-            if not str(self.ppNumber) in os.listdir(self.projectFolder/'results'):
-                os.mkdir(self.projectFolder/f'results/{self.ppNumber}')
-                
+            if not str(self.ppNumber) in os.listdir(self.projectFolder / 'results'):
+                os.mkdir(self.projectFolder / f'results/{self.ppNumber}')
+
             return
-        
+
         # If already in use, recursively run again
         else:
             print(f'{number} is already in use! Use another number or name')
             self.setParticipantNumber()
-                
+
     def writeCursorPosition(self, now):
         e = self.mouse.pos()
 
@@ -220,7 +220,7 @@ class Canvas(QWidget):
         if now - self.checkIfFinishedStart >= 500:
             self.checkIfFinished()
             self.checkIfFinishedStart = now
-                    
+
     def runTimer(self):
         self.timer.setInterval(1)  # 1 ms
         self.timer.timeout.connect(self.updateTimer)
@@ -231,55 +231,57 @@ class Canvas(QWidget):
         self.checkIfFinishedStart = self.start
 
         self.crossingStart = None
-        
+
         self.timer.start()
-        
+
     def disconnectTimer(self):
         try:
             self.timer.stop()
         except AttributeError:
-            pass # Happens if the timer has never been started yet
+            pass  # Happens if the timer has never been started yet
 
     def getTrackerClock(self):
         try:
             trackerClock = self.tracker.get_eyelink_clock()
         except Exception:
             trackerClock = 0
-            
+
         return trackerClock
 
     def writeEvent(self, msg):
         trackerClock = self.getTrackerClock()
-            
+
         localTime = round(time.time() * 1000)
         timeDiff = localTime - trackerClock
-        
-        event = pd.DataFrame({'Time': localTime, 'TrackerTime': trackerClock, 
+
+        event = pd.DataFrame({'Time': localTime, 'TrackerTime': trackerClock,
                               'TimeDiff': timeDiff, 'Event': msg,
                               'Condition': self.currentConditionIndex, 'Trial': self.currentTrial}, index=[0])
         self.eventTracker = self.eventTracker.append(event, ignore_index=True)
 
     def writeFiles(self):
-        self.correctPlacements.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-correctPlacements.csv')
-        self.eventTracker.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv')
+        self.correctPlacements.to_csv(
+            self.projectFolder / f'results/{self.ppNumber}/{self.ppNumber}-correctPlacements.csv')
+        self.eventTracker.to_csv(self.projectFolder / f'results/{self.ppNumber}/{self.ppNumber}-eventTracking.csv')
 
     def writeMouseTracker(self):
         mouseTrackerDF = pd.DataFrame(self.mouseTrackerDict)
-        mouseTrackerDF.to_csv(self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}-trackingSession-{self.recordingSession}.csv')
-        
+        mouseTrackerDF.to_csv(
+            self.projectFolder / f'results/{self.ppNumber}/{self.ppNumber}-mouseTracking-condition{self.currentConditionIndex}-trackingSession-{self.recordingSession}.csv')
+
         self.mouseTrackerDict = {key: [] for key in ['x', 'y', 'Time', 'TrackerTime', 'Trial', 'Condition']}
-        
-    def checkIfFinished(self, timeOut=False):        
+
+    def checkIfFinished(self, timeOut=False):
         copiedTemp = self.correctPlacements.loc[self.correctPlacements['Trial'] == self.currentTrial]
         copiedTemp = copiedTemp.loc[copiedTemp['Condition'] == self.currentConditionIndex]
-        
+
         allCorrect = np.all(copiedTemp['Correct'].values)
 
         if (len(copiedTemp) > 0 and allCorrect) or timeOut:
             self.writeEvent('Finished trial')
 
             self.clearScreen()
-            
+
             self.writeFiles()
             self.currentTrial += 1
 
@@ -346,21 +348,21 @@ class Canvas(QWidget):
 
         if text is not None:
             self.writeEvent(f'{text} grid')
-    
+
     def moveAndRenameTrackerFile(self):
-        fromLocation = self.projectFolder/'default.edf'
-        toLocation = self.projectFolder/f'results/{self.ppNumber}/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
+        fromLocation = self.projectFolder / 'default.edf'
+        toLocation = self.projectFolder / f'results/{self.ppNumber}/{self.ppNumber}-trackingSession-{self.recordingSession}.edf'
         os.rename(Path(fromLocation), Path(toLocation))
-        
+
         self.writeMouseTracker()
-        
+
         self.writeEvent(f'Writing eyetracker session {self.recordingSession}')
 
-        print(f'Saved session {self.recordingSession} to {toLocation}')        
+        print(f'Saved session {self.recordingSession} to {toLocation}')
 
     def custom_calibration(self, x, y):
         self.screen = libscreen.Screen()
-        
+
         self.screen.draw_circle(colour='black', pos=(x, y), r=self.customCalibrationSize, fill=True)
         self.disp.fill(self.screen)
 
@@ -376,7 +378,7 @@ class Canvas(QWidget):
                 self.initTask()
 
             if key == QtCore.Qt.Key_Space and not self.spacePushed:
-                
+
                 # Set spacePushed to true and remove all widgets
                 self.spacePushed = True
                 self.clearScreen()
@@ -391,9 +393,9 @@ class Canvas(QWidget):
 
             elif key == QtCore.Qt.Key_Backspace:
                 print('Backspace pressed')
-                
+
                 self.clearScreen()
-                
+
                 # Try to close the eyetracker
                 try:
                     self.tracker.stop_recording()
@@ -401,7 +403,7 @@ class Canvas(QWidget):
                     self.moveAndRenameTrackerFile()
                     self.disp = None
                     self.tracker = None
-                    
+
                 except Exception as e:
                     # There is no recording to stop
                     print(e)
@@ -410,31 +412,31 @@ class Canvas(QWidget):
                 if self.disp is None:
                     # Program crashes if both pygaze and this want to use fullscreen, so maximize instead of FS
                     self.showMaximized()
-                    
+
                     self.disp = libscreen.Display()
                     self.tracker = EyeTracker(self.disp)
 
                     if self.customCalibration:
                         self.tracker.set_draw_calibration_target_func(self.custom_calibration)
-    
+
                     self.tracker.calibrate()
                     self.disp.close()
-                    
+
                     self.showFullScreen()
-    
+
                     # When done, start recording and init task
                     self.recordingSession += 1
                     self.tracker.start_recording()
-                    
+
                     # Get the async between tracker and os
                     async_val = self.tracker._get_eyelink_clock_async()
                     self.writeEvent(f'Async {async_val}')
-                    
+
                 time.sleep(1)
                 self.initOpeningScreen()
-                
+
                 return True
-            
+
             # Trigger early exit
             elif key == QtCore.Qt.Key_Tab:
                 try:
@@ -443,11 +445,11 @@ class Canvas(QWidget):
                     self.moveAndRenameTrackerFile()
                 except Exception as e:
                     print(e)
-                                
+
                 self.writeEvent('Early exit')
-                
+
                 self.writeFiles()
-                
+
                 self.close()
                 print('\nEarly exit')
                 raise SystemExit(0)
@@ -466,48 +468,48 @@ class Canvas(QWidget):
                 self.moveAndRenameTrackerFile()
             except AttributeError as ae:
                 print(ae)
-            
+
             self.writeEvent('Finished')
-            
+
             self.writeFiles()
-            
+
             self.close()
             print('\nNo more conditions, the experiment is finished!')
             raise SystemExit(0)
-        
+
         if self.addNoise and occludedTime != 0:
             sumDuration = visibleTime + occludedTime
 
             # Generating a noise and its invert keeps the sum duration the same as without permutation
             noise = gauss(mu=1.0, sigma=0.1)
-            
+
             self.occludedTime = int(occludedTime * noise)
             self.visibleTime = sumDuration - occludedTime
         else:
             self.visibleTime = visibleTime
-            self.occludedTime = occludedTime 
+            self.occludedTime = occludedTime
 
         self.backCrossStart = 0
         self.backCrossing = False
         # print(f'Moving to condition {self.currentConditionIndex}: ({self.visibleTime}, {self.occludedTime})')
-    
+
     def getConditionTiming(self):
         # conditionOrderIndex to retrieve a condition number from conditionOrder
         self.currentConditionIndex = self.conditionOrder[self.conditionOrderIndex]
-        
+
         # Use the condition number retrieved from conditionOrder to retrieve the actual condition to use
         visibleTime = self.conditions[self.currentConditionIndex][0]
         occludedTime = self.conditions[self.currentConditionIndex][1]
 
         return visibleTime, occludedTime
-        
+
     # =============================================================================
     #     INITIALIZATION OF SCREENS
     # =============================================================================
     def clearScreen(self):
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().setParent(None)
-    
+
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -519,9 +521,9 @@ class Canvas(QWidget):
         self.loadThumbsUp()
         self.loadFixationCross()
         self.initOpeningScreen()
-    
+
     def loadThumbsUp(self):
-        path = Path(__file__).parent/'pictograms'/'thumbs.png'
+        path = Path(__file__).parent / 'pictograms' / 'thumbs.png'
         with open(path, 'rb') as f:
             im = f.read()
 
@@ -537,7 +539,7 @@ class Canvas(QWidget):
         self.thumbsUp.setSizePolicy(self.sizePolicy)
 
     def loadFixationCross(self):
-        path = Path(__file__).parent/'pictograms'/'fixation_cross.png'
+        path = Path(__file__).parent / 'pictograms' / 'fixation_cross.png'
         with open(path, 'rb') as f:
             im = f.read()
 
@@ -556,7 +558,7 @@ class Canvas(QWidget):
         self.disconnectTimer()
 
         self.inOpeningScreen = True
-        
+
         # If all trials are done, increment condition counter and 
         # reset trial counter to 1.
         if self.currentTrial > self.nTrials:
@@ -564,36 +566,36 @@ class Canvas(QWidget):
             self.currentTrial = 1
 
         print(f'Trial {self.currentTrial}, Block {self.conditionOrderIndex}, Condition {self.currentConditionIndex}')
-        
+
         self.spacePushed = False
         self.writeEvent('In starting screen')
-        
+
         if self.currentTrial == 1:
             if self.conditionOrderIndex == 0:
                 self.label = QLabel("Welcome to the experiment.\n" +
-                "Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n" +
-                "by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly" +
-                "and as accurately as possible.\n" +
-                "If you make a mistake, the location will briefly turn red. \n" +
-                "Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n" +
-                "performing the task as quickly and as accurately as possible.\n" +
-                "If you performed a trial correctly, you will see a thumbs up at the bottom of the screen, as shown below \n \n" +
-                "If you have any questions now or anytime during the experiment, please ask them straightaway.\n" +
-                "If you need to take a break, please tell the experimenter so.\n \n" +
-                "When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n" +
-                "Good luck!")
+                                    "Throughout this experiment, you will be asked to copy the layout on the left side of the screen to the right side of the screen,\n" +
+                                    "by dragging the images in the lower right part of the screen to their correct positions. You are asked to do this as quickly" +
+                                    "and as accurately as possible.\n" +
+                                    "If you make a mistake, the location will briefly turn red. \n" +
+                                    "Throughout the experiment, the example layout may disappear for brief periods of time. You are asked to keep\n" +
+                                    "performing the task as quickly and as accurately as possible.\n" +
+                                    "If you performed a trial correctly, you will see a thumbs up at the bottom of the screen, as shown below \n \n" +
+                                    "If you have any questions now or anytime during the experiment, please ask them straightaway.\n" +
+                                    "If you need to take a break, please tell the experimenter so.\n \n" +
+                                    "When you are ready to start the experiment, please tell the experimenter and we will start calibrating.\n" +
+                                    "Good luck!")
 
             elif self.conditionOrderIndex > 0:
                 self.label = QLabel(
-                f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n" +
-                "If you wish to carry on immediately, let the experimenter know.\n" +
-                "If you have taken a break, please wait for the experimenter to start the calibration procedure.")
+                    f"End of block {self.conditionOrderIndex}. You may now take a break if you wish to do so.\n" +
+                    "If you wish to carry on immediately, let the experimenter know.\n" +
+                    "If you have taken a break, please wait for the experimenter to start the calibration procedure.")
                 self.label.setStyleSheet("color:rgba(0, 0, 255, 200)")
 
         elif self.currentTrial > 1:
             nextTrial = f'Press space to continue to the next trial ({self.currentTrial} of {self.nTrials}).'
             # addText = f'\nFixation error last trial was {self.mean_error} ({self.sd_error}) degrees.'
-            
+
             if timeOut:
                 self.label = QLabel(f"You timed out. {nextTrial}")  # {addText}")
             else:
@@ -631,7 +633,7 @@ class Canvas(QWidget):
 
     def continueInitTask(self):
         self.inFixationScreen = False
-        
+
         # Create the actual task layout
         self.createMasterGrid()
 
@@ -685,7 +687,6 @@ class Canvas(QWidget):
             else:  # Otherwise, return np.nan to indicate an issue
                 samp = np.nan
 
-            # samp = (random.gauss(1280, 10), random.gauss(720, 10))  # Used for testing
             self.fixationCrossSamples.append(samp)
 
     def fixationScreen(self):
@@ -706,7 +707,7 @@ class Canvas(QWidget):
         self.writeEvent('Showing drift warning')
 
         self.label = QLabel("Warning: fixation error was greater than threshold.\n")  # +
-                            # "Press 'backspace' to calibrate, 'r' to retry, or 'spacebar' to continue.")
+        # "Press 'backspace' to calibrate, 'r' to retry, or 'spacebar' to continue.")
 
         self.label.setFont(QFont("Times", 18))
         self.label.setStyleSheet("color:rgba(255, 0, 0, 200)")
@@ -729,7 +730,7 @@ class Canvas(QWidget):
         masterGridRows = 3
         masterGridCols = 6
         gridLocs = [(1, 1), (1, 4), (2, 4)]
-        
+
         self.emptyGridLayout()
         for row in range(masterGridRows):
             for col in range(masterGridCols):
@@ -738,10 +739,10 @@ class Canvas(QWidget):
 
         self.exampleGridLayout()
         layout.addWidget(self.exampleGridBox, gridLocs[0][0], gridLocs[0][1])
-        
+
         self.copyGridLayout()
         layout.addWidget(self.copyGridBox, gridLocs[1][0], gridLocs[1][1])
-        
+
         self.resourceGridLayout()
         layout.addWidget(self.resourceGridBox, gridLocs[2][0], gridLocs[2][1])
 
@@ -750,13 +751,13 @@ class Canvas(QWidget):
 
         self.hourGlassLayout()
         layout.addWidget(self.hourGlass, gridLocs[0][0], gridLocs[0][1])
-        
+
         self.masterGrid.setLayout(layout)
         self.masterGrid.setTitle('')
         self.masterGrid.setStyleSheet(self.styleStr)
 
     def hourGlassLayout(self):
-        path = Path(__file__).parent/'pictograms'/'hourglass.png'
+        path = Path(__file__).parent / 'pictograms' / 'hourglass.png'
         with open(path, 'rb') as f:
             im = f.read()
 
@@ -786,11 +787,11 @@ class Canvas(QWidget):
         self.emptyGridBox.setLayout(layout)
         self.emptyGridBox.setTitle('')
         self.emptyGridBox.setStyleSheet(self.styleStr + "; border:0px")
-    
+
     def exampleGridLayout(self):
         self.exampleGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
-        
+
         i = 0
         for x in range(self.ncol):
             for y in range(self.nrow):
@@ -800,7 +801,7 @@ class Canvas(QWidget):
                 if self.grid[x, y]:
                     image = self.images[i]
                     pixmap = QPixmap.fromImage(image.qimage)
-                    label.setPixmap(pixmap) 
+                    label.setPixmap(pixmap)
                     label.setAlignment(QtCore.Qt.AlignCenter)
                     label.setSizePolicy(self.sizePolicy)
 
@@ -820,7 +821,7 @@ class Canvas(QWidget):
                         'cameFromY': None
                     }, index=[0])
                     self.correctPlacements = self.correctPlacements.append(exampleDict, ignore_index=True)
-                    
+
                     i += 1
 
                 layout.addWidget(label, y, x)  # addWidget asks for (row, column)
@@ -829,7 +830,7 @@ class Canvas(QWidget):
         self.exampleGridBox.setTitle('')
         self.exampleGridBox.setSizePolicy(self.sizePolicy)
         self.exampleGridBox.setStyleSheet(self.styleStr)
-        
+
     def copyGridLayout(self):
         self.copyGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
@@ -851,11 +852,11 @@ class Canvas(QWidget):
                 label.setAlignment(QtCore.Qt.AlignCenter)
                 label.setSizePolicy(self.sizePolicy)
                 layout.addWidget(label, y, x)  # addWidget asks for (row, column)
-        
+
         self.copyGridBox.setLayout(layout)
         self.copyGridBox.setTitle('')
         self.copyGridBox.setStyleSheet(self.styleStr)
-        
+
     def resourceGridLayout(self):
         self.resourceGridBox = QGroupBox("Grid", self)
         layout = QGridLayout()
@@ -871,7 +872,7 @@ class Canvas(QWidget):
                     # label.setFrameStyle(QFrame.Panel)  # temp
                     label.setAlignment(QtCore.Qt.AlignCenter)
                     label.setSizePolicy(self.sizePolicy)
-                    
+
                     if i % self.ncol == 0:
                         row += 1
                         col = 0
@@ -879,7 +880,7 @@ class Canvas(QWidget):
                     layout.addWidget(label, row, col)  # addWidget asks for (row, column)
                     i += 1
                     col += 1
-        
+
         self.resourceGridBox.setLayout(layout)
         self.resourceGridBox.setTitle('')
         self.resourceGridBox.setSizePolicy(self.sizePolicy)

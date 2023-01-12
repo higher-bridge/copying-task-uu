@@ -605,7 +605,7 @@ class libeyelink(BaseEyeTracker):
         ### ADDED THE CONDITIONAL. TO RESTORE, REMOVE THIS FILE AND RENAME
         ### LIBEYELINK_ORIGINAL.PY TO LIBEYELINK.PY
         if full_close:
-            pylink.getEYELINK().close();
+            pylink.getEYELINK().close()
             
         pylink.msecDelay(500)
 

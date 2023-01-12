@@ -31,20 +31,21 @@ def getListOfFiles(dirName):
             allFiles = allFiles + getListOfFiles(fullPath)
         else:
             allFiles.append(fullPath)
-                
+
     return sorted(allFiles)
 
+
 def remove_temp_files(directory='../data', key='/._'):
-    ''' Removes temp data files, marked with the ._ prefix which are created 
-sometimes (at least by macOS) '''
+    """ Removes temp data files, marked with the ._ prefix which are created
+    sometimes (at least by macOS) """
     files_removed = 0
     all_files = getListOfFiles(directory)
-    
+
     for filename in all_files:
         if key in filename:
             os.remove(filename)
             files_removed += 1
-            
+
     print(f'Removed {files_removed} files.')
 
 

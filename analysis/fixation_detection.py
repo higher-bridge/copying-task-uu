@@ -1,7 +1,4 @@
 """
-visual_search
-Copyright (C) 2022 Utrecht University, Alex Hoogerbrugge
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -26,10 +23,10 @@ from constants_analysis import N_JOBS, RESULT_DIR
 from analysis.hessels_classifier import classify_hessels2020
 
 
-def detect_fixations(path: Path, ID, to_csv=True, skip_existing=True) -> pd.DataFrame:
+def detect_fixations(path: Path, ID, to_csv=True, skip_existing=False) -> pd.DataFrame:
     new_path = Path(str(path).replace('samples', 'events'))
 
-    if skip_existing and new_path in list(RESULT_DIR.rglob('*-samples.csv')):
+    if skip_existing and new_path in list(RESULT_DIR.rglob('*-events.csv')):
         return pd.DataFrame()
 
     df = pd.read_csv(path)
@@ -47,7 +44,7 @@ if __name__ == '__main__':
 
     if N_JOBS == 1:
         for i, (p, ID) in enumerate(zip(paths, IDs)):
-            detect_fixations(p, ID)
+            _ = detect_fixations(p, ID)
             print(f'Processed {i + 1} of {len(paths)} files')
 
     else:

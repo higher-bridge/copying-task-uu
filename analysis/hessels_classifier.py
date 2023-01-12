@@ -1,7 +1,4 @@
 """
-visual_search
-Copyright (C) 2022 Utrecht University, Alex Hoogerbrugge
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -27,6 +24,7 @@ https://github.com/dcnieho/GlassesViewer/tree/master/user_functions/HesselsEtAl2
 from pathlib import Path
 from typing import List, Tuple
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from constants_analysis import (HESSELS_LAMBDA, HESSELS_MAX_ITER,
@@ -292,7 +290,6 @@ def classify_hessels2020(df: pd.DataFrame,
     """
     :param df: pd.DataFrame with all gaze data for one participant, one condition
     :param ID:
-    :param condition:
     :param verbose: Prints df.head() after detection is performed
     :return:
     """
@@ -325,7 +322,8 @@ def classify_hessels2020(df: pd.DataFrame,
         x = savgol_filter(x_before, HESSELS_SAVGOL_LEN, 2, mode='nearest')
         y = savgol_filter(y_before, HESSELS_SAVGOL_LEN, 2, mode='nearest')
 
-        print('ID', ID, ':', len(x), 'rows of samples')
+        if verbose:
+            print('ID', ID, ':', len(x), 'rows of samples')
 
         # vel = detect_velocity_python(x, y, ts)
         vx = detect_velocity(x, ts)
