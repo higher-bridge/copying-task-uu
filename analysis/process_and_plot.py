@@ -57,7 +57,13 @@ features = [
     'Dwell time at grid per correct item (s)',
     'Completion time (s)',
     'Errors per second',
-    'Errors while occluded'
+    'Errors while occluded',
+    'Fixations at grid',
+    'Inspections without placement',
+    'Correct per inspection if placed',
+    # 'Correct placement times',
+    # 'Incorrect placement times',
+    # 'Correct streak'
 ]
 
 cols = ['ID', 'Session', 'Condition', 'Session-condition', 'Trial']
@@ -75,6 +81,8 @@ cross_times = {'ID': [],
                'Condition': [],
                'Trial': [],
                'Timestamp': []}
+
+all_placements = []
 
 for ID in valid_IDs:
     fix_filenames = [f for f in fixations_files if ID in f]
@@ -139,17 +147,28 @@ for ID in valid_IDs:
                                                                                            list(fixations['onset']),
                                                                                            list(fixations['offset']))
                             total_hourglass_duration = hf.get_hourglass_duration(task_df_t)
-                            useful_crossings = hf.get_useful_crossings(task_df_t,
-                                                                       list(fixations['avg_x']),
-                                                                       list(fixations['onset']),
-                                                                       list(fixations['offset']))
+                            useful_crossings, _, _ = hf.get_useful_crossings(task_df_t,
+                                                                             list(fixations['avg_x']),
+                                                                             list(fixations['onset']),
+                                                                             list(fixations['offset']))
                             fix_at_grid = hf.get_fixations_at_grid(list(fixations['avg_x']),
                                                                    list(fixations['avg_y']),
                                                                    list(fixations['onset']),
                                                                    list(fixations['offset']))
                             errors_occluded = hf.get_errors_while_occluded(task_df_t)
 
-                            # Compute additional outcome measures here
+                            correct_per_crossing, insp_no_place, correct_if_placement, placements = hf.get_placements_per_inspection(
+                                task_df_t,
+                                placement_df_t,
+                                fixations['avg_x'],
+                                fixations['onset'],
+                                fixations['offset'])
+
+                            placements['ID'] = [ID] * len(placements)
+                            placements['Condition'] = [condition] * len(placements)
+                            placements['Trial'] = [trial] * len(placements)
+                            all_placements.append(placements)
+
                             errors = np.nan
                             incorrect_placements = hf.number_of_incorrect_placements_per_trial(task_df_t)
                             correct_placements = hf.number_of_correct_placements_per_trial(placement_df_t)
@@ -194,7 +213,13 @@ for ID in valid_IDs:
                                                   completion_time - hourglass_fixated_duration) / 1000,
                                               'Errors per second': float(incorrect_placements / (
                                                       (completion_time - hourglass_fixated_duration) / 1000)),
-                                              'Errors while occluded': float(errors_occluded)
+                                              'Errors while occluded': float(errors_occluded),
+                                              'Fixations at grid': float(len(fix_at_grid['x']) / useful_crossings),
+                                              'Inspections without placement': float(insp_no_place),
+                                              'Correct per inspection if placed': float(correct_if_placement),
+                                              # 'Correct placement times': float(placement_times_correct),
+                                              # 'Incorrect placement times': float(placement_times_incorrect),
+                                              # 'Correct streak': float(streak)
                                               },
                                              index=[0])
                             results = pd.concat([results, r], ignore_index=True)
@@ -211,12 +236,13 @@ for ID in valid_IDs:
 # Define: [0] the features that we use, [1] the aggregate function, [2] tick marks, [3] tick labels
 features = [
     ('Number of crossings', np.nanmean, [2, 3, 4, 5, 6, 7, 8, 9], [' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9']),
-    ('Items placed after crossing', np.nanmean, [0.5, 1.0, 1.5, 2.0, 2.5, 3.0], [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]),
-    ('Dwell time per crossing (ms)', np.nanmedian, [100, 250, 400, 550, 700], [100, 250, 400, 550, 700]),
+    ('Fixations at grid', np.nanmean, [1, 1.5, 2, 2.5, 3, 3.5], [1.0, 1.5, 2.0, 2.5, 3.0, 3.5]),
+    ('Items placed after crossing', np.nanmean, [0.5, 1.0, 1.5, 2.0, 2.5], [0.5, 1.0, 1.5, 2.0, 2.5]),
     ('Completion time (s)', np.nanmedian, [9, 10, 12, 14, 16, 18, 20], ['', 10, 12, 14, 16, 18, 20]),
-    ('Errors per trial', np.nanmean, [0, 0.2, 0.4, 0.6, 0.8], [0, 0.2, 0.4, 0.6, 0.8]),
+    ('Errors per trial', np.nanmean, [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]),
     ('Proportion spent waiting', np.nanmean, [0, 0.05, 0.1, 0.15, 0.2], [0, 0.05, 0.1, 0.15, 0.2]),
-]
+    ('Inspections without placement', np.nanmean, [], []), ('Correct per inspection if placed', np.nanmean, [], []),
+    ('Hourglass shown duration (s)', np.nanmedian, [], [])]
 
 # =============================================================================
 # REMOVE OUTLIERS / OTHER OPTIONAL SCALING
@@ -228,10 +254,10 @@ for f_ in features:
     results[f].iloc[idxs] = np.nan
 
 # =============================================================================
-# AGGREGATE BY MEDIAN                
+# AGGREGATE BY MEDIAN
 # =============================================================================
 results.to_csv(f'{constants.RESULT_DIR}/results-pregrouped.csv')
-results = results.dropna()
+# results = results.dropna()
 
 condition_var = 'Condition'
 label = 'Availability of external information'
@@ -249,17 +275,31 @@ results_grouped['Condition number'] = results_grouped[condition_var].apply(hf.co
 results_grouped.to_csv(f'{constants.RESULT_DIR}/results-grouped-ID-condition.csv')
 
 # Pivot table for analysis
+medians = {'Feature': [],
+           'Condition': [],
+           'Mdn': [],
+           'MAD': []
+           }
+
 for f in features:
     feat = f[0]
     df_pivot = pd.pivot(results_grouped, columns=['Condition number'], values=feat, index='ID')
     df_pivot.to_csv(constants.RESULT_DIR / f'pivot_{feat}.csv')
 
-    print('\n', feat)
-    print('Median')
-    print(df_pivot.median(axis=0).round(3))
-    print('MAD')
-    print(df_pivot.mad(axis=0).round(3))
+    for col in list(df_pivot.columns):
+        mdn = df_pivot[col].median().round(3)
+        mad = df_pivot[col].mad().round(3)
 
+        medians['Feature'].append(feat)
+        medians['Condition'].append(col)
+        medians['Mdn'].append(mdn)
+        medians['MAD'].append(mad)
+
+medians = pd.DataFrame(medians)
+medians.to_excel(constants.RESULT_DIR / 'medians.xlsx')
+
+# Remove the inspections without placement variable from the list
+features = features[:-3]
 # =============================================================================
 # COMBINED BOXPLOTS (FIGURE 2 IN MANUSCRIPT)
 # =============================================================================
@@ -270,8 +310,7 @@ rcParams['font.size'] = 9
 # Define two linestyles
 ls = ['-', '--']
 
-colors = sns.color_palette('Blues', 4)
-sns.set_palette(colors)
+colors = list(sns.color_palette('Blues', 4))
 
 # Adjust nrows and ncols as needed such that nrows * ncols == len(features)
 nrows, ncols = 2, 3
@@ -295,7 +334,7 @@ for i, feat_ in enumerate(features):
         sns.lineplot(x='Condition', y=feat, data=results_ID,
                      color='gray',
                      linestyle='--',
-                     linewidth=.5,
+                     linewidth=.4,
                      marker='.', markersize=4,
                      markerfacecolor='gray', markeredgecolor='black',
                      ax=axes[i],
@@ -346,3 +385,44 @@ for i, feat_ in enumerate(features):
 f.tight_layout()
 f.savefig(f'{constants.RESULT_DIR}/plots/Figure 2.pdf', dpi=600)
 plt.show()
+
+################
+# Other plots
+################
+# rcParams['font.family'] = 'sans-serif'
+# rcParams['font.serif'] = 'Helvetica'
+# rcParams['font.size'] = 9
+#
+# colors = sns.color_palette('Blues', 4)
+
+# all_placements = pd.concat(all_placements, ignore_index=True)
+# all_placements['Condition'] = all_placements['Condition'].apply(hf.condition_number_to_name)
+# all_placements = all_placements.loc[all_placements['Placements'] == 0]
+# all_placements = all_placements.loc[all_placements['Time since start'] < 42000]
+
+# plt.figure(figsize=(7.5, 4))
+# sns.boxplot(data=all_placements, x='Condition', y='Proportion since start',
+#             palette=colors)
+# plt.show()
+
+
+# plt.figure(figsize=(7.5, 4))
+# sns.histplot(data=all_placements, x='Proportion since start', hue='Condition',
+#              kde=True,
+#              # stat='proportion',
+#              binwidth=0.02,
+#              palette=colors)
+# plt.ylabel('Frequency of inspections without placement')
+# plt.show()
+
+
+# all_placements_grouped = all_placements.groupby(['ID', 'Condition', 'Trial']).agg('count')
+#
+# plt.figure(figsize=(7.5, 4))
+# sns.lineplot(data=all_placements_grouped, x='Trial', y='Proportion since start', hue='Condition',
+#              # kde=True,
+#              # stat='proportion',
+#              # binwidth=0.02,
+#              palette=colors)
+# plt.ylabel('Number of inspections without placement')
+# plt.show()

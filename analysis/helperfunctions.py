@@ -22,7 +22,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pingouin as pg
+# import pingouin as pg
 import seaborn as sns
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -48,17 +48,17 @@ def getListOfFiles(dirName):
 
 def rename_features(x):
     if x == 'Number of crossings':
-        return 'A.  Number of crossings'
+        return 'Example grid inspections'
+    elif x == 'Fixations at grid':
+        return 'Fixations per inspection'
     elif x == 'Items placed after crossing':
-        return 'B.  Items placed after crossing'
-    elif x == 'Dwell time per crossing (ms)':
-        return 'C.  Dwell time per crossing (ms)'
+        return 'Items placed per inspection'
     elif x == 'Completion time (s)':
-        return 'D.  Completion time (s)'
+        return 'Completion time (s)'
     elif x == 'Errors per trial':
-        return 'E.  Errors per trial'
+        return 'Errors per trial'
     elif x == 'Proportion spent waiting':
-        return 'F.  Proportion spent waiting'
+        return 'Proportion spent waiting'
     else:
         return x
 
@@ -90,7 +90,6 @@ def normalize_column(df: pd.DataFrame,
                      feature: str,
                      groupby: str = 'ID',
                      groupby2: str = 'Condition') -> pd.DataFrame:
-
     # Split by group (ID)
     group_df = []
     groups = list(df[groupby].unique())
@@ -146,10 +145,14 @@ def remove_outliers(df: pd.DataFrame,
     else:
         indices = np.argwhere((np.array(df[feature]) < low) |
                               (np.array(df[feature]) > high)).ravel()
-        print(f'{feature}: '
-              f'before={len_before}, '
-              f'removed={len(indices)}, '
-              f'{round((len(indices) / len_before) * 100, 2)}%')
+
+        print(f'{feature}:'.ljust(26),
+              f'Trials before={len_before}, '
+              f'removed={len(indices)} '
+              f'({round((len(indices) / len_before) * 100, 2)}%), '
+              f'remaining={len_before - len(indices)}, '
+              f'Per condition={(len_before - len(indices)) / 4}'
+              )
 
         return indices
 
@@ -374,6 +377,19 @@ def get_midline_cross_times(xpos: list, timestamp: list, midline=constants.MIDLI
     return cross_time
 
 
+def get_post_inspection_times(xpos: list, timestamp: list, midline=constants.MIDLINE):
+    cross_time = []
+    prev_x = constants.SCREEN_CENTER[0]
+
+    for x, ts in zip(xpos, timestamp):
+        if prev_x < midline and x > midline:
+            cross_time.append(ts)
+
+        prev_x = x
+
+    return cross_time
+
+
 def get_left_side_fixations(xpos: list, midline=constants.MIDLINE):
     return len([x for x in xpos if x < midline])
 
@@ -485,6 +501,8 @@ def get_useful_crossings(df, x_list, starts, ends, min_dur=120):
         dwellends.pop()
 
     num_crossings = 0
+    useful_starts = []
+    useful_ends = []
 
     # For each dwell on the left, check if grid was visible during that time
     for start, end in zip(dwellstarts, dwellends):
@@ -496,17 +514,23 @@ def get_useful_crossings(df, x_list, starts, ends, min_dur=120):
             # If the grid started showing sometime during a dwell (but must be X ms before dwell ended)
             if starttime < showing < endtime - min_dur:
                 num_crossings += 1
+                useful_starts.append(starttime)
+                useful_ends.append(endtime)
                 break
             # If the grid was already showing, maybe it started hiding during a dwell. Must be X ms after dwell start
             elif starttime + min_dur < hiding < endtime:
                 num_crossings += 1
+                useful_starts.append(starttime)
+                useful_ends.append(endtime)
                 break
             # Maybe a dwell occurred only while the grid was showing. Count this too
             elif showing < starttime < hiding and showing < endtime < hiding:
                 num_crossings += 1
+                useful_starts.append(starttime)
+                useful_ends.append(endtime)
                 break
 
-    return num_crossings
+    return num_crossings, useful_starts, useful_ends
 
 
 def get_fixated_hourglass_duration(df, x_list, y_list, starts, ends):
@@ -545,7 +569,7 @@ def get_fixated_hourglass_duration(df, x_list, y_list, starts, ends):
 
 def get_hourglass_duration(df):
     hourglasstimer = 0
-    
+
     showing = df.loc[df['Event'] == 'Showing hourglass']
     hiding = df.loc[df['Event'] == 'Hiding hourglass']
 
@@ -557,16 +581,15 @@ def get_hourglass_duration(df):
 
     time_showing = showing['TrackerTime']
     time_hiding = hiding['TrackerTime']
-    
+
     for show, hide in zip(time_showing, time_hiding):
         hourglass_shown = hide - show
         hourglasstimer += hourglass_shown
-    
+
     return hourglasstimer
 
 
 def get_errors_while_occluded(df):
-    # incorrect_idx = np.argwhere(np.array(df['Event']) == 'Incorrectly placed')
     incorrect_idx = [i for i, x in enumerate(list(df['Event'])) if 'Incorrectly placed' in x]
     incorrect_ts = np.array(df['TrackerTime'])[incorrect_idx]
 
@@ -593,26 +616,107 @@ def get_errors_while_occluded(df):
 
 def number_of_incorrect_placements_per_trial(df):
     incorrect_placements = 0
-    
+
     for i, row in df.iterrows():
         event = row['Event']
-        
+
         if 'Incorrectly placed' in event:
             incorrect_placements += 1
-    
+
     return incorrect_placements
 
 
 def number_of_correct_placements_per_trial(df):
     correct_placements = 0
-    
+
     for i, row in df.iterrows():
         correct = row['Correct']
-        
+
         if correct:
             correct_placements += 1
-    
+
     return correct_placements
+
+
+def get_placements_per_inspection(df_events, df_place, xpos: list, onsets: list, offsets):
+    _, cross_times, back_times = get_useful_crossings(df_events, xpos, onsets, offsets)
+
+    trial_start = df_events.loc[df_events['Event'] == 'Task init']
+    trial_start = list(trial_start['TrackerTime'])[0]
+
+    trial_end = df_events.loc[df_events['Event'] == 'Finished trial']
+    trial_end = list(trial_end['TrackerTime'])[0]
+
+    trial_dur = trial_end - trial_start
+
+    if len(cross_times) <= len(back_times):
+        cross_times.append(trial_end + 500)  # Add a few ms to make sure we catch the last placement(s)
+
+    # Get list of timestamps of incorrect placements
+    incorrect_idx = [i for i, x in enumerate(list(df_events['Event'])) if 'Incorrectly placed' in x]
+    incorrect_ts = np.array(df_events['TrackerTime'])[incorrect_idx]
+
+    # Add trackertime column to correct placement df
+    timediff = list(df_events['TimeDiff'])[0]
+    df_place['TrackerTime'] = np.array(df_place['Time']) - timediff
+
+    # Get list of timestamps of correct placements
+    df_place = df_place.loc[df_place['Correct'] == True]
+    correct_ts = np.array(df_place['TrackerTime'])
+
+    timestamps = pd.DataFrame(columns=['ts', 'correct'])
+    timestamps['ts'] = np.concatenate([incorrect_ts, correct_ts])
+    timestamps['correct'] = [False] * len(incorrect_ts) + [True] * len(correct_ts)
+    timestamps = timestamps.sort_values(by='ts')
+
+    placements = {'Timestamp': [np.nan] * len(back_times),
+                  'Time since start': [np.nan] * len(back_times),
+                  'Proportion since start': [np.nan] * len(back_times),
+                  'Crossing': [i + 1 for i in range(len(back_times))],
+                  'Inspection duration': [np.nan] * len(back_times),
+                  'Placements': [0] * len(back_times),
+                  'Correct placements': [0] * len(back_times),
+                  'Streak': [0] * len(back_times)
+                  }
+
+    for j, (back, cross) in enumerate(zip(back_times, cross_times[1:])):
+        counter = 0
+        streak = 0
+        correct_counter = 0
+
+        placements['Timestamp'][j] = back
+        placements['Time since start'][j] = back - trial_start
+        placements['Proportion since start'][j] = (back - trial_start) / trial_dur
+        placements['Inspection duration'][j] = back_times[j] - cross_times[j]
+
+        # Loop through (timestamps of) placements
+        for i, row in timestamps.iterrows():
+            ts = row['ts']
+            correct = row['correct']
+
+            # If timestamp is between back and cross, a placement was made in this period
+            if back <= ts <= cross:
+                counter += 1
+                placements['Placements'][j] = int(counter)
+
+                if correct:
+                    streak += 1
+                    correct_counter += 1
+                else:
+                    streak = 0
+
+                placements['Correct placements'][j] = int(correct_counter)
+                placements['Streak'][j] = streak
+
+    placements = pd.DataFrame(placements)
+
+    crossings_no_placement = placements.loc[placements['Placements'] == 0]
+    crossings_w_placement = placements.loc[placements['Placements'] > 0]
+
+    return np.nanmean(placements['Correct placements']), \
+           len(crossings_no_placement), \
+           np.nanmean(crossings_w_placement['Correct placements']), \
+           placements
 
 
 def get_ttest(df: pd.DataFrame, dep_var: str, ind_var: str):
